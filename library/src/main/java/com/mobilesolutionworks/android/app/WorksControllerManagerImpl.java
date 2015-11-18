@@ -16,8 +16,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     {
         final int    mId;
         final Bundle mArgs;
-        WorksControllerManager.LoaderCallbacks<WorksController> mCallbacks;
-        WorksController                                         mLoader;
+        ControllerCallbacks<WorksController> mCallbacks;
+        WorksController                      mLoader;
 
 //        boolean mHaveData;
 //        boolean mDeliveredData;
@@ -35,7 +35,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         // ControllerInfo mPendingLoader;
 
-        public ControllerInfo(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callbacks)
+        public ControllerInfo(int id, Bundle args, ControllerCallbacks<WorksController> callbacks)
         {
             mId = id;
             mArgs = args;
@@ -64,20 +64,20 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             if (DEBUG) LOGGER.fine("  Starting: " + this);
             if (mLoader == null && mCallbacks != null)
             {
-                mLoader = mCallbacks.onCreateLoader(mId, mArgs);
+                mLoader = mCallbacks.onCreateController(mId, mArgs);
                 mLoader.onCreate();
             }
 
             if (mLoader != null && mCallbacks != null)
             {
-                mCallbacks.onLoadFinished(mId, mLoader);
+                mCallbacks.onCreated(mId, mLoader);
             }
 
             if (mLoader != null/* && !mInfoReportNextStart*/)
             {
 //                if (mLoader.getClass().isMemberClass() && !Modifier.isStatic(mLoader.getClass().getModifiers()))
 //                {
-//                    throw new IllegalArgumentException("Object returned from onCreateLoader must not be a non-static inner member class: " + mLoader);
+//                    throw new IllegalArgumentException("Object returned from onCreateController must not be a non-static inner member class: " + mLoader);
 //                }
 
 //                if (!mListenerRegistered)
@@ -203,11 +203,11 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 {
 //                    todo
 //                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onLoaderReset";
+//                    mHost.mFragmentManager.mNoTransactionsBecause = "onReset";
                 }
                 try
                 {
-                    mCallbacks.onLoaderReset(mLoader);
+                    mCallbacks.onReset(mLoader);
                 }
                 finally
                 {
@@ -315,7 +315,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //                }
 //            }
 //
-//            //if (DEBUG) LOGGER.fine( "  onLoadFinished returned: " + this);
+//            //if (DEBUG) LOGGER.fine( "  onCreated returned: " + this);
 //
 //            // We have now given the application the new loader with its
 //            // loaded data, so it should have stopped using the previous
@@ -345,15 +345,15 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 {
 //                    todo
 //                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onLoadFinished";
+//                    mHost.mFragmentManager.mNoTransactionsBecause = "onCreated";
                 }
                 try
                 {
                     if (DEBUG)
                     {
-                        LOGGER.fine("  onLoadFinished in " + loader);
+                        LOGGER.fine("  onCreated in " + loader);
                     }
-                    mCallbacks.onLoadFinished(mId, loader);
+                    mCallbacks.onCreated(mId, loader);
                 }
                 finally
                 {
@@ -463,10 +463,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         super(host, who);
     }
 
-    private ControllerInfo createLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callback)
+    private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<WorksController> callback)
     {
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
-        WorksController loader = callback.onCreateLoader(id, args);
+        WorksController loader = callback.onCreateController(id, args);
         info.mLoader = loader;
         loader.onCreate();
 
@@ -474,7 +474,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     }
 
     private ControllerInfo createAndInstallLoader(int id, Bundle args,
-                                                  WorksControllerManager.LoaderCallbacks<WorksController> callback)
+                                                  ControllerCallbacks<WorksController> callback)
     {
         try
         {
@@ -502,7 +502,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         }
     }
 
-    public <D extends WorksController> D initLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callback)
+    public <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<WorksController> callback)
     {
         if (mCreatingLoader)
         {
@@ -511,7 +511,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         ControllerInfo info = mLoaders.get(id);
 
-        if (DEBUG) LOGGER.fine("initLoader in " + this + ": args=" + args);
+        if (DEBUG) LOGGER.fine("initController in " + this + ": args=" + args);
 
         if (info == null)
         {
@@ -534,7 +534,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         return (D) info.mLoader;
     }
 
-//    public <D> WorksController<D> restartLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<D> callback)
+//    public <D> WorksController<D> restartLoader(int id, Bundle args, WorksControllerManager.ControllerCallbacks<D> callback)
 //    {
 //        if (mCreatingLoader)
 //        {
@@ -586,7 +586,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //                            info.mPendingLoader = null;
 //                        }
 //                        if (DEBUG) LOGGER.fine("  Enqueuing as new pending loader");
-//                        info.mPendingLoader = createLoader(id, args, (WorksControllerManager.LoaderCallbacks<Object>) callback);
+//                        info.mPendingLoader = createLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
 //                        return (WorksController<D>) info.mPendingLoader.mLoader;
 //                    }
 //                }
@@ -601,18 +601,18 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            }
 //        }
 //
-//        info = createAndInstallLoader(id, args, (WorksControllerManager.LoaderCallbacks<Object>) callback);
+//        info = createAndInstallLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
 //        return (WorksController<D>) info.mLoader;
 //    }
 
-    public void destroyLoader(int id)
+    public void destroyController(int id)
     {
         if (mCreatingLoader)
         {
             throw new IllegalStateException("Called while creating a loader");
         }
 
-        if (DEBUG) LOGGER.fine("destroyLoader in " + this + " of " + id);
+        if (DEBUG) LOGGER.fine("destroyController in " + this + " of " + id);
         int idx = mLoaders.indexOfKey(id);
         if (idx >= 0)
         {

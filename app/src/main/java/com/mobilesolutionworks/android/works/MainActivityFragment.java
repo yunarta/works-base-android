@@ -20,22 +20,22 @@ public class MainActivityFragment extends WorksFragment
         super.onCreate(savedInstanceState);
 
         WorksControllerManager manager = getControllerManager();
-        manager.initLoader(0, null, new WorksControllerManager.LoaderCallbacks<WorksController>()
+        manager.initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
         {
             @Override
-            public WorksController onCreateLoader(int id, Bundle args)
+            public WorksController onCreateController(int id, Bundle args)
             {
                 return new WorksController();
             }
 
             @Override
-            public void onLoadFinished(int id, WorksController loader)
+            public void onCreated(int id, WorksController loader)
             {
 
             }
 
             @Override
-            public void onLoaderReset(WorksController loader)
+            public void onReset(WorksController loader)
             {
 
             }
