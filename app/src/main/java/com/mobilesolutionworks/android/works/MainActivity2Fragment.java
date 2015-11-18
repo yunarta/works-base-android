@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
+import com.mobilesolutionworks.android.app.WorksFragment;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivity2Fragment extends BaseFragment
+public class MainActivity2Fragment extends WorksFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)

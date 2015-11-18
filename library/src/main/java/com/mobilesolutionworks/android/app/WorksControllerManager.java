@@ -23,7 +23,7 @@ public abstract class WorksControllerManager
 
     protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
 
-    protected static final boolean DEBUG = true;
+    protected static final boolean DEBUG = false;
 
     protected static final String TAG = "/!";
 

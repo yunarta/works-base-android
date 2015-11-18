@@ -1,16 +1,14 @@
-package com.mobilesolutionworks.android.works;
+package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mobilesolutionworks.android.app.ActivityControllerHost;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
 /**
- * Created by yunarta on 17/11/15.
+ * Created by yunarta on 19/11/15.
  */
-public class BaseActivity extends AppCompatActivity
+public class WorksActivity extends AppCompatActivity
 {
     ActivityControllerHost mHost;
 
@@ -95,4 +93,5 @@ public class BaseActivity extends AppCompatActivity
     {
         return mHost.getControllerManager();
     }
+
 }

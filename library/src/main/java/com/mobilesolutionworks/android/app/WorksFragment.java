@@ -1,15 +1,12 @@
-package com.mobilesolutionworks.android.works;
+package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.mobilesolutionworks.android.app.FragmentControllerHost;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
-
 /**
- * Created by yunarta on 17/11/15.
+ * Created by yunarta on 19/11/15.
  */
-public class BaseFragment extends Fragment
+public class WorksFragment extends Fragment
 {
     private static int sInstanceCount;
 
@@ -30,7 +27,7 @@ public class BaseFragment extends Fragment
             mInstanceName = "fragment:" + (++sInstanceCount);
         }
 
-        BaseActivity activity = (BaseActivity) getActivity();
+        WorksActivity activity = (WorksActivity) getActivity();
         mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
     }
 
@@ -85,4 +82,5 @@ public class BaseFragment extends Fragment
     {
         return mHost.getControllerManager();
     }
+
 }

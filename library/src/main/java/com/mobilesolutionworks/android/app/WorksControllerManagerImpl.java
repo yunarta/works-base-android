@@ -30,7 +30,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         boolean mInfoRetainingStarted;
         boolean mInfoReportNextStart;
         boolean mInfoDestroyed;
-        boolean mListenerRegistered;
+
+//        boolean mListenerRegistered;
 
         // ControllerInfo mPendingLoader;
 
@@ -72,19 +73,19 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 mCallbacks.onLoadFinished(mId, mLoader);
             }
 
-            if (mLoader != null && !mInfoReportNextStart)
+            if (mLoader != null/* && !mInfoReportNextStart*/)
             {
 //                if (mLoader.getClass().isMemberClass() && !Modifier.isStatic(mLoader.getClass().getModifiers()))
 //                {
 //                    throw new IllegalArgumentException("Object returned from onCreateLoader must not be a non-static inner member class: " + mLoader);
 //                }
 
-                if (!mListenerRegistered)
-                {
-//                    mLoader.registerListener(mId, this);
-//                    mLoader.registerOnLoadCanceledListener(this);
-                    mListenerRegistered = true;
-                }
+//                if (!mListenerRegistered)
+//                {
+////                    mLoader.registerListener(mId, this);
+////                    mLoader.registerOnLoadCanceledListener(this);
+//                    mListenerRegistered = true;
+//                }
 //                mLoader.startLoading();
                 mLoader.onStart();
             }
@@ -152,7 +153,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         public void resume()
         {
-            if (mLoader != null) {
+            if (mLoader != null)
+            {
                 mLoader.onResume();
             }
         }
@@ -163,10 +165,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mInfoStarted = false;
             if (!mInfoRetaining)
             {
-                if (mLoader != null && mListenerRegistered)
+                if (mLoader != null/* && mListenerRegistered*/)
                 {
                     // Let the loader know we're done with it
-                    mListenerRegistered = false;
+//                    mListenerRegistered = false;
 //                    mLoader.unregisterListener(this);
 //                    mLoader.unregisterOnLoadCanceledListener(this);
 //                    mLoader.stopLoading();
@@ -221,12 +223,12 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            mHaveData = false;
             if (mLoader != null)
             {
-                if (mListenerRegistered)
-                {
-                    mListenerRegistered = false;
-//                    mLoader.unregisterListener(this);
-//                    mLoader.unregisterOnLoadCanceledListener(this);
-                }
+//                if (mListenerRegistered)
+//                {
+//                    mListenerRegistered = false;
+////                    mLoader.unregisterListener(this);
+////                    mLoader.unregisterOnLoadCanceledListener(this);
+//                }
 //                mLoader.reset();
                 mLoader.onDestroy();
             }
@@ -394,12 +396,14 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             writer.print("mCallbacks=");
             writer.println(mCallbacks);
             writer.print(prefix);
+
             writer.print("mLoader=");
             writer.println(mLoader);
-            if (mLoader != null)
-            {
-                mLoader.dump(prefix + "  ", fd, writer, args);
-            }
+
+//            if (mLoader != null)
+//            {
+//                mLoader.dump(prefix + "  ", fd, writer, args);
+//            }
 
 //            if (mHaveData || mDeliveredData)
 //            {
@@ -425,8 +429,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             writer.print(mInfoRetaining);
             writer.print(" mRetainingStarted=");
             writer.print(mInfoRetainingStarted);
-            writer.print(" mListenerRegistered=");
-            writer.println(mListenerRegistered);
+//            writer.print(" mListenerRegistered=");
+//            writer.println(mListenerRegistered);
 
 //            if (mPendingLoader != null)
 //            {
