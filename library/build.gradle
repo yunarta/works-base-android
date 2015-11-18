@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+group 'com.mobilesolutionworks'
+version '1.0.0'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

@@ -1,0 +1,3 @@
+<loggable>
+    <package name="com.mobilesolutionworks" level="FINE" shortName="true"/>
+</loggable>
