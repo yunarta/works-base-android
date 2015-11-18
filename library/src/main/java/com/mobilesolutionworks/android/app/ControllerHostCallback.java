@@ -6,6 +6,9 @@ import android.os.Handler;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
+import bolts.Task;
+import bolts.TaskCompletionSource;
+
 /**
  * Created by yunarta on 16/11/15.
  */
@@ -20,6 +23,9 @@ public class ControllerHostCallback // <Host>
     SimpleArrayMap<String, WorksControllerManager> mAllLoaderManagers;
 
     private boolean mRetainLoaders;
+
+    private Task<Boolean>                 mRetainLoadersTask;
+    private TaskCompletionSource<Boolean> mRetainLoadersTCS;
 
     /**
      * The controller manager for the fragment host
@@ -38,6 +44,9 @@ public class ControllerHostCallback // <Host>
         mActivity = activity;
         mContext = context;
         mHandler = handler;
+
+        mRetainLoadersTCS = new TaskCompletionSource<>();
+        mRetainLoadersTask = mRetainLoadersTCS.getTask();
     }
 
 //    public abstract Host onGetHost();
@@ -97,6 +106,11 @@ public class ControllerHostCallback // <Host>
         return mRetainLoaders;
     }
 
+    Task<Boolean> getRetainLoadersTask()
+    {
+        return mRetainLoadersTask;
+    }
+
     void doControllerStart()
     {
         if (mLoadersStarted)
@@ -144,6 +158,7 @@ public class ControllerHostCallback // <Host>
     void doControllerStop(boolean retain)
     {
         mRetainLoaders = retain;
+        mRetainLoadersTCS.trySetResult(mRetainLoaders);
 
         if (mLoaderManager == null)
         {

@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class MainActivity extends BaseActivity
+import com.mobilesolutionworks.android.app.WorksActivity;
+
+public class MainActivity extends WorksActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -12,18 +12,18 @@ public abstract class WorksControllerManager
     /**
      * Callback interface for a client to interact with the manager.
      */
-    public interface LoaderCallbacks<D extends WorksController>
+    public interface ControllerCallbacks<D extends WorksController>
     {
-        public D onCreateLoader(int id, Bundle args);
+        D onCreateController(int id, Bundle args);
 
-        public void onLoadFinished(int id, D loader);
+        void onCreated(int id, D controller);
 
-        public void onLoaderReset(D loader);
+        void onReset(D loader);
     }
 
     protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
 
-    protected static final boolean DEBUG = true;
+    protected static final boolean DEBUG = false;
 
     protected static final String TAG = "/!";
 
@@ -46,9 +46,9 @@ public abstract class WorksControllerManager
         return mWho;
     }
 
-    public abstract <D extends WorksController> D initLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callback);
+    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
 
-    public abstract void destroyLoader(int id);
+    public abstract void destroyController(int id);
 
     void updateHostController(ControllerHostCallback host)
     {

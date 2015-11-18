@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
-import android.util.Log;
+import bolts.Continuation;
+import bolts.Task;
 
 /**
  * Created by yunarta on 17/11/15.
@@ -93,15 +94,33 @@ public class FragmentControllerHost
 
             if (mLoaderManager != null)
             {
-                Log.d("/!", "    fragment.mHost.getRetainLoaders() = " + mHost.getRetainLoaders());
-                if (/*retain || */mHost.getRetainLoaders())
+                mHost.getRetainLoadersTask().continueWith(new Continuation<Boolean, Object>()
                 {
-                    mLoaderManager.doRetain();
-                }
-                else
-                {
-                    mLoaderManager.doStop();
-                }
+                    @Override
+                    public Object then(Task<Boolean> task) throws Exception
+                    {
+                        boolean retain = task.getResult();
+                        if (retain)
+                        {
+                            mLoaderManager.doRetain();
+                        }
+                        else
+                        {
+                            mLoaderManager.doStop();
+                        }
+
+                        return null;
+                    }
+                });
+
+//                if (/*retain || */mHost.getRetainLoaders())
+//                {
+//                    mLoaderManager.doRetain();
+//                }
+//                else
+//                {
+//                    mLoaderManager.doStop();
+//                }
             }
         }
     }

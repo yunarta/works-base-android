@@ -12,12 +12,12 @@ import java.util.logging.Level;
  */
 public class WorksControllerManagerImpl extends WorksControllerManager
 {
-    final class ControllerInfo // implements WorksController.OnLoadCompleteListener<Object>, WorksController.OnLoadCanceledListener<Object>
+    final class ControllerInfo<T extends WorksController> // implements WorksController.OnLoadCompleteListener<Object>, WorksController.OnLoadCanceledListener<Object>
     {
         final int    mId;
         final Bundle mArgs;
-        WorksControllerManager.LoaderCallbacks<WorksController> mCallbacks;
-        WorksController                                         mLoader;
+        ControllerCallbacks<T> mCallbacks;
+        T                      mLoader;
 
 //        boolean mHaveData;
 //        boolean mDeliveredData;
@@ -30,11 +30,12 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         boolean mInfoRetainingStarted;
         boolean mInfoReportNextStart;
         boolean mInfoDestroyed;
-        boolean mListenerRegistered;
+
+//        boolean mListenerRegistered;
 
         // ControllerInfo mPendingLoader;
 
-        public ControllerInfo(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callbacks)
+        public ControllerInfo(int id, Bundle args, ControllerCallbacks<T> callbacks)
         {
             mId = id;
             mArgs = args;
@@ -63,28 +64,28 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             if (DEBUG) LOGGER.fine("  Starting: " + this);
             if (mLoader == null && mCallbacks != null)
             {
-                mLoader = mCallbacks.onCreateLoader(mId, mArgs);
+                mLoader = mCallbacks.onCreateController(mId, mArgs);
                 mLoader.onCreate();
             }
 
             if (mLoader != null && mCallbacks != null)
             {
-                mCallbacks.onLoadFinished(mId, mLoader);
+                mCallbacks.onCreated(mId, mLoader);
             }
 
-            if (mLoader != null && !mInfoReportNextStart)
+            if (mLoader != null/* && !mInfoReportNextStart*/)
             {
 //                if (mLoader.getClass().isMemberClass() && !Modifier.isStatic(mLoader.getClass().getModifiers()))
 //                {
-//                    throw new IllegalArgumentException("Object returned from onCreateLoader must not be a non-static inner member class: " + mLoader);
+//                    throw new IllegalArgumentException("Object returned from onCreateController must not be a non-static inner member class: " + mLoader);
 //                }
 
-                if (!mListenerRegistered)
-                {
-//                    mLoader.registerListener(mId, this);
-//                    mLoader.registerOnLoadCanceledListener(this);
-                    mListenerRegistered = true;
-                }
+//                if (!mListenerRegistered)
+//                {
+////                    mLoader.registerListener(mId, this);
+////                    mLoader.registerOnLoadCanceledListener(this);
+//                    mListenerRegistered = true;
+//                }
 //                mLoader.startLoading();
                 mLoader.onStart();
             }
@@ -152,7 +153,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         public void resume()
         {
-            if (mLoader != null) {
+            if (mLoader != null)
+            {
                 mLoader.onResume();
             }
         }
@@ -163,10 +165,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mInfoStarted = false;
             if (!mInfoRetaining)
             {
-                if (mLoader != null && mListenerRegistered)
+                if (mLoader != null/* && mListenerRegistered*/)
                 {
                     // Let the loader know we're done with it
-                    mListenerRegistered = false;
+//                    mListenerRegistered = false;
 //                    mLoader.unregisterListener(this);
 //                    mLoader.unregisterOnLoadCanceledListener(this);
 //                    mLoader.stopLoading();
@@ -201,11 +203,11 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 {
 //                    todo
 //                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onLoaderReset";
+//                    mHost.mFragmentManager.mNoTransactionsBecause = "onReset";
                 }
                 try
                 {
-                    mCallbacks.onLoaderReset(mLoader);
+                    mCallbacks.onReset(mLoader);
                 }
                 finally
                 {
@@ -221,12 +223,12 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            mHaveData = false;
             if (mLoader != null)
             {
-                if (mListenerRegistered)
-                {
-                    mListenerRegistered = false;
-//                    mLoader.unregisterListener(this);
-//                    mLoader.unregisterOnLoadCanceledListener(this);
-                }
+//                if (mListenerRegistered)
+//                {
+//                    mListenerRegistered = false;
+////                    mLoader.unregisterListener(this);
+////                    mLoader.unregisterOnLoadCanceledListener(this);
+//                }
 //                mLoader.reset();
                 mLoader.onDestroy();
             }
@@ -313,7 +315,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //                }
 //            }
 //
-//            //if (DEBUG) LOGGER.fine( "  onLoadFinished returned: " + this);
+//            //if (DEBUG) LOGGER.fine( "  onCreated returned: " + this);
 //
 //            // We have now given the application the new loader with its
 //            // loaded data, so it should have stopped using the previous
@@ -334,7 +336,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            }
 //        }
 
-        void callOnLoadFinished(WorksController loader)
+        void callOnLoadFinished(T loader)
         {
             if (mCallbacks != null)
             {
@@ -343,15 +345,15 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 {
 //                    todo
 //                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onLoadFinished";
+//                    mHost.mFragmentManager.mNoTransactionsBecause = "onCreated";
                 }
                 try
                 {
                     if (DEBUG)
                     {
-                        LOGGER.fine("  onLoadFinished in " + loader);
+                        LOGGER.fine("  onCreated in " + loader);
                     }
-                    mCallbacks.onLoadFinished(mId, loader);
+                    mCallbacks.onCreated(mId, loader);
                 }
                 finally
                 {
@@ -394,12 +396,14 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             writer.print("mCallbacks=");
             writer.println(mCallbacks);
             writer.print(prefix);
+
             writer.print("mLoader=");
             writer.println(mLoader);
-            if (mLoader != null)
-            {
-                mLoader.dump(prefix + "  ", fd, writer, args);
-            }
+
+//            if (mLoader != null)
+//            {
+//                mLoader.dump(prefix + "  ", fd, writer, args);
+//            }
 
 //            if (mHaveData || mDeliveredData)
 //            {
@@ -425,8 +429,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             writer.print(mInfoRetaining);
             writer.print(" mRetainingStarted=");
             writer.print(mInfoRetainingStarted);
-            writer.print(" mListenerRegistered=");
-            writer.println(mListenerRegistered);
+//            writer.print(" mListenerRegistered=");
+//            writer.println(mListenerRegistered);
 
 //            if (mPendingLoader != null)
 //            {
@@ -459,18 +463,17 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         super(host, who);
     }
 
-    private ControllerInfo createLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callback)
+    private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
     {
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
-        WorksController loader = callback.onCreateLoader(id, args);
+        WorksController loader = callback.onCreateController(id, args);
         info.mLoader = loader;
         loader.onCreate();
 
         return info;
     }
 
-    private ControllerInfo createAndInstallLoader(int id, Bundle args,
-                                                  WorksControllerManager.LoaderCallbacks<WorksController> callback)
+    private ControllerInfo createAndInstallLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
     {
         try
         {
@@ -498,7 +501,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         }
     }
 
-    public <D extends WorksController> D initLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<WorksController> callback)
+    public <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback)
     {
         if (mCreatingLoader)
         {
@@ -507,7 +510,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         ControllerInfo info = mLoaders.get(id);
 
-        if (DEBUG) LOGGER.fine("initLoader in " + this + ": args=" + args);
+        if (DEBUG) LOGGER.fine("initController in " + this + ": args=" + args);
 
         if (info == null)
         {
@@ -530,7 +533,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         return (D) info.mLoader;
     }
 
-//    public <D> WorksController<D> restartLoader(int id, Bundle args, WorksControllerManager.LoaderCallbacks<D> callback)
+//    public <D> WorksController<D> restartLoader(int id, Bundle args, WorksControllerManager.ControllerCallbacks<D> callback)
 //    {
 //        if (mCreatingLoader)
 //        {
@@ -582,7 +585,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //                            info.mPendingLoader = null;
 //                        }
 //                        if (DEBUG) LOGGER.fine("  Enqueuing as new pending loader");
-//                        info.mPendingLoader = createLoader(id, args, (WorksControllerManager.LoaderCallbacks<Object>) callback);
+//                        info.mPendingLoader = createLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
 //                        return (WorksController<D>) info.mPendingLoader.mLoader;
 //                    }
 //                }
@@ -597,18 +600,18 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            }
 //        }
 //
-//        info = createAndInstallLoader(id, args, (WorksControllerManager.LoaderCallbacks<Object>) callback);
+//        info = createAndInstallLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
 //        return (WorksController<D>) info.mLoader;
 //    }
 
-    public void destroyLoader(int id)
+    public void destroyController(int id)
     {
         if (mCreatingLoader)
         {
             throw new IllegalStateException("Called while creating a loader");
         }
 
-        if (DEBUG) LOGGER.fine("destroyLoader in " + this + " of " + id);
+        if (DEBUG) LOGGER.fine("destroyController in " + this + " of " + id);
         int idx = mLoaders.indexOfKey(id);
         if (idx >= 0)
         {

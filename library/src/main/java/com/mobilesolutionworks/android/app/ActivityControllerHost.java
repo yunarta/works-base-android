@@ -3,7 +3,6 @@ package com.mobilesolutionworks.android.app;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
@@ -64,7 +63,6 @@ public class ActivityControllerHost // <Host>
 
     public void dispatchStart()
     {
-        Log.d("/!", "    Activity.dispatchStart");
         mStopped = false;
         mReallyStopped = false;
 
@@ -74,14 +72,12 @@ public class ActivityControllerHost // <Host>
 
     public void dispatchStop()
     {
-        Log.d("/!", "    Activity.dispatchStop");
         mStopped = true;
         mHandler.sendEmptyMessage(MSG_REALLY_STOPPED);
     }
 
     public void dispatchDestroy()
     {
-        Log.d("/!", "    Activity.dispatchDestroy");
         doReallyStop(false);
 
         mHost.doLoaderDestroy();
@@ -89,7 +85,6 @@ public class ActivityControllerHost // <Host>
 
     void doReallyStop(boolean retaining)
     {
-        Log.d("/!", "    Activity.doReallyStop retaining = " + retaining + " reallyStopped = " + mReallyStopped);
         if (!mReallyStopped)
         {
             mReallyStopped = true;
@@ -101,7 +96,6 @@ public class ActivityControllerHost // <Host>
 
     private void onReallyStop()
     {
-        Log.d("/!", "    Activity.onReallyStop");
         mHost.doControllerStop(mRetaining);
     }
 

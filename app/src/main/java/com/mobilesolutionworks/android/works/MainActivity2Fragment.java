@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
+import com.mobilesolutionworks.android.app.WorksFragment;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivity2Fragment extends BaseFragment
+public class MainActivity2Fragment extends WorksFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -19,22 +20,22 @@ public class MainActivity2Fragment extends BaseFragment
         super.onCreate(savedInstanceState);
 
         WorksControllerManager manager = getControllerManager();
-        manager.initLoader(0, null, new WorksControllerManager.LoaderCallbacks<WorksController>()
+        manager.initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
         {
             @Override
-            public WorksController onCreateLoader(int id, Bundle args)
+            public WorksController onCreateController(int id, Bundle args)
             {
                 return new WorksController();
             }
 
             @Override
-            public void onLoadFinished(int id, WorksController loader)
+            public void onCreated(int id, WorksController loader)
             {
 
             }
 
             @Override
-            public void onLoaderReset(WorksController loader)
+            public void onReset(WorksController loader)
             {
 
             }
