@@ -32,6 +32,10 @@ public class MainActivity extends WorksActivity
             }
         });
 
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, new BWCHostFragment()).commit();
+        }
 //        WorksControllerManager manager = getControllerManager();
 //        Log.d("/!", "manager.mWho = " + manager.who());
     }

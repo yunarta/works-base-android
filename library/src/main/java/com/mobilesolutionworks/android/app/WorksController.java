@@ -39,7 +39,7 @@ public class WorksController
 
     public void onPaused()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onPause");
+        if (DEBUG) logger.fine("  [" + mHash + "] onPaused");
     }
 
     public void onResume()
@@ -56,6 +56,8 @@ public class WorksController
     {
         if (DEBUG) logger.fine("  [" + mHash + "] onDestroy");
     }
+
+
 
 //    public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args)
 //    {

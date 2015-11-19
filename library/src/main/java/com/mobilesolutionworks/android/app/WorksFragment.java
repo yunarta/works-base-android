@@ -3,7 +3,6 @@ package com.mobilesolutionworks.android.app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import java.util.logging.Logger;
 
@@ -12,9 +11,9 @@ import java.util.logging.Logger;
  */
 public class WorksFragment extends Fragment
 {
-    private static final boolean DEBUG  = WorksBaseConfig.DEBUG;
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
-    protected final      Logger  LOGGER = Logger.getLogger(getClass().getName());
+    protected final Logger LOGGER = Logger.getLogger(getClass().getName());
 
     private static int sInstanceCount;
 
@@ -24,6 +23,8 @@ public class WorksFragment extends Fragment
 
     Handler mHandler;
 
+    FragmentHostCallback mFragmentHostCallback;
+
     public Handler getHandler()
     {
         return mHandler;
@@ -32,8 +33,6 @@ public class WorksFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        if (DEBUG) Log.d("/!", this + " FRAGMENT ON CREATE\n===\n");
-
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
         {
@@ -44,11 +43,29 @@ public class WorksFragment extends Fragment
             mInstanceName = "fragment:" + (++sInstanceCount);
         }
 
-        WorksActivity activity = (WorksActivity) getActivity();
-        mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
         mHandler = new Handler();
 
+        WorksActivity activity = (WorksActivity) getActivity();
+
+        mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
+        mFragmentHostCallback = new FragmentHostCallback()
+        {
+            @Override
+            public boolean isRetaining()
+            {
+                return getRetainInstance();
+            }
+        };
+
+        mHost.setFragmentHostCallback(mFragmentHostCallback);
         mHost.dispatchCreate();
+    }
+
+    @Override
+    public void setRetainInstance(boolean retain)
+    {
+        mHost.dispatchRetainInstance(retain);
+        super.setRetainInstance(retain);
     }
 
     public void onSaveInstanceState(Bundle bundle)
@@ -60,7 +77,6 @@ public class WorksFragment extends Fragment
     @Override
     public void onStart()
     {
-        if (DEBUG) Log.d("/!", this + " FRAGMENT ON START\n===\n");
         mHost.dispatchStart();
         super.onStart();
     }
@@ -75,13 +91,14 @@ public class WorksFragment extends Fragment
     @Override
     public void onPause()
     {
+        mHost.dispatchPause();
         super.onPause();
     }
 
     @Override
     public void onStop()
     {
-        mHost.dispatchStop(getActivity() != null);
+        mHost.dispatchStop();
         super.onStop();
     }
 
@@ -95,7 +112,6 @@ public class WorksFragment extends Fragment
     @Override
     public void onDestroy()
     {
-        if (DEBUG) Log.d("/!", this + " FRAGMENT ON DESTROY\n===\n");
         mHost.dispatchDestroy();
         super.onDestroy();
     }

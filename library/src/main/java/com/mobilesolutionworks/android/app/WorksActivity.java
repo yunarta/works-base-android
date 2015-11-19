@@ -2,7 +2,6 @@ package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
@@ -19,7 +18,6 @@ public class WorksActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        if (DEBUG) Log.d("/!", "ON CREATE\n===\n");
         mHost = new ActivityControllerHost(this);
         NonConfiguration nc = (NonConfiguration) getLastCustomNonConfigurationInstance();
         if (nc != null)
@@ -33,7 +31,6 @@ public class WorksActivity extends AppCompatActivity
     @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
-        if (DEBUG) Log.d("/!", "ON POST CREATE\n===\n");
         mHost.dispatchPostCreate();
         super.onPostCreate(savedInstanceState);
     }
@@ -55,7 +52,6 @@ public class WorksActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        if (DEBUG) Log.d("/!", "ON DESTROY\n===\n");
         mHost.dispatchDestroy();
         super.onDestroy();
     }
