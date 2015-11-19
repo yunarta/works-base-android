@@ -1,5 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
+import android.util.Log;
+
 import bolts.Continuation;
 import bolts.Task;
 
@@ -8,6 +10,8 @@ import bolts.Task;
  */
 public class FragmentControllerHost
 {
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
+
     private ControllerHostCallback mHost;
 
     WorksControllerManager mLoaderManager;
@@ -16,7 +20,9 @@ public class FragmentControllerHost
 
     boolean mCheckedForLoaderManager;
 
-    private String mWho;
+    private String  mWho;
+
+    private boolean mRetainerAttached;
 
     public FragmentControllerHost(String who, ActivityControllerHost host)
     {
@@ -36,11 +42,56 @@ public class FragmentControllerHost
 
         if (mHost == null)
         {
-            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+            throw new IllegalStateException("Fragment " + FragmentControllerHost.this + " not attached to Activity");
         }
         mCheckedForLoaderManager = true;
         mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, true);
         return mLoaderManager;
+    }
+
+    public void dispatchCreate()
+    {
+        mHost.getPostCreateTask().continueWith(new Continuation<Boolean, Object>()
+        {
+            @Override
+            public Object then(Task<Boolean> task) throws Exception
+            {
+                if (DEBUG) Log.d("/!", FragmentControllerHost.this + " DISPATCH ON POST CREATE\n===\n");
+                if (!mCheckedForLoaderManager)
+                {
+                    mCheckedForLoaderManager = true;
+                    mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, false);
+                }
+
+                if (mLoaderManager != null)
+                {
+                    if (DEBUG) Log.d("/!", FragmentControllerHost.this + " DISPATCH ON mLoaderManager\n===\n");
+                    mRetainerAttached = true;
+                    mHost.getRetainLoadersTask().continueWith(new Continuation<Boolean, Object>()
+                    {
+                        @Override
+                        public Object then(Task<Boolean> task) throws Exception
+                        {
+                            boolean retain = task.getResult();
+
+                            if (DEBUG) Log.d("/!", FragmentControllerHost.this + " RETAIN SET=" + retain + "\n===\n");
+                            if (retain)
+                            {
+                                mLoaderManager.doRetain();
+                            }
+                            else
+                            {
+                                mLoaderManager.doStop();
+                            }
+
+                            return null;
+                        }
+                    });
+                }
+
+                return null;
+            }
+        });
     }
 
     public void dispatchStart()
@@ -83,6 +134,8 @@ public class FragmentControllerHost
 
     public void dispatchStop(boolean retain)
     {
+        if (mRetainerAttached) return;
+
         if (mLoadersStarted)
         {
             mLoadersStarted = false;
@@ -112,15 +165,6 @@ public class FragmentControllerHost
                         return null;
                     }
                 });
-
-//                if (/*retain || */mHost.getRetainLoaders())
-//                {
-//                    mLoaderManager.doRetain();
-//                }
-//                else
-//                {
-//                    mLoaderManager.doStop();
-//                }
             }
         }
     }
@@ -145,5 +189,13 @@ public class FragmentControllerHost
         {
             mLoaderManager.doDestroy();
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "FragmentControllerHost[" +
+                "mWho='" + mWho + '\'' +
+                ']';
     }
 }

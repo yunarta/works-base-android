@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.app.WorksFragment;
+import com.mobilesolutionworks.android.bolts.BoltsWorksController;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends WorksFragment
+public class BWCHostFragment extends WorksFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -20,27 +20,7 @@ public class MainActivityFragment extends WorksFragment
         super.onCreate(savedInstanceState);
 
         WorksControllerManager manager = getControllerManager();
-        manager.initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
-        {
-            @Override
-            public WorksController onCreateController(int id, Bundle args)
-            {
-                return new WorksController();
-            }
-
-            @Override
-            public void onCreated(int id, WorksController loader)
-            {
-
-            }
-
-            @Override
-            public void onReset(WorksController loader)
-            {
-
-            }
-        });
-
+        manager.initController(0, null, new BoltsWorksController.ControllerCallbacks());
     }
 
     @Override

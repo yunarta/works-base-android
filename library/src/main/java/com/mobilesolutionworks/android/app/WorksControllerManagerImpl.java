@@ -3,9 +3,10 @@ package com.mobilesolutionworks.android.app;
 import android.os.Bundle;
 import android.util.SparseArray;
 
+import com.mobilesolutionworks.android.app.v4.DebugUtils;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.util.logging.Level;
 
 /**
  * Created by yunarta on 16/11/15.
@@ -375,13 +376,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         public String toString()
         {
             StringBuilder sb = new StringBuilder(64);
-            sb.append("ControllerInfo{");
-            sb.append(Integer.toHexString(System.identityHashCode(this)));
+            sb.append("ControllerInfo[");
+            sb.append(Integer.toString(System.identityHashCode(this), Character.MAX_RADIX));
             sb.append(" #");
             sb.append(mId);
             sb.append(" : ");
-//            DebugUtils.buildShortClassTag(mLoader, sb);
-            sb.append("}}");
+            DebugUtils.buildShortClassTag(mLoader, sb);
+            sb.append("]]");
             return sb.toString();
         }
 
@@ -448,11 +449,11 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     // stopped or restarted by the application.
     final SparseArray<ControllerInfo> mLoaders = new SparseArray<ControllerInfo>();
 
-    // These are previously run loaders.  This list is maintained internally
-    // to avoid destroying a loader while an application is still using it.
-    // It allows an application to restart a loader, but continue using its
-    // previously run loader until the new loader's data is available.
-    final SparseArray<ControllerInfo> mInactiveLoaders = new SparseArray<ControllerInfo>();
+//    // These are previously run loaders.  This list is maintained internally
+//    // to avoid destroying a loader while an application is still using it.
+//    // It allows an application to restart a loader, but continue using its
+//    // previously run loader until the new loader's data is available.
+//    final SparseArray<ControllerInfo> mInactiveLoaders = new SparseArray<ControllerInfo>();
 
     boolean mRetainingStarted;
 
@@ -619,17 +620,18 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mLoaders.removeAt(idx);
             info.destroy();
         }
-        idx = mInactiveLoaders.indexOfKey(id);
-        if (idx >= 0)
-        {
-            ControllerInfo info = mInactiveLoaders.valueAt(idx);
-            mInactiveLoaders.removeAt(idx);
-            info.destroy();
-        }
-        if (mHost != null && !hasRunningLoaders())
-        {
-            // todo: mHost.mFragmentManager.startPendingDeferredFragments();
-        }
+
+//        idx = mInactiveLoaders.indexOfKey(id);
+//        if (idx >= 0)
+//        {
+//            ControllerInfo info = mInactiveLoaders.valueAt(idx);
+//            mInactiveLoaders.removeAt(idx);
+//            info.destroy();
+//        }
+//        if (mHost != null && !hasRunningLoaders())
+//        {
+//            // todo: mHost.mFragmentManager.startPendingDeferredFragments();
+//        }
     }
 
     public <D extends WorksController> D getLoader(int id)
@@ -668,13 +670,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     void doStart()
     {
         if (DEBUG) LOGGER.fine("Starting in " + this);
-        if (mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doStart when already started: " + this, e);
-            return;
-        }
+//        if (mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doStart when already started: " + this, e);
+//            return;
+//        }
 
         mStarted = true;
 
@@ -699,13 +701,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     void doStop()
     {
         if (DEBUG) LOGGER.fine("Stopping in " + this);
-        if (!mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doStop when not started: " + this, e);
-            return;
-        }
+//        if (!mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doStop when not started: " + this, e);
+//            return;
+//        }
 
         for (int i = mLoaders.size() - 1; i >= 0; i--)
         {
@@ -719,13 +721,14 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     void doRetain()
     {
         if (DEBUG) LOGGER.fine("Retaining in " + this);
-        if (!mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doRetain when not started: " + this, e);
-            return;
-        }
+//        if (!mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doRetain when not started: " + this, e);
+//            return;
+//        }
+
 
         mRetaining = true;
         mStarted = false;
@@ -782,11 +785,19 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mLoaders.clear();
         }
 
-        if (DEBUG) LOGGER.fine("Destroying Inactive in " + this);
-        for (int i = mInactiveLoaders.size() - 1; i >= 0; i--)
-        {
-            mInactiveLoaders.valueAt(i).destroy();
-        }
-        mInactiveLoaders.clear();
+//        if (DEBUG) LOGGER.fine("Destroying Inactive in " + this);
+//        for (int i = mInactiveLoaders.size() - 1; i >= 0; i--)
+//        {
+//            mInactiveLoaders.valueAt(i).destroy();
+//        }
+//        mInactiveLoaders.clear();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "WorksControllerManager[" + Integer.toString(System.identityHashCode(this), Character.MAX_RADIX) +
+                "#mLoaders=" + mLoaders +
+                ']';
     }
 }

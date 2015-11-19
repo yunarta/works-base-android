@@ -3,6 +3,7 @@ package com.mobilesolutionworks.android.app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import java.util.logging.Logger;
 
@@ -11,7 +12,9 @@ import java.util.logging.Logger;
  */
 public class WorksFragment extends Fragment
 {
-    protected final Logger LOGGER = Logger.getLogger(getClass().getName());
+    private static final boolean DEBUG  = WorksBaseConfig.DEBUG;
+
+    protected final      Logger  LOGGER = Logger.getLogger(getClass().getName());
 
     private static int sInstanceCount;
 
@@ -29,6 +32,8 @@ public class WorksFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        if (DEBUG) Log.d("/!", this + " FRAGMENT ON CREATE\n===\n");
+
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null)
         {
@@ -42,6 +47,8 @@ public class WorksFragment extends Fragment
         WorksActivity activity = (WorksActivity) getActivity();
         mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
         mHandler = new Handler();
+
+        mHost.dispatchCreate();
     }
 
     public void onSaveInstanceState(Bundle bundle)
@@ -53,6 +60,7 @@ public class WorksFragment extends Fragment
     @Override
     public void onStart()
     {
+        if (DEBUG) Log.d("/!", this + " FRAGMENT ON START\n===\n");
         mHost.dispatchStart();
         super.onStart();
     }
@@ -87,6 +95,7 @@ public class WorksFragment extends Fragment
     @Override
     public void onDestroy()
     {
+        if (DEBUG) Log.d("/!", this + " FRAGMENT ON DESTROY\n===\n");
         mHost.dispatchDestroy();
         super.onDestroy();
     }

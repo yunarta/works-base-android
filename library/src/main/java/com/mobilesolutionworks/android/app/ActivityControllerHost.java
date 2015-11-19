@@ -61,6 +61,11 @@ public class ActivityControllerHost // <Host>
         return mHost.getControllerManager();
     }
 
+    public void dispatchPostCreate()
+    {
+        mHost.reportControllerPostCreate();
+    }
+
     public void dispatchStart()
     {
         mStopped = false;

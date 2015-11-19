@@ -3,6 +3,7 @@ package com.mobilesolutionworks.android.app;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
@@ -14,6 +15,8 @@ import bolts.TaskCompletionSource;
  */
 public class ControllerHostCallback // <Host>
 {
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
+
     final Activity mActivity;
 
     final Context mContext;
@@ -24,8 +27,8 @@ public class ControllerHostCallback // <Host>
 
     private boolean mRetainLoaders;
 
-    private Task<Boolean>                 mRetainLoadersTask;
     private TaskCompletionSource<Boolean> mRetainLoadersTCS;
+    private TaskCompletionSource<Boolean> mCheckLoaderTCS;
 
     /**
      * The controller manager for the fragment host
@@ -46,7 +49,7 @@ public class ControllerHostCallback // <Host>
         mHandler = handler;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();
-        mRetainLoadersTask = mRetainLoadersTCS.getTask();
+        mCheckLoaderTCS = new TaskCompletionSource<>();
     }
 
 //    public abstract Host onGetHost();
@@ -108,7 +111,16 @@ public class ControllerHostCallback // <Host>
 
     Task<Boolean> getRetainLoadersTask()
     {
-        return mRetainLoadersTask;
+        return mRetainLoadersTCS.getTask();
+    }
+
+    void reportControllerPostCreate()
+    {
+        mCheckLoaderTCS.trySetResult(true);
+    }
+
+    Task<Boolean> getPostCreateTask() {
+        return mCheckLoaderTCS.getTask();
     }
 
     void doControllerStart()
@@ -203,6 +215,7 @@ public class ControllerHostCallback // <Host>
     // onRetainNonConfigurationInstance
     SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig()
     {
+        if (DEBUG) Log.d("/!", "RETAINLOADERNONCONFIG\n===\n");
         boolean retainLoaders = false;
         if (mAllLoaderManagers != null)
         {

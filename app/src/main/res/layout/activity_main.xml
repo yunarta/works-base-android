@@ -29,7 +29,7 @@
 
         <fragment
             android:id="@+id/fragment"
-            android:name="com.mobilesolutionworks.android.works.MainActivityFragment"
+            android:name="com.mobilesolutionworks.android.works.BWCHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"

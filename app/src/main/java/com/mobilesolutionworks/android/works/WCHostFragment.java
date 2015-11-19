@@ -12,7 +12,7 @@ import com.mobilesolutionworks.android.app.WorksFragment;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivity2Fragment extends WorksFragment
+public class WCHostFragment extends WorksFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
