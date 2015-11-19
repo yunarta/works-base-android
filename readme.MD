@@ -1,10 +1,8 @@
 # Works Base Android
-===
 
 Base library for new upcoming library for Works libraries for Android as well as base for building Android projects.
 
 # Features
-===
 
 ## Works Controller
 Works Controller is a class that you can utilise for 
@@ -86,6 +84,5 @@ With WorksController, since it maintain the persistence within, it can be used t
 The question might arise in which, why the continuation had to be re-initialised the inner class, every time during onCreate rather than within the onLogin flow. The reason being is that we need to always re-initialise function related to the Fragment, as the Fragment was destroyed during transition, and previous inner class will still bound the the previous Fragment instance.
 
 # Known Issues
-===
 
 * Right now during device rotation, sometime there a warning exception being printed out in logcat. I'm still looking for the right way to fix that issue entirely.
