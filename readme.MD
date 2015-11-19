@@ -84,3 +84,8 @@ As can be seen in the usage above, usually we put a dialog as indicator of backg
 With WorksController, since it maintain the persistence within, it can be used to store the background operation, request and task state, and what to do when the task is done. 
 
 The question might arise in which, why the continuation had to be re-initialised the inner class, every time during onCreate rather than within the onLogin flow. The reason being is that we need to always re-initialise function related to the Fragment, as the Fragment was destroyed during transition, and previous inner class will still bound the the previous Fragment instance.
+
+# Known Issues
+===
+
+* Right now during device rotation, sometime there a warning exception being printed out in logcat. I'm still looking for the right way to fix that issue entirely.
