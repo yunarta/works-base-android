@@ -1,18 +1,30 @@
 package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+
+import java.util.logging.Logger;
 
 /**
  * Created by yunarta on 19/11/15.
  */
 public class WorksFragment extends Fragment
 {
+    protected final Logger LOGGER = Logger.getLogger(getClass().getName());
+
     private static int sInstanceCount;
 
     String mInstanceName;
 
     FragmentControllerHost mHost;
+
+    Handler mHandler;
+
+    public Handler getHandler()
+    {
+        return mHandler;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -29,6 +41,7 @@ public class WorksFragment extends Fragment
 
         WorksActivity activity = (WorksActivity) getActivity();
         mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
+        mHandler = new Handler();
     }
 
     public void onSaveInstanceState(Bundle bundle)
