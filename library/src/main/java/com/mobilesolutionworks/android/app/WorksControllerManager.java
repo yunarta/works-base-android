@@ -16,7 +16,7 @@ public abstract class WorksControllerManager
     {
         D onCreateController(int id, Bundle args);
 
-        void onCreated(int id, D loader);
+        void onCreated(int id, D controller);
 
         void onReset(D loader);
     }
@@ -46,7 +46,7 @@ public abstract class WorksControllerManager
         return mWho;
     }
 
-    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<WorksController> callback);
+    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
 
     public abstract void destroyController(int id);
 

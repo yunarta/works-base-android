@@ -12,12 +12,12 @@ import java.util.logging.Level;
  */
 public class WorksControllerManagerImpl extends WorksControllerManager
 {
-    final class ControllerInfo // implements WorksController.OnLoadCompleteListener<Object>, WorksController.OnLoadCanceledListener<Object>
+    final class ControllerInfo<T extends WorksController> // implements WorksController.OnLoadCompleteListener<Object>, WorksController.OnLoadCanceledListener<Object>
     {
         final int    mId;
         final Bundle mArgs;
-        ControllerCallbacks<WorksController> mCallbacks;
-        WorksController                      mLoader;
+        ControllerCallbacks<T> mCallbacks;
+        T                      mLoader;
 
 //        boolean mHaveData;
 //        boolean mDeliveredData;
@@ -35,7 +35,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
         // ControllerInfo mPendingLoader;
 
-        public ControllerInfo(int id, Bundle args, ControllerCallbacks<WorksController> callbacks)
+        public ControllerInfo(int id, Bundle args, ControllerCallbacks<T> callbacks)
         {
             mId = id;
             mArgs = args;
@@ -336,7 +336,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //            }
 //        }
 
-        void callOnLoadFinished(WorksController loader)
+        void callOnLoadFinished(T loader)
         {
             if (mCallbacks != null)
             {
@@ -463,7 +463,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         super(host, who);
     }
 
-    private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<WorksController> callback)
+    private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
     {
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
         WorksController loader = callback.onCreateController(id, args);
@@ -473,8 +473,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         return info;
     }
 
-    private ControllerInfo createAndInstallLoader(int id, Bundle args,
-                                                  ControllerCallbacks<WorksController> callback)
+    private ControllerInfo createAndInstallLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
     {
         try
         {
@@ -502,7 +501,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         }
     }
 
-    public <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<WorksController> callback)
+    public <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback)
     {
         if (mCreatingLoader)
         {
