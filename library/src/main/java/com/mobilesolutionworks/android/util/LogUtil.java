@@ -244,7 +244,10 @@ public class LogUtil
                 loggerName = loggerName.substring(loggerName.lastIndexOf(".") + 1);
                 loggerName = "!" + loggerName;
 
-                String message = Thread.currentThread() + " " + record.getMessage();
+                String message;
+
+//                message = Thread.currentThread() + " " + record.getMessage();
+                message = record.getMessage();
                 if (level == Level.SEVERE)
                 {
                     Log.e(loggerName, message, record.getThrown());

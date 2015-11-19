@@ -5,21 +5,23 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import bolts.Continuation;
-import bolts.Task;
+
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.app.WorksFragment;
-import com.mobilesolutionworks.android.bolts.BoltsWorkController;
+import com.mobilesolutionworks.android.bolts.BoltsWorksController;
 import com.mobilesolutionworks.android.exe.WorksExecutor;
 
 import java.util.concurrent.Callable;
+
+import bolts.Continuation;
+import bolts.Task;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class BoltsActivityFragment extends WorksFragment
 {
-    private BoltsWorkController mBwc;
+    private BoltsWorksController mBwc;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -28,8 +30,8 @@ public class BoltsActivityFragment extends WorksFragment
 
         WorksControllerManager manager = getControllerManager();
 
-        mBwc = manager.initController(0, null, new BoltsWorkController.ControllerCallbacks());
-        mBwc.setContinuation("login", new BoltsWorkController.ContinuationFactory<Boolean>()
+        mBwc = manager.initController(0, null, new BoltsWorksController.ControllerCallbacks());
+        mBwc.setContinuation("login", new BoltsWorksController.ContinuationFactory<Boolean>()
         {
             @Override
             public Task<Boolean> continueWith(Task<Boolean> task)

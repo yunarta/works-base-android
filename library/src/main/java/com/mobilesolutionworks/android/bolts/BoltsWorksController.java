@@ -1,9 +1,7 @@
 package com.mobilesolutionworks.android.bolts;
 
 import android.os.Bundle;
-import bolts.Continuation;
-import bolts.Task;
-import bolts.TaskCompletionSource;
+
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
@@ -11,10 +9,14 @@ import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import bolts.Continuation;
+import bolts.Task;
+import bolts.TaskCompletionSource;
+
 /**
  * Created by yunarta on 19/11/15.
  */
-public class BoltsWorkController extends WorksController
+public class BoltsWorksController extends WorksController
 {
     SimpleArrayMap<String, ContinuationFactory> mFactories;
 
@@ -24,10 +26,12 @@ public class BoltsWorkController extends WorksController
 
     TaskCompletionSource mDiplayTCS;
 
-    public BoltsWorkController()
+    public BoltsWorksController()
     {
         mFactories = new SimpleArrayMap<>();
         mRegisteredTask = new HashSet<>();
+
+        mDiplayTCS = new TaskCompletionSource();
     }
 
     public void setContinuation(String requestCode, ContinuationFactory factory)
@@ -127,25 +131,25 @@ public class BoltsWorkController extends WorksController
         Task<Result> continueWith(Task<Result> task);
     }
 
-    public static class ControllerCallbacks implements WorksControllerManager.ControllerCallbacks<BoltsWorkController>
+    public static class ControllerCallbacks implements WorksControllerManager.ControllerCallbacks<BoltsWorksController>
     {
-        BoltsWorkController mController;
+        BoltsWorksController mController;
 
         @Override
-        public BoltsWorkController onCreateController(int id, Bundle args)
+        public BoltsWorksController onCreateController(int id, Bundle args)
         {
-            mController = new BoltsWorkController();
+            mController = new BoltsWorksController();
             return mController;
         }
 
         @Override
-        public void onCreated(int id, BoltsWorkController loader)
+        public void onCreated(int id, BoltsWorksController loader)
         {
 
         }
 
         @Override
-        public void onReset(BoltsWorkController loader)
+        public void onReset(BoltsWorksController loader)
         {
 
         }

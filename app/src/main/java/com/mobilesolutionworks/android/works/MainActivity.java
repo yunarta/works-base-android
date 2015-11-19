@@ -25,13 +25,17 @@ public class MainActivity extends WorksActivity
             public void onClick(View view)
             {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.addToBackStack(null).replace(R.id.fragment_container, new MainActivity2Fragment()).commit();
+                ft.addToBackStack(null).replace(R.id.fragment_container, new WCHostFragment()).commit();
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             }
         });
 
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, new BWCHostFragment()).commit();
+        }
 //        WorksControllerManager manager = getControllerManager();
 //        Log.d("/!", "manager.mWho = " + manager.who());
     }

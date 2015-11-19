@@ -3,6 +3,7 @@ package com.mobilesolutionworks.android.app;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
@@ -14,6 +15,8 @@ import bolts.TaskCompletionSource;
  */
 public class ControllerHostCallback // <Host>
 {
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
+
     final Activity mActivity;
 
     final Context mContext;
@@ -24,8 +27,8 @@ public class ControllerHostCallback // <Host>
 
     private boolean mRetainLoaders;
 
-    private Task<Boolean>                 mRetainLoadersTask;
     private TaskCompletionSource<Boolean> mRetainLoadersTCS;
+    private TaskCompletionSource<Boolean> mCheckLoaderTCS;
 
     /**
      * The controller manager for the fragment host
@@ -39,6 +42,8 @@ public class ControllerHostCallback // <Host>
      */
     private boolean mLoadersStarted;
 
+    private int mHostState;
+
     ControllerHostCallback(Activity activity, Context context, Handler handler)
     {
         mActivity = activity;
@@ -46,7 +51,7 @@ public class ControllerHostCallback // <Host>
         mHandler = handler;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();
-        mRetainLoadersTask = mRetainLoadersTCS.getTask();
+        mCheckLoaderTCS = new TaskCompletionSource<>();
     }
 
 //    public abstract Host onGetHost();
@@ -59,11 +64,11 @@ public class ControllerHostCallback // <Host>
         }
 
         mCheckedForLoaderManager = true;
-        mLoaderManager = getControllerManager("(root)", mLoadersStarted, true /*create*/);
+        mLoaderManager = getControllerManager("(root)", mHostState, true /*create*/);
         return mLoaderManager;
     }
 
-    WorksControllerManager getControllerManager(String who, boolean started, boolean create)
+    WorksControllerManager getControllerManager(String who, int state, boolean create)
     {
         if (mAllLoaderManagers == null)
         {
@@ -75,12 +80,13 @@ public class ControllerHostCallback // <Host>
         {
             if (create)
             {
-                lm = new WorksControllerManagerImpl(who, this, started);
+                lm = new WorksControllerManagerImpl(who, this, state);
                 mAllLoaderManagers.put(who, lm);
             }
         }
         else
         {
+            lm.updateState(state);
             lm.updateHostController(this);
         }
         return lm;
@@ -92,7 +98,7 @@ public class ControllerHostCallback // <Host>
         if (mAllLoaderManagers != null)
         {
             WorksControllerManager lm = (WorksControllerManager) mAllLoaderManagers.get(who);
-            if (lm != null && !lm.mRetaining)
+            if (lm != null && !lm.isRetaining())
             {
                 lm.doDestroy();
                 mAllLoaderManagers.remove(who);
@@ -106,9 +112,19 @@ public class ControllerHostCallback // <Host>
         return mRetainLoaders;
     }
 
+    @NonNull
     Task<Boolean> getRetainLoadersTask()
     {
-        return mRetainLoadersTask;
+        return mRetainLoadersTCS.getTask();
+    }
+
+    void reportControllerPostCreate()
+    {
+        mCheckLoaderTCS.trySetResult(true);
+    }
+
+    Task<Boolean> getPostCreateTask() {
+        return mCheckLoaderTCS.getTask();
     }
 
     void doControllerStart()
@@ -125,8 +141,8 @@ public class ControllerHostCallback // <Host>
         }
         else if (!mCheckedForLoaderManager)
         {
-            mLoaderManager = getControllerManager("(root)", mLoadersStarted, false);
-            // the returned loader manager may be a new one, so we have to start it
+            mLoaderManager = getControllerManager("(root)", mHostState, false);
+            // the returned loader manager may be a new one, so we have to create it
             if ((mLoaderManager != null) && (!mLoaderManager.mStarted))
             {
                 mLoaderManager.doStart();
@@ -145,6 +161,7 @@ public class ControllerHostCallback // <Host>
             {
                 loaders[i] = mAllLoaderManagers.valueAt(i);
             }
+
             for (int i = 0; i < N; i++)
             {
                 WorksControllerManager lm = loaders[i];
@@ -217,7 +234,7 @@ public class ControllerHostCallback // <Host>
             for (int i = 0; i < N; i++)
             {
                 WorksControllerManager lm = loaders[i];
-                if (lm.mRetaining)
+                if (lm.isRetaining())
                 {
                     retainLoaders = true;
                 }

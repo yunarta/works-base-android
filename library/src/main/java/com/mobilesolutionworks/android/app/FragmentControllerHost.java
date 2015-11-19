@@ -1,5 +1,9 @@
 package com.mobilesolutionworks.android.app;
 
+import android.util.Log;
+
+import java.lang.ref.WeakReference;
+
 import bolts.Continuation;
 import bolts.Task;
 
@@ -8,20 +12,74 @@ import bolts.Task;
  */
 public class FragmentControllerHost
 {
-    private ControllerHostCallback mHost;
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
     WorksControllerManager mLoaderManager;
 
-    boolean mLoadersStarted;
+    ControllerHostCallback mHost;
+
+    String mWho;
 
     boolean mCheckedForLoaderManager;
 
-    private String mWho;
+    boolean mRetainerAttached;
+
+    int mHostState;
+    int mCheckingState;
+
+    WeakReference<FragmentHostCallback> mFragmentHostCallback;
 
     public FragmentControllerHost(String who, ActivityControllerHost host)
     {
         mWho = who;
         mHost = host.mHost;
+    }
+
+    private void addToRetainerChain()
+    {
+        if (!mRetainerAttached)
+        {
+            // we haven't been added to retainer chain, then we check whether we have a controller manager
+            final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
+            if (loaderManager != null)
+            {
+                mRetainerAttached = true;
+                mHost.getRetainLoadersTask().continueWith(new Continuation<Boolean, Object>()
+                {
+                    @Override
+                    public Object then(Task<Boolean> task) throws Exception
+                    {
+                        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null)
+                        {
+                            loaderManager.setFragmentHostCallback(mFragmentHostCallback.get());
+                        }
+
+                        boolean retain = task.getResult();
+                        if (retain || loaderManager.isFragmentRetaining())
+                        {
+                            loaderManager.doRetain();
+                        }
+                        else
+                        {
+                            loaderManager.doDestroy();
+                        }
+
+                        return null;
+                    }
+                }).continueWith(new Continuation<Object, Object>()
+                {
+                    @Override
+                    public Object then(Task<Object> task) throws Exception
+                    {
+                        if (task.isFaulted())
+                        {
+                            Log.d("/!@#", "error", task.getError());
+                        }
+                        return null;
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -36,97 +94,145 @@ public class FragmentControllerHost
 
         if (mHost == null)
         {
-            throw new IllegalStateException("Fragment " + this + " not attached to Activity");
+            throw new IllegalStateException("Fragment " + FragmentControllerHost.this + " not attached to Activity");
         }
-        mCheckedForLoaderManager = true;
-        mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, true);
-        return mLoaderManager;
+
+        try
+        {
+            mCheckedForLoaderManager = true;
+
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, true);
+
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
+
+            return mLoaderManager;
+        }
+        finally
+        {
+            // controller manager created, therefore we will put the controller on retain loader chain
+            addToRetainerChain();
+        }
+    }
+
+    /**
+     * android.app.Fragment#setRetainInstance(boolean) may be called at any time,
+     * then if a loader created we put into retainer chain if retain is true
+     *
+     * @param retain android.app.Fragment#setRetainInstance(boolean) retain value.
+     * @see android.app.Fragment#setRetainInstance(boolean)
+     */
+    public void dispatchRetainInstance(boolean retain)
+    {
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
+        if (mLoaderManager != null)
+        {
+            mLoaderManager.mFragmentRetaining = retain;
+            addToRetainerChain();
+        }
+    }
+
+    public void dispatchCreate()
+    {
+        mHostState = HostState.CREATED;
+        mCheckingState = HostState.CREATED;
+
+        // this is post checking for non-retained fragment in back stack where onCreate will be called and we check
+        // whether there's a controller manager is created in onCreate() of Fragment
+        mHost.getPostCreateTask().continueWith(new Continuation<Boolean, Object>()
+        {
+            @Override
+            public Object then(Task<Boolean> task) throws Exception
+            {
+                addToRetainerChain();
+                return null;
+            }
+        });
     }
 
     public void dispatchStart()
     {
-        if (!mLoadersStarted)
-        {
-            mLoadersStarted = true;
-            if (!mCheckedForLoaderManager)
-            {
-                mCheckedForLoaderManager = true;
-                mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, false);
-            }
+        mHostState = HostState.START;
 
-            if (mLoaderManager != null)
-            {
-                mLoaderManager.doStart();
-            }
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
         }
 
-        performStart();
+        if (mLoaderManager != null)
+        {
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
+        }
     }
 
     public void dispatchResume()
     {
+        mHostState = HostState.RESUME;
+
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
         if (mLoaderManager != null)
         {
-            mLoaderManager.doResume();
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
         }
     }
 
-
-    void performStart()
+    public void dispatchPause()
     {
+        mHostState = HostState.PAUSED;
+
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
         if (mLoaderManager != null)
         {
-            mLoaderManager.doReportStart();
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
         }
     }
 
-
-    public void dispatchStop(boolean retain)
+    public void dispatchStop()
     {
-        if (mLoadersStarted)
+        mHostState = HostState.STOP;
+
+        if (!mCheckedForLoaderManager)
         {
-            mLoadersStarted = false;
-            if (!mCheckedForLoaderManager)
-            {
-                mCheckedForLoaderManager = true;
-                mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, false);
-            }
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
 
-            if (mLoaderManager != null)
-            {
-                mHost.getRetainLoadersTask().continueWith(new Continuation<Boolean, Object>()
-                {
-                    @Override
-                    public Object then(Task<Boolean> task) throws Exception
-                    {
-                        boolean retain = task.getResult();
-                        if (retain)
-                        {
-                            mLoaderManager.doRetain();
-                        }
-                        else
-                        {
-                            mLoaderManager.doStop();
-                        }
+        if (mLoaderManager != null)
+        {
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
 
-                        return null;
-                    }
-                });
-
-//                if (/*retain || */mHost.getRetainLoaders())
-//                {
-//                    mLoaderManager.doRetain();
-//                }
-//                else
-//                {
-//                    mLoaderManager.doStop();
-//                }
-            }
+            addToRetainerChain();
         }
     }
 
     public void dispatchDestroyView()
     {
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
         if (mLoaderManager != null)
         {
             mLoaderManager.doReportNextStart();
@@ -135,15 +241,71 @@ public class FragmentControllerHost
 
     public void dispatchDestroy()
     {
+        mHostState = HostState.DESTROYED;
+
         if (!mCheckedForLoaderManager)
         {
             mCheckedForLoaderManager = true;
-            mLoaderManager = mHost.getControllerManager(mWho, mLoadersStarted, false);
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
         }
 
         if (mLoaderManager != null)
         {
-            mLoaderManager.doDestroy();
+            if (!mLoaderManager.isRetaining())
+            {
+                updateStates(mCheckingState, mHostState, mLoaderManager);
+                mCheckingState = mHostState;
+            }
         }
+    }
+
+    private void updateStates(int lastState, int newState, WorksControllerManager manager)
+    {
+        for (int state = lastState + 1; state <= newState; state++)
+        {
+            updateState(state, manager);
+        }
+    }
+
+    private void updateState(int state, WorksControllerManager manager)
+    {
+        switch (state)
+        {
+            default:
+            case HostState.CREATED:
+                break;
+
+            case HostState.START:
+                manager.doStart();
+//                mLoaderManager.doReportStart();
+                break;
+
+            case HostState.RESUME:
+                manager.doResume();
+                break;
+
+            case HostState.PAUSED:
+                manager.doPause();
+                break;
+
+            case HostState.STOP:
+                manager.doStop();
+                break;
+
+            case HostState.DESTROYED:
+                manager.doDestroy();
+                break;
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "FragmentControllerHost[mWho='" + mWho + '\'' + ']';
+    }
+
+    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
+    {
+        mFragmentHostCallback = new WeakReference<>(fragmentHostCallback);
     }
 }

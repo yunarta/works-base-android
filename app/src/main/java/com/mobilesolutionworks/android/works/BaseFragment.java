@@ -63,7 +63,7 @@ public class BaseFragment extends Fragment
     @Override
     public void onStop()
     {
-        mHost.dispatchStop(getActivity() != null);
+        mHost.dispatchStop();
         super.onStop();
     }
 

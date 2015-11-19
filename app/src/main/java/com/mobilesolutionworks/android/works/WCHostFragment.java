@@ -12,13 +12,30 @@ import com.mobilesolutionworks.android.app.WorksFragment;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivity2Fragment extends WorksFragment
+public class WCHostFragment extends WorksFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        createController();
+    }
+
+    private void createController()
+    {
         WorksControllerManager manager = getControllerManager();
         manager.initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
         {
@@ -40,12 +57,5 @@ public class MainActivity2Fragment extends WorksFragment
 
             }
         });
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 }

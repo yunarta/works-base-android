@@ -2,6 +2,7 @@ package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 
+import java.lang.ref.WeakReference;
 import java.util.logging.Logger;
 
 /**
@@ -9,23 +10,42 @@ import java.util.logging.Logger;
  */
 public abstract class WorksControllerManager
 {
+    private WeakReference<FragmentHostCallback> mFragmentHostCallback;
+
+    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
+    {
+        mFragmentHostCallback = new WeakReference<>(fragmentHostCallback);
+    }
+
+    public boolean isFragmentRetaining()
+    {
+        // if fragment is retaining, then controller manager is retaining
+        boolean mFragmentRetaining = false;
+        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null)
+        {
+            mFragmentRetaining = mFragmentHostCallback.get().isRetaining();
+        }
+
+        return mFragmentRetaining;
+    }
+
     /**
      * Callback interface for a client to interact with the manager.
      */
     public interface ControllerCallbacks<D extends WorksController>
     {
+
         D onCreateController(int id, Bundle args);
 
         void onCreated(int id, D controller);
 
         void onReset(D loader);
+
     }
 
     protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
 
     protected static final boolean DEBUG = false;
-
-    protected static final String TAG = "/!";
 
     final String mWho;
 
@@ -34,6 +54,13 @@ public abstract class WorksControllerManager
     boolean mStarted;
 
     boolean mRetaining;
+
+    public boolean isRetaining()
+    {
+        return mRetaining || isFragmentRetaining();
+    }
+
+    boolean mFragmentRetaining;
 
     public WorksControllerManager(ControllerHostCallback host, String who)
     {
@@ -55,9 +82,13 @@ public abstract class WorksControllerManager
         mHost = host;
     }
 
+    abstract void updateState(int state);
+
     abstract void doStart();
 
     abstract void doResume();
+
+    abstract void doPause();
 
     abstract void doStop();
 
