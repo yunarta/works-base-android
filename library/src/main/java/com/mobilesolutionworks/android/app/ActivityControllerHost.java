@@ -86,6 +86,11 @@ public class ActivityControllerHost // <Host>
         doReallyStop(false);
 
         mHost.doLoaderDestroy();
+
+        if (!mRetaining)
+        {
+            mHost.doAllLoaderDestroy();
+        }
     }
 
     void doReallyStop(boolean retaining)

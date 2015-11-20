@@ -92,6 +92,8 @@ public abstract class WorksControllerManager
 
     abstract void doStop();
 
+    abstract void doRelease();
+
     abstract void doRetain();
 
     abstract void finishRetain();
@@ -100,5 +102,5 @@ public abstract class WorksControllerManager
 
     abstract void doReportStart();
 
-    abstract void doDestroy();
+    abstract void doDestroy(boolean release);
 }

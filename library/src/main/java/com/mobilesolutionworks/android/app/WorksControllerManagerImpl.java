@@ -731,6 +731,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         }
     }
 
+    void doRelease() {
+//        mRetaining = RetainState.RELEASE;
+    }
+
     @Override
     void finishRetain()
     {
@@ -765,9 +769,9 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     }
 
     @Override
-    public void doDestroy()
+    public void doDestroy(boolean release)
     {
-        if (!isRetaining())
+        if (release || !isRetaining())
         {
             if (DEBUG) LOGGER.fine("Destroying controllers in " + this);
             for (int i = mControllers.size() - 1; i >= 0; i--)

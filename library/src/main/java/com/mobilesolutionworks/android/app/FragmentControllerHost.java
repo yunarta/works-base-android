@@ -55,13 +55,14 @@ public class FragmentControllerHost
                         }
 
                         boolean retain = task.getResult();
-                        if (retain || loaderManager.isFragmentRetaining())
+                        if (retain)// || loaderManager.isFragmentRetaining())
                         {
                             loaderManager.doRetain();
                         }
                         else
                         {
-                            loaderManager.doDestroy();
+//                            loaderManager.doRelease();
+                            loaderManager.doDestroy(false);
                         }
 
                         return null;
@@ -293,7 +294,7 @@ public class FragmentControllerHost
                 break;
 
             case HostState.DESTROYED:
-                manager.doDestroy();
+                manager.doDestroy(false);
                 break;
         }
     }
