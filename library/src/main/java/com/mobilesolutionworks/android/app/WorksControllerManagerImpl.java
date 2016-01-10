@@ -3,15 +3,17 @@ package com.mobilesolutionworks.android.app;
 import android.os.Bundle;
 import android.util.SparseArray;
 
+import com.mobilesolutionworks.android.app.v4.DebugUtils;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.util.logging.Level;
 
 /**
  * Created by yunarta on 16/11/15.
  */
 public class WorksControllerManagerImpl extends WorksControllerManager
 {
+
     final class ControllerInfo<T extends WorksController> // implements WorksController.OnLoadCompleteListener<Object>, WorksController.OnLoadCanceledListener<Object>
     {
         final int    mId;
@@ -31,6 +33,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         boolean mInfoReportNextStart;
         boolean mInfoDestroyed;
 
+        boolean mCreationPosted;
+
 //        boolean mListenerRegistered;
 
         // ControllerInfo mPendingLoader;
@@ -40,9 +44,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mId = id;
             mArgs = args;
             mCallbacks = callbacks;
+            mCreationPosted = true;
         }
 
-        void start()
+        void create()
         {
             if (mInfoRetaining && mInfoRetainingStarted)
             {
@@ -62,31 +67,69 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             mInfoStarted = true;
 
             if (DEBUG) LOGGER.fine("  Starting: " + this);
-            if (mLoader == null && mCallbacks != null)
-            {
-                mLoader = mCallbacks.onCreateController(mId, mArgs);
-                mLoader.onCreate();
-            }
+//            if (mLoader == null && mCallbacks != null)
+//            {
+//                mLoader = mCallbacks.onCreateController(mId, mArgs);
+//                mLoader.onCreate();
+//                mCreationPosted = true;
+//            }
 
             if (mLoader != null && mCallbacks != null)
             {
                 mCallbacks.onCreated(mId, mLoader);
+
+                if (mCreationPosted)
+                {
+                    mCreationPosted = false;
+                    updateStates(HostState.CREATED, mHostState, mLoader);
+                }
             }
 
-            if (mLoader != null/* && !mInfoReportNextStart*/)
-            {
-//                if (mLoader.getClass().isMemberClass() && !Modifier.isStatic(mLoader.getClass().getModifiers()))
-//                {
-//                    throw new IllegalArgumentException("Object returned from onCreateController must not be a non-static inner member class: " + mLoader);
-//                }
+        }
 
-//                if (!mListenerRegistered)
-//                {
-////                    mLoader.registerListener(mId, this);
-////                    mLoader.registerOnLoadCanceledListener(this);
-//                    mListenerRegistered = true;
-//                }
-//                mLoader.startLoading();
+        private void updateStates(int lastState, int newState, WorksController controller)
+        {
+            for (int state = lastState + 1; state <= newState; state++)
+            {
+                updateState(state, controller);
+            }
+        }
+
+        private void updateState(int state, WorksController controller)
+        {
+            switch (state)
+            {
+                default:
+                case HostState.CREATED:
+                    break;
+
+                case HostState.START:
+                    controller.onStart();
+//                mLoaderManager.doReportStart();
+                    break;
+
+                case HostState.RESUME:
+                    controller.onResume();
+                    break;
+
+                case HostState.PAUSED:
+                    controller.onPaused();
+                    break;
+
+                case HostState.STOP:
+                    controller.onStop();
+                    break;
+
+                case HostState.DESTROYED:
+                    controller.onDestroy();
+                    break;
+            }
+        }
+
+        void start()
+        {
+            if (mLoader != null)
+            {
                 mLoader.onStart();
             }
         }
@@ -95,10 +138,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         {
             if (DEBUG) LOGGER.fine("  Retaining: " + this);
 
-            if (mLoader != null)
-            {
-                mLoader.onPaused();
-            }
+//            if (mLoader != null)
+//            {
+//                mLoader.onPaused();
+//            }
 
             mInfoRetaining = true;
             mInfoRetainingStarted = mInfoStarted;
@@ -364,10 +407,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                     }
                 }
 //                mDeliveredData = true;
-                if (loader != null)
-                {
-                    loader.onStart();
-                }
+//                if (loader != null)
+//                {
+//                    loader.onStart();
+//                }
             }
         }
 
@@ -375,13 +418,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         public String toString()
         {
             StringBuilder sb = new StringBuilder(64);
-            sb.append("ControllerInfo{");
-            sb.append(Integer.toHexString(System.identityHashCode(this)));
+            sb.append("ControllerInfo[");
+            sb.append(Integer.toString(System.identityHashCode(this), Character.MAX_RADIX));
             sb.append(" #");
             sb.append(mId);
             sb.append(" : ");
-//            DebugUtils.buildShortClassTag(mLoader, sb);
-            sb.append("}}");
+            DebugUtils.buildShortClassTag(mLoader, sb);
+            sb.append("]]");
             return sb.toString();
         }
 
@@ -441,26 +484,34 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 //                mPendingLoader.dump(prefix + "  ", fd, writer, args);
 //            }
         }
+
+        public void pause()
+        {
+            if (mLoader != null) mLoader.onPaused();
+        }
     }
 
     // These are the currently active loaders.  A loader is here
     // from the time its load is started until it has been explicitly
     // stopped or restarted by the application.
-    final SparseArray<ControllerInfo> mLoaders = new SparseArray<ControllerInfo>();
+    final SparseArray<ControllerInfo> mControllers = new SparseArray<ControllerInfo>();
 
-    // These are previously run loaders.  This list is maintained internally
-    // to avoid destroying a loader while an application is still using it.
-    // It allows an application to restart a loader, but continue using its
-    // previously run loader until the new loader's data is available.
-    final SparseArray<ControllerInfo> mInactiveLoaders = new SparseArray<ControllerInfo>();
+//    // These are previously run loaders.  This list is maintained internally
+//    // to avoid destroying a loader while an application is still using it.
+//    // It allows an application to restart a loader, but continue using its
+//    // previously run loader until the new loader's data is available.
+//    final SparseArray<ControllerInfo> mInactiveLoaders = new SparseArray<ControllerInfo>();
 
     boolean mRetainingStarted;
 
     boolean mCreatingLoader;
 
-    public WorksControllerManagerImpl(String who, ControllerHostCallback host, boolean started)
+    private int mHostState;
+
+    public WorksControllerManagerImpl(String who, ControllerHostCallback host, int state)
     {
         super(host, who);
+        mHostState = state;
     }
 
     private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
@@ -491,13 +542,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
 
     void installLoader(ControllerInfo info)
     {
-        mLoaders.put(info.mId, info);
-        if (mStarted)
+        mControllers.put(info.mId, info);
+//        if (mStarted)
         {
-            // The activity will start all existing loaders in it's onStart(),
-            // so only start them here if we're past that point of the activitiy's
+            // The activity will create all existing loaders in it's onStart(),
+            // so only create them here if we're past that point of the activitiy's
             // life cycle
-            info.start();
+            info.create();
         }
     }
 
@@ -508,7 +559,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             throw new IllegalStateException("Called while creating a loader");
         }
 
-        ControllerInfo info = mLoaders.get(id);
+        ControllerInfo info = mControllers.get(id);
 
         if (DEBUG) LOGGER.fine("initController in " + this + ": args=" + args);
 
@@ -533,77 +584,6 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         return (D) info.mLoader;
     }
 
-//    public <D> WorksController<D> restartLoader(int id, Bundle args, WorksControllerManager.ControllerCallbacks<D> callback)
-//    {
-//        if (mCreatingLoader)
-//        {
-//            throw new IllegalStateException("Called while creating a loader");
-//        }
-//
-//        ControllerInfo info = mLoaders.get(id);
-//        if (info != null)
-//        {
-//            ControllerInfo inactive = mInactiveLoaders.get(id);
-//            if (inactive != null)
-//            {
-//                if (info.mHaveData)
-//                {
-//                    // This loader now has data...  we are probably being
-//                    // called from within onLoadComplete, where we haven't
-//                    // yet destroyed the last inactive loader.  So just do
-//                    // that now.
-//                    if (DEBUG) LOGGER.fine("  Removing last inactive loader: " + info);
-//                    inactive.mDeliveredData = false;
-//                    inactive.destroy();
-//                    info.mLoader.abandon();
-//                    mInactiveLoaders.put(id, info);
-//                }
-//                else
-//                {
-//                    // We already have an inactive loader for this ID that we are
-//                    // waiting for!  What to do, what to do...
-//                    if (!info.mStarted)
-//                    {
-//                        // The current Loader has not been started...  we thus
-//                        // have no reason to keep it around, so bam, slam,
-//                        // thank-you-ma'am.
-//                        if (DEBUG) LOGGER.fine("  Current loader is stopped; replacing");
-//                        mLoaders.put(id, null);
-//                        info.destroy();
-//                    }
-//                    else
-//                    {
-//                        // Now we have three active loaders... we'll queue
-//                        // up this request to be processed once one of the other loaders
-//                        // finishes or is canceled.
-//                        if (DEBUG) LOGGER.fine("  Current loader is running; attempting to cancel");
-//                        info.cancel();
-//                        if (info.mPendingLoader != null)
-//                        {
-//                            if (DEBUG) LOGGER.fine("  Removing pending loader: " + info.mPendingLoader);
-//                            info.mPendingLoader.destroy();
-//                            info.mPendingLoader = null;
-//                        }
-//                        if (DEBUG) LOGGER.fine("  Enqueuing as new pending loader");
-//                        info.mPendingLoader = createLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
-//                        return (WorksController<D>) info.mPendingLoader.mLoader;
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                // Keep track of the previous instance of this loader so we can destroy
-//                // it when the new one completes.
-//                if (DEBUG) LOGGER.fine("  Making last loader inactive: " + info);
-//                info.mLoader.abandon();
-//                mInactiveLoaders.put(id, info);
-//            }
-//        }
-//
-//        info = createAndInstallLoader(id, args, (WorksControllerManager.ControllerCallbacks<Object>) callback);
-//        return (WorksController<D>) info.mLoader;
-//    }
-
     public void destroyController(int id)
     {
         if (mCreatingLoader)
@@ -612,24 +592,31 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         }
 
         if (DEBUG) LOGGER.fine("destroyController in " + this + " of " + id);
-        int idx = mLoaders.indexOfKey(id);
+        int idx = mControllers.indexOfKey(id);
         if (idx >= 0)
         {
-            ControllerInfo info = mLoaders.valueAt(idx);
-            mLoaders.removeAt(idx);
+            ControllerInfo info = mControllers.valueAt(idx);
+            mControllers.removeAt(idx);
             info.destroy();
         }
-        idx = mInactiveLoaders.indexOfKey(id);
-        if (idx >= 0)
-        {
-            ControllerInfo info = mInactiveLoaders.valueAt(idx);
-            mInactiveLoaders.removeAt(idx);
-            info.destroy();
-        }
-        if (mHost != null && !hasRunningLoaders())
-        {
-            // todo: mHost.mFragmentManager.startPendingDeferredFragments();
-        }
+
+//        idx = mInactiveLoaders.indexOfKey(id);
+//        if (idx >= 0)
+//        {
+//            ControllerInfo info = mInactiveLoaders.valueAt(idx);
+//            mInactiveLoaders.removeAt(idx);
+//            info.destroy();
+//        }
+//        if (mHost != null && !hasRunningLoaders())
+//        {
+//            // todo: mHost.mFragmentManager.startPendingDeferredFragments();
+//        }
+    }
+
+    @Override
+    void updateState(int state)
+    {
+        mHostState = state;
     }
 
     public <D extends WorksController> D getLoader(int id)
@@ -639,7 +626,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             throw new IllegalStateException("Called while creating a loader");
         }
 
-        ControllerInfo controllerInfo = mLoaders.get(id);
+        ControllerInfo controllerInfo = mControllers.get(id);
         if (controllerInfo != null)
         {
 //            if (controllerInfo.mPendingLoader != null)
@@ -655,10 +642,10 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     public boolean hasRunningLoaders()
     {
         boolean   loadersRunning = false;
-        final int count          = mLoaders.size();
+        final int count          = mControllers.size();
         for (int i = 0; i < count; i++)
         {
-            final ControllerInfo li = mLoaders.valueAt(i);
+            final ControllerInfo li = mControllers.valueAt(i);
             loadersRunning |= li.mInfoStarted/* && !li.mDeliveredData*/;
         }
         return loadersRunning;
@@ -668,30 +655,39 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     void doStart()
     {
         if (DEBUG) LOGGER.fine("Starting in " + this);
-        if (mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doStart when already started: " + this, e);
-            return;
-        }
+//        if (mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doStart when already started: " + this, e);
+//            return;
+//        }
 
         mStarted = true;
 
-        // Call out to sub classes so they can start their loaders
+        // Call out to sub classes so they can create their loaders
         // Let the existing loaders know that we want to be notified when a load is complete
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).start();
+            mControllers.valueAt(i).start();
         }
     }
 
     @Override
     void doResume()
     {
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).resume();
+            mControllers.valueAt(i).resume();
+        }
+    }
+
+    @Override
+    void doPause()
+    {
+        for (int i = mControllers.size() - 1; i >= 0; i--)
+        {
+            mControllers.valueAt(i).pause();
         }
     }
 
@@ -699,54 +695,57 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     void doStop()
     {
         if (DEBUG) LOGGER.fine("Stopping in " + this);
-        if (!mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doStop when not started: " + this, e);
-            return;
-        }
+//        if (!mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doStop when not started: " + this, e);
+//            return;
+//        }
 
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).stop();
+            mControllers.valueAt(i).stop();
         }
         mStarted = false;
-
     }
 
     @Override
     void doRetain()
     {
         if (DEBUG) LOGGER.fine("Retaining in " + this);
-        if (!mStarted)
-        {
-            RuntimeException e = new RuntimeException("here");
-            e.fillInStackTrace();
-            LOGGER.log(Level.WARNING, "Called doRetain when not started: " + this, e);
-            return;
-        }
+//        if (!mStarted)
+//        {
+//            RuntimeException e = new RuntimeException("here");
+//            e.fillInStackTrace();
+//            LOGGER.log(Level.WARNING, "Called doRetain when not started: " + this, e);
+//            return;
+//        }
+
 
         mRetaining = true;
         mStarted = false;
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).retain();
+            mControllers.valueAt(i).retain();
         }
+    }
 
+    void doRelease() {
+//        mRetaining = RetainState.RELEASE;
     }
 
     @Override
     void finishRetain()
     {
-        if (mRetaining)
+        if (isRetaining())
         {
             if (DEBUG) LOGGER.fine("Finished Retaining in " + this);
 
             mRetaining = false;
-            for (int i = mLoaders.size() - 1; i >= 0; i--)
+            for (int i = mControllers.size() - 1; i >= 0; i--)
             {
-                mLoaders.valueAt(i).finishRetain();
+                mControllers.valueAt(i).finishRetain();
             }
         }
     }
@@ -754,39 +753,40 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     @Override
     void doReportNextStart()
     {
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).mInfoReportNextStart = true;
+            mControllers.valueAt(i).mInfoReportNextStart = true;
         }
     }
 
     @Override
     void doReportStart()
     {
-        for (int i = mLoaders.size() - 1; i >= 0; i--)
+        for (int i = mControllers.size() - 1; i >= 0; i--)
         {
-            mLoaders.valueAt(i).reportStart();
+            mControllers.valueAt(i).reportStart();
         }
     }
 
     @Override
-    public void doDestroy()
+    public void doDestroy(boolean release)
     {
-        if (!mRetaining)
+        if (release || !isRetaining())
         {
-            if (DEBUG) LOGGER.fine("Destroying Active in " + this);
-            for (int i = mLoaders.size() - 1; i >= 0; i--)
+            if (DEBUG) LOGGER.fine("Destroying controllers in " + this);
+            for (int i = mControllers.size() - 1; i >= 0; i--)
             {
-                mLoaders.valueAt(i).destroy();
+                mControllers.valueAt(i).destroy();
             }
-            mLoaders.clear();
+            mControllers.clear();
         }
+    }
 
-        if (DEBUG) LOGGER.fine("Destroying Inactive in " + this);
-        for (int i = mInactiveLoaders.size() - 1; i >= 0; i--)
-        {
-            mInactiveLoaders.valueAt(i).destroy();
-        }
-        mInactiveLoaders.clear();
+    @Override
+    public String toString()
+    {
+        return "WorksControllerManager[" + Integer.toString(System.identityHashCode(this), Character.MAX_RADIX) +
+                "#mLoaders=" + mControllers +
+                ']';
     }
 }

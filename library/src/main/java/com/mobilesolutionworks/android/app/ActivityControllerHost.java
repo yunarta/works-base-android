@@ -61,6 +61,11 @@ public class ActivityControllerHost // <Host>
         return mHost.getControllerManager();
     }
 
+    public void dispatchPostCreate()
+    {
+        mHost.reportControllerPostCreate();
+    }
+
     public void dispatchStart()
     {
         mStopped = false;
@@ -81,6 +86,11 @@ public class ActivityControllerHost // <Host>
         doReallyStop(false);
 
         mHost.doLoaderDestroy();
+
+        if (!mRetaining)
+        {
+            mHost.doAllLoaderDestroy();
+        }
     }
 
     void doReallyStop(boolean retaining)

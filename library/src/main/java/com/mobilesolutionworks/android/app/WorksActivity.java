@@ -10,6 +10,8 @@ import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
  */
 public class WorksActivity extends AppCompatActivity
 {
+    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
+
     ActivityControllerHost mHost;
 
     @SuppressWarnings("deprecation")
@@ -24,6 +26,13 @@ public class WorksActivity extends AppCompatActivity
         }
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
+        mHost.dispatchPostCreate();
+        super.onPostCreate(savedInstanceState);
     }
 
     @Override
