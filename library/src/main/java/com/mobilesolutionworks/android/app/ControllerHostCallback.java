@@ -13,7 +13,7 @@ import bolts.TaskCompletionSource;
 /**
  * Created by yunarta on 16/11/15.
  */
-public class ControllerHostCallback // <Host>
+public class ControllerHostCallback
 {
     private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
@@ -44,11 +44,14 @@ public class ControllerHostCallback // <Host>
 
     private int mHostState;
 
+    private boolean mReallyDestroy;
+
     ControllerHostCallback(Activity activity, Context context, Handler handler)
     {
         mActivity = activity;
         mContext = context;
         mHandler = handler;
+        mReallyDestroy = true;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();
         mCheckLoaderTCS = new TaskCompletionSource<>();
@@ -97,10 +100,10 @@ public class ControllerHostCallback // <Host>
         //Log.v(TAG, "invalidateSupportFragment: who=" + who);
         if (mAllLoaderManagers != null)
         {
-            WorksControllerManager lm = (WorksControllerManager) mAllLoaderManagers.get(who);
+            WorksControllerManager lm = mAllLoaderManagers.get(who);
             if (lm != null && !lm.isRetaining())
             {
-                lm.doDestroy();
+                lm.doDestroy(false);
                 mAllLoaderManagers.remove(who);
             }
         }
@@ -123,7 +126,8 @@ public class ControllerHostCallback // <Host>
         mCheckLoaderTCS.trySetResult(true);
     }
 
-    Task<Boolean> getPostCreateTask() {
+    Task<Boolean> getPostCreateTask()
+    {
         return mCheckLoaderTCS.getTask();
     }
 
@@ -214,12 +218,13 @@ public class ControllerHostCallback // <Host>
         {
             return;
         }
-        mLoaderManager.doDestroy();
+        mLoaderManager.doDestroy(false);
     }
 
     // onRetainNonConfigurationInstance
     SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig()
     {
+        mReallyDestroy = false;
         boolean retainLoaders = false;
         if (mAllLoaderManagers != null)
         {
@@ -231,6 +236,7 @@ public class ControllerHostCallback // <Host>
             {
                 loaders[i] = mAllLoaderManagers.valueAt(i);
             }
+
             for (int i = 0; i < N; i++)
             {
                 WorksControllerManager lm = loaders[i];
@@ -240,7 +246,7 @@ public class ControllerHostCallback // <Host>
                 }
                 else
                 {
-                    lm.doDestroy();
+                    lm.doDestroy(false);
                     mAllLoaderManagers.remove(lm.mWho);
                 }
             }
@@ -250,6 +256,7 @@ public class ControllerHostCallback // <Host>
         {
             return mAllLoaderManagers;
         }
+
         return null;
     }
 
@@ -257,5 +264,26 @@ public class ControllerHostCallback // <Host>
     void restoreLoaderNonConfig(SimpleArrayMap<String, WorksControllerManager> loaderManagers)
     {
         mAllLoaderManagers = loaderManagers;
+    }
+
+    public void doAllLoaderDestroy()
+    {
+        if (mAllLoaderManagers != null)
+        {
+            // prune out any loader managers that were already stopped and so
+            // have nothing useful to retain.
+            final int N = mAllLoaderManagers.size();
+            WorksControllerManager loaders[] = new WorksControllerManager[N];
+            for (int i = N - 1; i >= 0; i--)
+            {
+                loaders[i] = mAllLoaderManagers.valueAt(i);
+            }
+
+            for (int i = 0; i < N; i++)
+            {
+                WorksControllerManager lm = loaders[i];
+                lm.doDestroy(true);
+            }
+        }
     }
 }

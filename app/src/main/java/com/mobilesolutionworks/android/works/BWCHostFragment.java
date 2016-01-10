@@ -1,7 +1,6 @@
 package com.mobilesolutionworks.android.works;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ public class BWCHostFragment extends WorksFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+//        setRetainInstance(true);
 
         WorksControllerManager manager = getControllerManager();
         manager.initController(0, null, new BoltsWorksController.ControllerCallbacks());
