@@ -57,7 +57,7 @@ public abstract class WorksControllerManager
 
     public boolean isRetaining()
     {
-        return mRetaining || isFragmentRetaining();
+        return true; // mRetaining || isFragmentRetaining();
     }
 
     boolean mFragmentRetaining;
