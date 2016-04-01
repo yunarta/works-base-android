@@ -1,7 +1,5 @@
 package com.mobilesolutionworks.android.app;
 
-import android.app.Activity;
-
 import java.util.logging.Logger;
 
 /**
@@ -15,17 +13,17 @@ public class WorksController
 
     private final String mHash = Integer.toString(System.identityHashCode(this), Character.MAX_RADIX);
 
-    private Activity mActivity;
-
-    public void updateActivity(Activity activity)
-    {
-        mActivity = activity;
-    }
-
-    public Activity getActivity()
-    {
-        return mActivity;
-    }
+//    private Activity mActivity;
+//
+//    public void updateActivity(Activity activity)
+//    {
+//        mActivity = activity;
+//    }
+//
+//    public Activity getActivity()
+//    {
+//        return mActivity;
+//    }
 
     public void onCreate()
     {
@@ -56,6 +54,7 @@ public class WorksController
     {
         if (DEBUG) logger.fine("  [" + mHash + "] onDestroy");
     }
+
 
 
 
