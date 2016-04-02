@@ -7,14 +7,18 @@ import android.support.annotation.NonNull;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 
 /**
  * Created by yunarta on 16/11/15.
  */
-public class ControllerHostCallback
-{
+public class ControllerHostCallback {
+
     private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
     final Activity mActivity;
@@ -44,14 +48,10 @@ public class ControllerHostCallback
 
     private int mHostState;
 
-    private boolean mReallyDestroy;
-
-    ControllerHostCallback(Activity activity, Context context, Handler handler)
-    {
+    ControllerHostCallback(Activity activity, Context context, Handler handler) {
         mActivity = activity;
         mContext = context;
         mHandler = handler;
-        mReallyDestroy = true;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();
         mCheckLoaderTCS = new TaskCompletionSource<>();
@@ -59,10 +59,8 @@ public class ControllerHostCallback
 
 //    public abstract Host onGetHost();
 
-    WorksControllerManager getControllerManager()
-    {
-        if (mLoaderManager != null)
-        {
+    WorksControllerManager getControllerManager() {
+        if (mLoaderManager != null) {
             return mLoaderManager;
         }
 
@@ -71,38 +69,29 @@ public class ControllerHostCallback
         return mLoaderManager;
     }
 
-    WorksControllerManager getControllerManager(String who, int state, boolean create)
-    {
-        if (mAllLoaderManagers == null)
-        {
+    WorksControllerManager getControllerManager(String who, int state, boolean create) {
+        if (mAllLoaderManagers == null) {
             mAllLoaderManagers = new SimpleArrayMap<>();
         }
 
         WorksControllerManager lm = mAllLoaderManagers.get(who);
-        if (lm == null)
-        {
-            if (create)
-            {
+        if (lm == null) {
+            if (create) {
                 lm = new WorksControllerManagerImpl(who, this, state);
                 mAllLoaderManagers.put(who, lm);
             }
-        }
-        else
-        {
+        } else {
             lm.updateState(state);
             lm.updateHostController(this);
         }
         return lm;
     }
 
-    void inactivateFragment(String who)
-    {
+    void inactivateFragment(String who) {
         //Log.v(TAG, "invalidateSupportFragment: who=" + who);
-        if (mAllLoaderManagers != null)
-        {
+        if (mAllLoaderManagers != null) {
             WorksControllerManager lm = mAllLoaderManagers.get(who);
-            if (lm != null && !lm.isRetaining())
-            {
+            if (lm != null && !lm.isRetaining()) {
                 lm.doDestroy(false);
                 mAllLoaderManagers.remove(who);
             }
@@ -110,64 +99,52 @@ public class ControllerHostCallback
     }
 
     /// this is called in fragment
-    boolean getRetainLoaders()
-    {
+    boolean getRetainLoaders() {
         return mRetainLoaders;
     }
 
     @NonNull
-    Task<Boolean> getRetainLoadersTask()
-    {
+    Task<Boolean> getRetainLoadersTask() {
         return mRetainLoadersTCS.getTask();
     }
 
-    void reportControllerPostCreate()
-    {
+    void reportControllerPostCreate() {
         mCheckLoaderTCS.trySetResult(true);
     }
 
-    Task<Boolean> getPostCreateTask()
-    {
+    Task<Boolean> getPostCreateTask() {
         return mCheckLoaderTCS.getTask();
     }
 
-    void doControllerStart()
-    {
-        if (mLoadersStarted)
-        {
-            return;
-        }
-        mLoadersStarted = true;
+    void doControllerStart() {
+        if (!mLoadersStarted) {
+            mLoadersStarted = true;
 
-        if (mLoaderManager != null)
-        {
-            mLoaderManager.doStart();
-        }
-        else if (!mCheckedForLoaderManager)
-        {
-            mLoaderManager = getControllerManager("(root)", mHostState, false);
-            // the returned loader manager may be a new one, so we have to create it
-            if ((mLoaderManager != null) && (!mLoaderManager.mStarted))
-            {
+            if (mLoaderManager != null) {
                 mLoaderManager.doStart();
+            } else if (!mCheckedForLoaderManager) {
+                mLoaderManager = getControllerManager("(root)", mHostState, false);
+
+                // the returned loader manager may be a new one, so we have to create it
+                if ((mLoaderManager != null) && (!mLoaderManager.mStarted)) {
+                    mLoaderManager.doStart();
+                }
             }
+            mCheckedForLoaderManager = true;
         }
-        mCheckedForLoaderManager = true;
     }
 
-    void reportControllerStart()
-    {
-        if (mAllLoaderManagers != null)
-        {
+    void reportControllerStart() {
+        if (mAllLoaderManagers != null) {
             final int N = mAllLoaderManagers.size();
             WorksControllerManager loaders[] = new WorksControllerManager[N];
-            for (int i = N - 1; i >= 0; i--)
-            {
+
+            for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = mAllLoaderManagers.valueAt(i);
             }
 
-            for (int i = 0; i < N; i++)
-            {
+
+            for (int i = 0; i < N; i++) {
                 WorksControllerManager lm = loaders[i];
                 lm.finishRetain();
                 lm.doReportStart();
@@ -176,84 +153,74 @@ public class ControllerHostCallback
     }
 
     // retain -- whether to stop the loader or retain it
-    void doControllerStop(boolean retain)
-    {
+    void doLoaderStop(boolean retain) {
         mRetainLoaders = retain;
         mRetainLoadersTCS.trySetResult(mRetainLoaders);
 
-        if (mLoaderManager == null)
-        {
-            return;
+        ArrayList<WeakReference<FragmentControllerHost>> missings = new ArrayList<>();
+        for (WeakReference<FragmentControllerHost> host : mFragmentControllerHosts) {
+            FragmentControllerHost controllerHost = host.get();
+            if (controllerHost == null) {
+                missings.add(host);
+            } else {
+                controllerHost.dispatchReallyStop(retain);
+            }
         }
 
-        if (!mLoadersStarted)
-        {
-            return;
-        }
-        mLoadersStarted = false;
+        mFragmentControllerHosts.removeAll(missings);
 
-        if (retain)
-        {
-            mLoaderManager.doRetain();
-        }
-        else
-        {
-            mLoaderManager.doStop();
+        if (mLoaderManager != null) {
+            if (mLoadersStarted) {
+                mLoadersStarted = false;
+
+                if (retain) {
+                    mLoaderManager.doRetain();
+                } else {
+                    mLoaderManager.doStop();
+                }
+            }
         }
     }
 
     @Deprecated
-    void doLoaderRetain()
-    {
-        if (mLoaderManager == null)
-        {
+    void doLoaderRetain() {
+        if (mLoaderManager == null) {
             return;
         }
         mLoaderManager.doRetain();
     }
 
-    void doLoaderDestroy()
-    {
-        if (mLoaderManager == null)
-        {
-            return;
+    void doLoaderDestroy() {
+        if (mLoaderManager != null) {
+            mLoaderManager.doDestroy(false);
         }
-        mLoaderManager.doDestroy(false);
     }
 
     // onRetainNonConfigurationInstance
-    SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig()
-    {
-        mReallyDestroy = false;
+    SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig() {
         boolean retainLoaders = false;
-        if (mAllLoaderManagers != null)
-        {
+        if (mAllLoaderManagers != null) {
             // prune out any loader managers that were already stopped and so
             // have nothing useful to retain.
             final int N = mAllLoaderManagers.size();
             WorksControllerManager loaders[] = new WorksControllerManager[N];
-            for (int i = N - 1; i >= 0; i--)
-            {
+
+            for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = mAllLoaderManagers.valueAt(i);
             }
 
-            for (int i = 0; i < N; i++)
-            {
+            for (int i = 0; i < N; i++) {
                 WorksControllerManager lm = loaders[i];
-                if (lm.isRetaining())
-                {
+                if (lm.isRetaining()) {
                     retainLoaders = true;
-                }
-                else
-                {
+                } else {
                     lm.doDestroy(false);
                     mAllLoaderManagers.remove(lm.mWho);
                 }
             }
         }
 
-        if (retainLoaders)
-        {
+        if (retainLoaders) {
             return mAllLoaderManagers;
         }
 
@@ -261,29 +228,30 @@ public class ControllerHostCallback
     }
 
     // onCreate
-    void restoreLoaderNonConfig(SimpleArrayMap<String, WorksControllerManager> loaderManagers)
-    {
+    void restoreLoaderNonConfig(SimpleArrayMap<String, WorksControllerManager> loaderManagers) {
         mAllLoaderManagers = loaderManagers;
     }
 
-    public void doAllLoaderDestroy()
-    {
-        if (mAllLoaderManagers != null)
-        {
+    public void doAllLoaderDestroy() {
+        if (mAllLoaderManagers != null) {
             // prune out any loader managers that were already stopped and so
             // have nothing useful to retain.
             final int N = mAllLoaderManagers.size();
             WorksControllerManager loaders[] = new WorksControllerManager[N];
-            for (int i = N - 1; i >= 0; i--)
-            {
+            for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = mAllLoaderManagers.valueAt(i);
             }
 
-            for (int i = 0; i < N; i++)
-            {
+            for (int i = 0; i < N; i++) {
                 WorksControllerManager lm = loaders[i];
                 lm.doDestroy(true);
             }
         }
+    }
+
+    List<WeakReference<FragmentControllerHost>> mFragmentControllerHosts = new ArrayList<>();
+
+    public void addFragmentControllerHost(FragmentControllerHost host) {
+        mFragmentControllerHosts.add(new WeakReference<>(host));
     }
 }

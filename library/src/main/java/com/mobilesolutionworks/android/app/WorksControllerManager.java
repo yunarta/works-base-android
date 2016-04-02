@@ -2,7 +2,6 @@ package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 
-import java.lang.ref.WeakReference;
 import java.util.logging.Logger;
 
 /**
@@ -10,24 +9,24 @@ import java.util.logging.Logger;
  */
 public abstract class WorksControllerManager
 {
-    private WeakReference<FragmentHostCallback> mFragmentHostCallback;
-
-    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
-    {
-        mFragmentHostCallback = new WeakReference<>(fragmentHostCallback);
-    }
-
-    public boolean isFragmentRetaining()
-    {
-        // if fragment is retaining, then controller manager is retaining
-        boolean mFragmentRetaining = false;
-        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null)
-        {
-            mFragmentRetaining = mFragmentHostCallback.get().isRetaining();
-        }
-
-        return mFragmentRetaining;
-    }
+//    private WeakReference<FragmentHostCallback> mFragmentHostCallback;
+//
+//    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
+//    {
+//        mFragmentHostCallback = new WeakReference<>(fragmentHostCallback);
+//    }
+//
+//    public boolean isFragmentRetaining()
+//    {
+//        // if fragment is retaining, then controller manager is retaining
+//        boolean mFragmentRetaining = false;
+//        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null)
+//        {
+//            mFragmentRetaining = mFragmentHostCallback.get().isRetaining();
+//        }
+//
+//        return mFragmentRetaining;
+//    }
 
     /**
      * Callback interface for a client to interact with the manager.
@@ -45,7 +44,7 @@ public abstract class WorksControllerManager
 
     protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
 
-    protected static final boolean DEBUG = false;
+    protected static final boolean DEBUG = true;
 
     final String mWho;
 
@@ -57,7 +56,8 @@ public abstract class WorksControllerManager
 
     public boolean isRetaining()
     {
-        return true; // mRetaining || isFragmentRetaining();
+//        return true; // mRetaining || isFragmentRetaining();
+        return mRetaining; // || isFragmentRetaining();
     }
 
     boolean mFragmentRetaining;

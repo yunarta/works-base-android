@@ -1,8 +1,8 @@
 package com.mobilesolutionworks.android.bolts;
 
-import bolts.Task;
-
 import java.util.Arrays;
+
+import bolts.Task;
 
 /**
  * Created by yunarta on 31/1/16.

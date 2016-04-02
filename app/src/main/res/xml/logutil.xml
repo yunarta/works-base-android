@@ -1,0 +1,20 @@
+<loggable>
+    <package
+        name="jp.co.vcube.android.gate"
+        level="FINEST"
+        prefix="[gate]"
+        shortName="true">
+    </package>
+    <package
+        name="com.mobilesolutionworks.android"
+        level="FINEST"
+        prefix="[works]"
+        shortName="true">
+    </package>
+    <package
+        name="com.vcube.gate2"
+        level="FINEST"
+        prefix="[gate]"
+        shortName="true">
+    </package>
+</loggable>

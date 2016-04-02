@@ -1,11 +1,12 @@
 package com.mobilesolutionworks.android.bolts;
 
 import android.util.SparseArray;
-import bolts.Task;
-import bolts.TaskCompletionSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import bolts.Task;
+import bolts.TaskCompletionSource;
 
 /**
  * Created by yunarta on 24/1/16.

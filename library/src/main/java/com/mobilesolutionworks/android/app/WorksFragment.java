@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 /**
  * Created by yunarta on 19/11/15.
  */
-public class WorksFragment extends Fragment
-{
+public class WorksFragment extends Fragment {
+
     private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
     protected final Logger LOGGER = Logger.getLogger(getClass().getName());
@@ -25,21 +25,16 @@ public class WorksFragment extends Fragment
 
     FragmentHostCallback mFragmentHostCallback;
 
-    public Handler getHandler()
-    {
+    public Handler getHandler() {
         return mHandler;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             mInstanceName = savedInstanceState.getString(":fragment:instance");
-        }
-        else
-        {
+        } else {
             mInstanceName = "fragment:" + (++sInstanceCount);
         }
 
@@ -48,76 +43,65 @@ public class WorksFragment extends Fragment
         WorksActivity activity = (WorksActivity) getActivity();
 
         mHost = new FragmentControllerHost(mInstanceName, activity.getControllerHost());
-        mFragmentHostCallback = new FragmentHostCallback()
-        {
+        mFragmentHostCallback = new FragmentHostCallback() {
             @Override
-            public boolean isRetaining()
-            {
+            public boolean isRetaining() {
                 return getRetainInstance();
             }
         };
 
-        mHost.setFragmentHostCallback(mFragmentHostCallback);
+//        mHost.setFragmentHostCallback(mFragmentHostCallback);
         mHost.dispatchCreate();
     }
 
     @Override
-    public void setRetainInstance(boolean retain)
-    {
+    public void setRetainInstance(boolean retain) {
         mHost.dispatchRetainInstance(retain);
         super.setRetainInstance(retain);
     }
 
-    public void onSaveInstanceState(Bundle bundle)
-    {
+    public void onSaveInstanceState(Bundle bundle) {
         bundle.putString(":fragment:instance", mInstanceName);
         super.onSaveInstanceState(bundle);
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         mHost.dispatchStart();
         super.onStart();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         mHost.dispatchResume();
         super.onResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         mHost.dispatchPause();
         super.onPause();
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         mHost.dispatchStop();
         super.onStop();
     }
 
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         mHost.dispatchDestroyView();
         super.onDestroyView();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mHost.dispatchDestroy();
         super.onDestroy();
     }
 
-    public WorksControllerManager getControllerManager()
-    {
+    public WorksControllerManager getControllerManager() {
         return mHost.getControllerManager();
     }
 

@@ -6,11 +6,15 @@ import android.os.Message;
 
 import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
+import java.util.logging.Logger;
+
 /**
  * Created by yunarta on 16/11/15.
  */
 public class ActivityControllerHost // <Host>
 {
+    public static final Logger LOGGER = Logger.getLogger(ActivityControllerHost.class.getName());
+
     private static final int MSG_REALLY_STOPPED = 1;
 
     ControllerHostCallback/*<Host>*/ mHost;
@@ -70,6 +74,7 @@ public class ActivityControllerHost // <Host>
     {
         mStopped = false;
         mReallyStopped = false;
+        mHandler.removeMessages(MSG_REALLY_STOPPED);
 
         mHost.doControllerStart();
         mHost.reportControllerStart();
@@ -84,13 +89,12 @@ public class ActivityControllerHost // <Host>
     public void dispatchDestroy()
     {
         doReallyStop(false);
-
         mHost.doLoaderDestroy();
 
-        if (!mRetaining)
-        {
-            mHost.doAllLoaderDestroy();
-        }
+//        if (!mRetaining)
+//        {
+//            mHost.doAllLoaderDestroy();
+//        }
     }
 
     void doReallyStop(boolean retaining)
@@ -106,7 +110,7 @@ public class ActivityControllerHost // <Host>
 
     private void onReallyStop()
     {
-        mHost.doControllerStop(mRetaining);
+        mHost.doLoaderStop(mRetaining);
     }
 
     public SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig()

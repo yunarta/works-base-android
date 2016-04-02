@@ -5,5 +5,5 @@ package com.mobilesolutionworks.android.app;
  */
 public class WorksBaseConfig
 {
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 }

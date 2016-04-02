@@ -1,6 +1,9 @@
 package com.mobilesolutionworks.android.works;
 
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,36 @@ public class WCHostFragment extends WorksFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        createController();
+
+        getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<String>() {
+            @Override
+            public Loader<String> onCreateLoader(int id, Bundle args) {
+                LOGGER.finest("onCreateLoader");
+                return new AsyncTaskLoader<String>(getActivity()) {
+                    @Override
+                    protected void onStartLoading() {
+                        super.onStartLoading();
+                        forceLoad();
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        return "ABC";
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<String> loader, String data) {
+                LOGGER.finest("onLoadFinished = " + data);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<String> loader) {
+
+            }
+        });
     }
 
     @Override
@@ -30,14 +63,11 @@ public class WCHostFragment extends WorksFragment
     public void onResume()
     {
         super.onResume();
-
-        createController();
     }
 
     private void createController()
     {
-        WorksControllerManager manager = getControllerManager();
-        manager.initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
+        getControllerManager().initController(0, null, new WorksControllerManager.ControllerCallbacks<WorksController>()
         {
             @Override
             public WorksController onCreateController(int id, Bundle args)

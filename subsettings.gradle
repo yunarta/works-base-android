@@ -1,2 +1,0 @@
-include ':works-base'
-project(':works-base').projectDir = new File('works-base/library')

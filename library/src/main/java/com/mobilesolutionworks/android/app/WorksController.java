@@ -27,32 +27,32 @@ public class WorksController
 
     public void onCreate()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onCreate");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onCreate");
     }
 
     public void onStart()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onStart");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onStart");
     }
 
     public void onPaused()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onPaused");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onPaused");
     }
 
     public void onResume()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onResume");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onResume");
     }
 
     public void onStop()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onStop");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onStop");
     }
 
     public void onDestroy()
     {
-        if (DEBUG) logger.fine("  [" + mHash + "] onDestroy");
+        if (DEBUG) logger.fine("  wc[" + mHash + "] onDestroy");
     }
 
 

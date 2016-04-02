@@ -392,10 +392,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 }
                 try
                 {
-                    if (DEBUG)
-                    {
-                        LOGGER.fine("  onCreated in " + loader);
-                    }
+                    if (DEBUG) LOGGER.fine("  onCreated in " + loader);
                     mCallbacks.onCreated(mId, loader);
                 }
                 finally
@@ -771,7 +768,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     @Override
     public void doDestroy(boolean release)
     {
-        if (release || !isRetaining())
+        if (/*release || */ !isRetaining())
         {
             if (DEBUG) LOGGER.fine("Destroying controllers in " + this);
             for (int i = mControllers.size() - 1; i >= 0; i--)
