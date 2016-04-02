@@ -9,7 +9,7 @@ public class WorksController
 {
     protected static final boolean DEBUG = true;
 
-    protected Logger logger = Logger.getLogger(getClass().getName());
+    protected static final Logger logger = Logger.getLogger(WorksController.class.getName());
 
     private final String mHash = Integer.toString(System.identityHashCode(this), Character.MAX_RADIX);
 
