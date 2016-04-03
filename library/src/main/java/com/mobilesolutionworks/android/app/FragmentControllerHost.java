@@ -63,14 +63,14 @@ public class FragmentControllerHost {
     }
 
     private void addToRetainerChain() {
-        if (!mRetainerAttached) {
-            // we haven't been added to retainer chain, then we check whether we have a controller manager
-            final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
-            if (loaderManager != null) {
-                mRetainerAttached = true;
-                mHost.getRetainLoadersTask().continueWith(mContinuation);
-            }
-        }
+//        if (!mRetainerAttached) {
+//            // we haven't been added to retainer chain, then we check whether we have a controller manager
+//            final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
+//            if (loaderManager != null) {
+//                mRetainerAttached = true;
+//                mHost.getRetainLoadersTask().continueWith(mContinuation);
+//            }
+//        }
     }
 
     /**
@@ -299,11 +299,12 @@ public class FragmentControllerHost {
 
     public void dispatchReallyStop(boolean retain) {
         final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
-        if (retain) // || loaderManager.isFragmentRetaining())
-        {
-            loaderManager.doRetain();
-        } else {
-            loaderManager.doStop();
+        if (loaderManager != null) {
+            if (retain) {
+                loaderManager.doRetain();
+            } else {
+                loaderManager.doStop();
+            }
         }
     }
 }

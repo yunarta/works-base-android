@@ -37,7 +37,7 @@ public class ActivityControllerHost // <Host>
                 case MSG_REALLY_STOPPED:
                     if (mStopped)
                     {
-                        doReallyStop(false);
+//                        doReallyStop(false);
                     }
                     break;
 

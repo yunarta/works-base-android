@@ -23,6 +23,35 @@ public class WCHostFragment extends WorksFragment
         super.onCreate(savedInstanceState);
         createController();
 
+        getActivity().getLoaderManager().initLoader(1, null, new android.app.LoaderManager.LoaderCallbacks<String>() {
+            @Override
+            public android.content.Loader<String> onCreateLoader(int id, Bundle args) {
+                LOGGER.finest("onCreateLoader2");
+                return new android.content.AsyncTaskLoader<String>(getActivity()) {
+                    @Override
+                    protected void onStartLoading() {
+                        super.onStartLoading();
+                        forceLoad();
+                    }
+
+                    @Override
+                    public String loadInBackground() {
+                        return "ABC";
+                    }
+                };
+
+            }
+
+            @Override
+            public void onLoadFinished(android.content.Loader<String> loader, String data) {
+
+            }
+
+            @Override
+            public void onLoaderReset(android.content.Loader<String> loader) {
+
+            }
+        });
         getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<String>() {
             @Override
             public Loader<String> onCreateLoader(int id, Bundle args) {
