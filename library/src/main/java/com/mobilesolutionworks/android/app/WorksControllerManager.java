@@ -64,7 +64,7 @@ public abstract class WorksControllerManager
 
     public WorksControllerManager(ControllerHostCallback host, String who)
     {
-        mHost = host;
+//        mHost = host;
         mWho = who;
     }
 
@@ -79,7 +79,7 @@ public abstract class WorksControllerManager
 
     void updateHostController(ControllerHostCallback host)
     {
-        mHost = host;
+//        mHost = host;
     }
 
     abstract void updateState(int state);

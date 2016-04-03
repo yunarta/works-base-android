@@ -32,6 +32,7 @@ public class ControllerHostCallback {
     private boolean mRetainLoaders;
 
     private TaskCompletionSource<Boolean> mRetainLoadersTCS;
+
     private TaskCompletionSource<Boolean> mCheckLoaderTCS;
 
     /**
@@ -48,9 +49,9 @@ public class ControllerHostCallback {
 
     private int mHostState;
 
-    ControllerHostCallback(Activity activity, Context context, Handler handler) {
+    ControllerHostCallback(Activity activity, Handler handler) {
         mActivity = activity;
-        mContext = context;
+        mContext = activity;
         mHandler = handler;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();

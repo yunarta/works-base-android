@@ -54,7 +54,7 @@ public class ActivityControllerHost // <Host>
 
     public ActivityControllerHost(Activity activity)
     {
-        mHost = new ControllerHostCallback(activity, activity, mHandler);
+        mHost = new ControllerHostCallback(activity, mHandler);
     }
 
     /**

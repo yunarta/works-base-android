@@ -13,6 +13,7 @@ import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
  * Created by yunarta on 19/11/15.
  */
 public class WorksActivity extends AppCompatActivity {
+
     private static final boolean DEBUG = WorksBaseConfig.DEBUG;
 
     ActivityControllerHost mHost;

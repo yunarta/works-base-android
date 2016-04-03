@@ -242,23 +242,25 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             {
                 if (DEBUG) LOGGER.fine("  Reseting: " + this);
                 String lastBecause = null;
-                if (mHost != null)
-                {
-//                    todo
-//                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onReset";
-                }
+
+//                if (mHost != null)
+//                {
+////                    todo
+////                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
+////                    mHost.mFragmentManager.mNoTransactionsBecause = "onReset";
+//                }
+
                 try
                 {
                     mCallbacks.onReset(mLoader);
                 }
                 finally
                 {
-                    if (mHost != null)
-                    {
-//                        todo
-//                        mHost.mFragmentManager.mNoTransactionsBecause = lastBecause;
-                    }
+//                    if (mHost != null)
+//                    {
+////                        todo
+////                        mHost.mFragmentManager.mNoTransactionsBecause = lastBecause;
+//                    }
                 }
             }
             mCallbacks = null;
@@ -384,12 +386,13 @@ public class WorksControllerManagerImpl extends WorksControllerManager
             if (mCallbacks != null)
             {
                 String lastBecause = null;
-                if (mHost != null)
-                {
-//                    todo
-//                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
-//                    mHost.mFragmentManager.mNoTransactionsBecause = "onCreated";
-                }
+//                if (mHost != null)
+//                {
+////                    todo
+////                    lastBecause = mHost.mFragmentManager.mNoTransactionsBecause;
+////                    mHost.mFragmentManager.mNoTransactionsBecause = "onCreated";
+//                }
+
                 try
                 {
                     if (DEBUG) LOGGER.fine("  onCreated in " + loader);
@@ -397,11 +400,11 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 }
                 finally
                 {
-                    if (mHost != null)
-                    {
-//                        todo
-//                        mHost.mFragmentManager.mNoTransactionsBecause = lastBecause;
-                    }
+//                    if (mHost != null)
+//                    {
+////                        todo
+////                        mHost.mFragmentManager.mNoTransactionsBecause = lastBecause;
+//                    }
                 }
 //                mDeliveredData = true;
 //                if (loader != null)
