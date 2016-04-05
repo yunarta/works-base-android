@@ -51,11 +51,11 @@ public class BoltsWorksController extends WorksController {
 
         task.continueWithTask(new Continuation() {
             @Override
-            public Object then(Task task) throws Exception {
+            public Object then(final Task task) throws Exception {
                 if (mIsPaused) {
                     return getDisplayTCS().continueWith(new Continuation() {
                         @Override
-                        public Object then(Task task) throws Exception {
+                        public Object then(Task ignored) throws Exception {
                             return task;
                         }
                     });
