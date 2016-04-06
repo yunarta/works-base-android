@@ -17,6 +17,7 @@ import bolts.TaskCompletionSource;
  * Created by yunarta on 19/11/15.
  */
 public class BoltsWorksController extends WorksController {
+
     SimpleArrayMap<String, ContinuationFactory> mFactories;
 
     Set<String> mRegisteredTask;
