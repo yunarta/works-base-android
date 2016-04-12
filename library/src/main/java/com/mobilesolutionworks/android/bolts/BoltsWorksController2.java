@@ -12,11 +12,13 @@ import bolts.TaskCompletionSource;
 /**
  * Created by yunarta on 19/11/15.
  */
-public class BoltsWorksController2 extends WorksController {
+public class BoltsWorksController2<Host> extends WorksController {
 
     boolean mIsPaused;
 
     TaskCompletionSource<Void> mDiplayTCS;
+
+    protected Host mHost;
 
     public BoltsWorksController2() {
         mDiplayTCS = new TaskCompletionSource<>();
@@ -40,8 +42,30 @@ public class BoltsWorksController2 extends WorksController {
         }, Task.UI_THREAD_EXECUTOR).continueWith(continuation);
     }
 
+    public <T> Task<T> createTask(Task<T> task) {
+        return task.continueWithTask(new Continuation<T, Task<T>>() {
+            @Override
+            public Task<T> then(final Task<T> finished) throws Exception {
+                if (mIsPaused) {
+                    return getDisplayTCS().continueWithTask(new Continuation<Void, Task<T>>() {
+                        @Override
+                        public Task<T> then(Task<Void> task) throws Exception {
+                            return finished;
+                        }
+                    });
+                } else {
+                    return finished;
+                }
+            }
+        }, Task.UI_THREAD_EXECUTOR);
+    }
+
     private Task<Void> getDisplayTCS() {
         return mDiplayTCS.getTask();
+    }
+
+    public void setHost(Host host) {
+        this.mHost = host;
     }
 
     @Override
