@@ -39,7 +39,29 @@ public abstract class WorksControllerManager
         void onCreated(int id, D controller);
 
         void onReset(D loader);
+    }
 
+    public interface CreateControllerCallback<D extends WorksController> {
+        D onCreateController(int id, Bundle args);
+    }
+
+    public static <D extends WorksController> ControllerCallbacks<D> createControllerOnly(final CreateControllerCallback<D> callback){
+        return new ControllerCallbacks<D>() {
+            @Override
+            public D onCreateController(int id, Bundle args) {
+                return callback.onCreateController(id, args);
+            }
+
+            @Override
+            public void onCreated(int id, D controller) {
+                // not used
+            }
+
+            @Override
+            public void onReset(D loader) {
+                // not used
+            }
+        };
     }
 
     protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
