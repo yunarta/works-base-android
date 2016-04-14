@@ -35,10 +35,10 @@ public class ActivityControllerHost // <Host>
             switch (msg.what)
             {
                 case MSG_REALLY_STOPPED:
-                    if (mStopped)
-                    {
-//                        doReallyStop(false);
-                    }
+//                    if (mStopped)
+//                    {
+////                        doReallyStop(false);
+//                    }
                     break;
 
 //                case MSG_RESUME_PENDING:

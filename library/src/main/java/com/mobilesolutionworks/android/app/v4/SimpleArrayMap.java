@@ -12,6 +12,7 @@ import java.util.Map;
  * class can be preferrable since it doesn't bring in any of the implementation of those
  * APIs, allowing that code to be stripped by ProGuard.
  */
+@SuppressWarnings("unchecked")
 public class SimpleArrayMap<K, V>
 {
     private static final boolean DEBUG = false;

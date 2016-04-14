@@ -494,7 +494,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
     // These are the currently active loaders.  A loader is here
     // from the time its load is started until it has been explicitly
     // stopped or restarted by the application.
-    final SparseArray<ControllerInfo> mControllers = new SparseArray<ControllerInfo>();
+    final SparseArray<ControllerInfo> mControllers = new SparseArray<>();
 
 //    // These are previously run loaders.  This list is maintained internally
 //    // to avoid destroying a loader while an application is still using it.

@@ -1,8 +1,5 @@
 package com.mobilesolutionworks.android.app;
 
-import bolts.Continuation;
-import bolts.Task;
-
 /**
  * Created by yunarta on 17/11/15.
  */

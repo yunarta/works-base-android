@@ -12,12 +12,14 @@ import java.util.Set;
  *
  * @hide
  */
+@SuppressWarnings({"NullableProblems", "SuspiciousMethodCalls", "unchecked"})
 abstract class MapCollections<K, V>
 {
     EntrySet         mEntrySet;
     KeySet           mKeySet;
     ValuesCollection mValues;
 
+    @SuppressWarnings("unchecked")
     final class ArrayIterator<T> implements Iterator<T>
     {
         final int mOffset;
@@ -60,6 +62,7 @@ abstract class MapCollections<K, V>
         }
     }
 
+    @SuppressWarnings("unchecked")
     final class MapIterator implements Iterator<Map.Entry<K, V>>, Map.Entry<K, V>
     {
         int mEnd;
@@ -170,6 +173,7 @@ abstract class MapCollections<K, V>
         }
     }
 
+    @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass", "NullableProblems"})
     final class EntrySet implements Set<Map.Entry<K, V>>
     {
         @Override
@@ -274,6 +278,7 @@ abstract class MapCollections<K, V>
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         @Override
         public boolean equals(Object object)
         {
@@ -295,6 +300,7 @@ abstract class MapCollections<K, V>
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     final class KeySet implements Set<K>
     {
 
@@ -337,7 +343,7 @@ abstract class MapCollections<K, V>
         @Override
         public Iterator<K> iterator()
         {
-            return new ArrayIterator<K>(0);
+            return new ArrayIterator<>(0);
         }
 
         @Override
@@ -382,6 +388,7 @@ abstract class MapCollections<K, V>
             return toArrayHelper(array, 0);
         }
 
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         @Override
         public boolean equals(Object object)
         {
@@ -401,6 +408,7 @@ abstract class MapCollections<K, V>
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     final class ValuesCollection implements Collection<V>
     {
 
@@ -451,7 +459,7 @@ abstract class MapCollections<K, V>
         @Override
         public Iterator<V> iterator()
         {
-            return new ArrayIterator<V>(1);
+            return new ArrayIterator<>(1);
         }
 
         @Override
