@@ -30,35 +30,35 @@ public class FragmentControllerHost {
 
 //    WeakReference<FragmentHostCallback> mFragmentHostCallback;
 
-    private Continuation<Boolean, Object> mContinuation;
+//    private Continuation<Boolean, Object> mContinuation;
 
     public FragmentControllerHost(String who, ActivityControllerHost host) {
         mWho = who;
         mHost = host.mHost;
 
         mHost.addFragmentControllerHost(this);
-        mContinuation = new Continuation<Boolean, Object>() {
-            @Override
-            public Object then(Task<Boolean> task) throws Exception {
-//                        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null) {
-//                            loaderManager.setFragmentHostCallback(mFragmentHostCallback.get());
-//                        }
-
-                boolean retain = task.getResult();
-
-                final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
-                if (retain) // || loaderManager.isFragmentRetaining())
-                {
-                    loaderManager.doRetain();
-                } else {
-//                            loaderManager.doRelease();
-                    loaderManager.doStop();
-//                            loaderManager.doDestroy(false);
-                }
-
-                return null;
-            }
-        };
+//        mContinuation = new Continuation<Boolean, Object>() {
+//            @Override
+//            public Object then(Task<Boolean> task) throws Exception {
+////                        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null) {
+////                            loaderManager.setFragmentHostCallback(mFragmentHostCallback.get());
+////                        }
+//
+//                boolean retain = task.getResult();
+//
+//                final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
+//                if (retain) // || loaderManager.isFragmentRetaining())
+//                {
+//                    loaderManager.doRetain();
+//                } else {
+////                            loaderManager.doRelease();
+//                    loaderManager.doStop();
+////                            loaderManager.doDestroy(false);
+//                }
+//
+//                return null;
+//            }
+//        };
 
     }
 

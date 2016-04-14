@@ -11,6 +11,7 @@ import bolts.TaskCompletionSource;
 /**
  * Created by yunarta on 24/1/16.
  */
+@SuppressWarnings("All")
 public class BoltsWaitForMultipleObjects {
 
     private final int mCount;

@@ -295,8 +295,6 @@ abstract class MapCollections<K, V>
         }
     }
 
-    ;
-
     final class KeySet implements Set<K>
     {
 
@@ -402,8 +400,6 @@ abstract class MapCollections<K, V>
             return result;
         }
     }
-
-    ;
 
     final class ValuesCollection implements Collection<V>
     {
@@ -526,8 +522,6 @@ abstract class MapCollections<K, V>
             return toArrayHelper(array, 1);
         }
     }
-
-    ;
 
     public static <K, V> boolean containsAllHelper(Map<K, V> map, Collection<?> collection)
     {

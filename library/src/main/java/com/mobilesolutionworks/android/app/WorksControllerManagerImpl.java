@@ -596,7 +596,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         if (idx >= 0)
         {
             ControllerInfo info = mControllers.valueAt(idx);
-            mControllers.removeAt(idx);
+            mControllers.remove(mControllers.keyAt(idx));
             info.destroy();
         }
 
