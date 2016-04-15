@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 /**
  * Created by yunarta on 18/11/15.
  */
-public abstract class WorksControllerManager
-{
+public abstract class WorksControllerManager {
 //    private WeakReference<FragmentHostCallback> mFragmentHostCallback;
 //
 //    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
@@ -31,8 +30,7 @@ public abstract class WorksControllerManager
     /**
      * Callback interface for a client to interact with the manager.
      */
-    public interface ControllerCallbacks<D extends WorksController>
-    {
+    public interface ControllerCallbacks<D extends WorksController> {
 
         D onCreateController(int id, Bundle args);
 
@@ -42,11 +40,45 @@ public abstract class WorksControllerManager
     }
 
     public interface CreateControllerCallback<D extends WorksController> {
+
         D onCreateController(int id, Bundle args);
     }
 
-    public static <D extends WorksController> ControllerCallbacks<D> createControllerOnly(final CreateControllerCallback<D> callback){
-        return new ControllerCallbacks<D>() {
+//    public static <D extends WorksController> ControllerCallbacks<D> createControllerOnly(final CreateControllerCallback<D> callback) {
+//    }
+
+    protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
+
+    protected static final boolean DEBUG = true;
+
+    final String mWho;
+
+    protected ControllerHostCallback mHost;
+
+    boolean mStarted;
+
+    boolean mRetaining;
+
+    public boolean isRetaining() {
+//        return true; // mRetaining || isFragmentRetaining();
+        return mRetaining; // || isFragmentRetaining();
+    }
+
+    boolean mFragmentRetaining;
+
+    public WorksControllerManager(ControllerHostCallback host, String who) {
+//        mHost = host;
+        mWho = who;
+    }
+
+    public String who() {
+        return mWho;
+    }
+
+    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
+
+    public <D extends WorksController> D createControllerOnly(int id, Bundle args, final CreateControllerCallback<D> callback) {
+        return initController(0, args, new ControllerCallbacks<D>() {
             @Override
             public D onCreateController(int id, Bundle args) {
                 return callback.onCreateController(id, args);
@@ -61,46 +93,12 @@ public abstract class WorksControllerManager
             public void onReset(D loader) {
                 // not used
             }
-        };
+        });
     }
-
-    protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
-
-    protected static final boolean DEBUG = true;
-
-    final String mWho;
-
-    protected ControllerHostCallback mHost;
-
-    boolean mStarted;
-
-    boolean mRetaining;
-
-    public boolean isRetaining()
-    {
-//        return true; // mRetaining || isFragmentRetaining();
-        return mRetaining; // || isFragmentRetaining();
-    }
-
-    boolean mFragmentRetaining;
-
-    public WorksControllerManager(ControllerHostCallback host, String who)
-    {
-//        mHost = host;
-        mWho = who;
-    }
-
-    public String who()
-    {
-        return mWho;
-    }
-
-    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
 
     public abstract void destroyController(int id);
 
-    void updateHostController(ControllerHostCallback host)
-    {
+    void updateHostController(ControllerHostCallback host) {
 //        mHost = host;
     }
 
