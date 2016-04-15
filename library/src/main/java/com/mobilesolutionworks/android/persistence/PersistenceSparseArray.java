@@ -6,6 +6,8 @@ import android.util.SparseArray;
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by yunarta on 6/3/16.
  */
@@ -25,11 +27,32 @@ public class PersistenceSparseArray extends WorksController {
         mInstances.put(name, object);
     }
 
-    public static abstract class ManagerCallback implements WorksControllerManager.ControllerCallbacks<PersistenceSparseArray> {
+    public interface OnSparseArrayCreated {
+
+        void onCreate(int id, PersistenceSparseArray controller);
+    }
+
+    public static class ManagerCallback implements WorksControllerManager.ControllerCallbacks<PersistenceSparseArray> {
+
+        WeakReference<OnSparseArrayCreated> mCallback;
+
+        public ManagerCallback(OnSparseArrayCreated callback) {
+            mCallback = new WeakReference<OnSparseArrayCreated>(callback);
+        }
 
         @Override
         public PersistenceSparseArray onCreateController(int id, Bundle args) {
             return new PersistenceSparseArray();
+        }
+
+        @Override
+        public void onCreated(int id, PersistenceSparseArray controller) {
+            if (mCallback != null) {
+                OnSparseArrayCreated callback = mCallback != null ? mCallback.get() : null;
+                if (callback != null) {
+                    callback.onCreate(id, controller);
+                }
+            }
         }
 
         @Override

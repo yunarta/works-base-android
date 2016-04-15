@@ -78,7 +78,7 @@ public abstract class WorksControllerManager {
     public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
 
     public <D extends WorksController> D createControllerOnly(int id, Bundle args, final CreateControllerCallback<D> callback) {
-        return initController(0, args, new ControllerCallbacks<D>() {
+        return initController(id, args, new ControllerCallbacks<D>() {
             @Override
             public D onCreateController(int id, Bundle args) {
                 return callback.onCreateController(id, args);
