@@ -153,35 +153,35 @@ public class FragmentControllerHost {
     }
 
     public void dispatchResume() {
-//        mHostState = HostState.RESUME;
-//
-//        if (!mCheckedForLoaderManager)
-//        {
-//            mCheckedForLoaderManager = true;
-//            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
-//        }
-//
-//        if (mLoaderManager != null)
-//        {
-//            updateStates(mCheckingState, mHostState, mLoaderManager);
-//            mCheckingState = mHostState;
-//        }
+        mHostState = HostState.RESUME;
+
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
+        if (mLoaderManager != null)
+        {
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
+        }
     }
 
     public void dispatchPause() {
-//        mHostState = HostState.PAUSED;
-//
-//        if (!mCheckedForLoaderManager)
-//        {
-//            mCheckedForLoaderManager = true;
-//            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
-//        }
-//
-//        if (mLoaderManager != null)
-//        {
-//            updateStates(mCheckingState, mHostState, mLoaderManager);
-//            mCheckingState = mHostState;
-//        }
+        mHostState = HostState.PAUSED;
+
+        if (!mCheckedForLoaderManager)
+        {
+            mCheckedForLoaderManager = true;
+            mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        }
+
+        if (mLoaderManager != null)
+        {
+            updateStates(mCheckingState, mHostState, mLoaderManager);
+            mCheckingState = mHostState;
+        }
     }
 
     public void dispatchStop() {
