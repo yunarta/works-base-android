@@ -251,9 +251,11 @@ public class FragmentControllerHost {
     }
 
     private void updateStates(int lastState, int newState, WorksControllerManager manager) {
-        for (int state = lastState + 1; state <= newState; state++) {
-            updateState(state, manager);
-        }
+//        for (int state = lastState + 1; state <= newState; state++) {
+//            updateState(state, manager);
+//        }
+        if (lastState != newState)
+        updateState(newState, manager);
     }
 
     private void updateState(int state, WorksControllerManager manager) {
