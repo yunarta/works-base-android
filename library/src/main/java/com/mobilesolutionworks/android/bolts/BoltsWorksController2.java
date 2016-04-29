@@ -1,13 +1,12 @@
 package com.mobilesolutionworks.android.bolts;
 
 import android.os.Bundle;
-
-import com.mobilesolutionworks.android.app.WorksController;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
-
+import android.os.Handler;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import com.mobilesolutionworks.android.app.WorksController;
+import com.mobilesolutionworks.android.app.WorksControllerManager;
 
 /**
  * Created by yunarta on 19/11/15.
@@ -19,6 +18,8 @@ public class BoltsWorksController2<Host> extends WorksController {
     TaskCompletionSource<Void> mDiplayTCS;
 
     protected Host mHost;
+
+    protected Handler mHandler;
 
     public BoltsWorksController2() {
         mDiplayTCS = new TaskCompletionSource<>();
@@ -113,4 +114,6 @@ public class BoltsWorksController2<Host> extends WorksController {
 
         }
     }
+
+
 }
