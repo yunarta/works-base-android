@@ -1,10 +1,35 @@
-apply plugin: 'java'
+apply plugin: 'com.android.library'
 
 group 'com.mobilesolutionworks'
 version '1.1.0'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    testOptions {
+        resultsDir = "${project.rootDir}/test/works-base"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
 
 configurations {
     provided
@@ -13,5 +38,7 @@ configurations {
 
 dependencies {
     provided fileTree(dir: 'libs', include: ['*.jar'])
+    provided 'com.android.support:appcompat-v7:23.3.0'
+
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
 }
