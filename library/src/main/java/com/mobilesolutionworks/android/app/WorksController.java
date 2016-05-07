@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class WorksController {
     protected static final boolean DEBUG = true;
 
-    protected static final Logger logger = Logger.getLogger(WorksController.class.getName());
+    private static final Logger WC_LOGGER = Logger.getLogger(WorksController.class.getName());
 
     private final String mHash = Integer.toString(System.identityHashCode(this), Character.MAX_RADIX);
 
@@ -30,27 +30,27 @@ public class WorksController {
 //    }
 
     public void onCreate() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onCreate");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onCreate");
     }
 
     public void onStart() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onStart");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onStart");
     }
 
     public void onPaused() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onPaused");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onPaused");
     }
 
     public void onResume() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onResume");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onResume");
     }
 
     public void onStop() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onStop");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onStop");
     }
 
     public void onDestroy() {
-        if (DEBUG) logger.fine("  wc[" + mHash + "] onDestroy");
+        if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onDestroy");
     }
 
     public Handler getHandler() {
