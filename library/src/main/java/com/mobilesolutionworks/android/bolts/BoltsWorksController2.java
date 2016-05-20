@@ -69,6 +69,10 @@ public class BoltsWorksController2<Host> extends WorksController {
         this.mHost = host;
     }
 
+    public Host getHost() {
+        return mHost;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
