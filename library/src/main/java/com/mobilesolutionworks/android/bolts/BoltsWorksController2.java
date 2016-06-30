@@ -19,8 +19,6 @@ public class BoltsWorksController2<Host> extends WorksController {
 
     protected Host mHost;
 
-    protected Handler mHandler;
-
     public BoltsWorksController2() {
         mDiplayTCS = new TaskCompletionSource<>();
     }

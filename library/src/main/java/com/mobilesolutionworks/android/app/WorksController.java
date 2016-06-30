@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import java.util.logging.Logger;
@@ -55,7 +56,7 @@ public class WorksController {
 
     public Handler getHandler() {
         if (mHandler == null) {
-            mHandler = new Handler(new HandlerImpl(this));
+            mHandler = new Handler(Looper.myLooper(), new HandlerImpl(this));
         }
 
         return mHandler;
