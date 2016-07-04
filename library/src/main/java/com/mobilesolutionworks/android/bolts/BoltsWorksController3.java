@@ -82,6 +82,10 @@ public class BoltsWorksController3<Host> extends WorksController {
         mDiplayTCS.trySetResult(null);
     }
 
+    protected void onHostUpdated() {
+
+    }
+
     @Override
     public void onPaused() {
         super.onPaused();
@@ -111,6 +115,7 @@ public class BoltsWorksController3<Host> extends WorksController {
         @Override
         public void onCreated(int id, Controller controller) {
             controller.setHost(mHost);
+            controller.onHostUpdated();
         }
 
         @Override

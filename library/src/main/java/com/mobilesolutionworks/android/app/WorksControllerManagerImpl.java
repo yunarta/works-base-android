@@ -514,11 +514,12 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         mHostState = state;
     }
 
-    private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
+    private <T extends WorksController> ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<T> callback)
     {
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
-        WorksController loader = callback.onCreateController(id, args);
+        T loader = callback.onCreateController(id, args);
         info.mLoader = loader;
+        callback.onCreated(id, loader);
         loader.onCreate();
 
         return info;
