@@ -1,21 +1,18 @@
 package com.mobilesolutionworks.android.app;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Message;
-
-import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
+import android.support.v4.util.SimpleArrayMap;
 
 import java.util.logging.Logger;
 
 /**
+ * Host class of work base to be installed in Activity.
+ * <p>
  * Created by yunarta on 16/11/15.
  */
 public class ActivityControllerHost // <Host>
 {
-    public static final Logger LOGGER = Logger.getLogger(ActivityControllerHost.class.getName());
-
-    private static final int MSG_REALLY_STOPPED = 1;
+    private static final Logger LOGGER = Logger.getLogger(ActivityControllerHost.class.getName());
 
     ControllerHostCallback/*<Host>*/ mHost;
 
@@ -25,106 +22,69 @@ public class ActivityControllerHost // <Host>
 
     private boolean mRetaining;
 
-    final Handler mHandler = new HandlerImpl();
+    private final Activity mActivity;
 
-    private class HandlerImpl extends Handler
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case MSG_REALLY_STOPPED:
-//                    if (mStopped)
-//                    {
-////                        doReallyStop(false);
-//                    }
-                    break;
-
-//                case MSG_RESUME_PENDING:
-//                    onResumeFragments();
-//                    mFragments.execPendingActions();
-//                    break;
-
-                default:
-                    super.handleMessage(msg);
-            }
-        }
+    public ActivityControllerHost(Activity activity) {
+        mActivity = activity;
+        mHost = new ControllerHostCallback(activity);
     }
 
-    public ActivityControllerHost(Activity activity)
-    {
-        mHost = new ControllerHostCallback(activity, mHandler);
-    }
-
-    /**
-     * Returns a {@link WorksControllerManagerImpl}.
-     */
-    public WorksControllerManager getControllerManager()
-    {
+    public WorksControllerManager getControllerManager() {
         return mHost.getControllerManager();
     }
 
-    public void dispatchPostCreate()
-    {
-        mHost.reportControllerPostCreate();
-    }
-
-    public void dispatchStart()
-    {
+    public void dispatchStart() {
         mStopped = false;
         mReallyStopped = false;
-        mHandler.removeMessages(MSG_REALLY_STOPPED);
 
         mHost.doControllerStart();
         mHost.reportControllerStart();
     }
 
-    public void dispatchStop()
-    {
+    public void dispatchStop() {
         mStopped = true;
-        mHandler.sendEmptyMessage(MSG_REALLY_STOPPED);
+
     }
 
-    public void dispatchDestroy()
-    {
+    public void dispatchDestroy() {
         doReallyStop(false);
-        mHost.doLoaderDestroy();
 
-//        if (!mRetaining)
-//        {
-//            mHost.doAllLoaderDestroy();
-//        }
-    }
+        // // KB#0001 - stopping by pressing home button, actually breaks retain
+        // mHost.doLoaderDestroy();
+        // if (!mRetaining) {
+        //     mHost.doAllLoaderDestroy();
+        // }
 
-    void doReallyStop(boolean retaining)
-    {
-        if (!mReallyStopped)
-        {
-            mReallyStopped = true;
-            mRetaining = retaining;
-            mHandler.removeMessages(MSG_REALLY_STOPPED);
-            onReallyStop();
+        if (!mActivity.isChangingConfigurations()) {
+            mHost.doLoaderDestroy();
         }
     }
 
-    private void onReallyStop()
-    {
+    void doReallyStop(boolean retaining) {
+        if (!mReallyStopped) {
+            mReallyStopped = true;
+            mRetaining = retaining;
+
+            onReallyStop();
+        } else if (retaining) {
+            mHost.doControllerStart();
+            mHost.doLoaderStop(true);
+        }
+    }
+
+    private void onReallyStop() {
         mHost.doLoaderStop(mRetaining);
     }
 
-    public SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig()
-    {
-        if (mStopped)
-        {
+    public SimpleArrayMap<String, WorksControllerManager> retainLoaderNonConfig() {
+        if (mStopped) {
             doReallyStop(true);
         }
 
         return mHost.retainLoaderNonConfig();
     }
 
-    public void restoreLoaderNonConfig(SimpleArrayMap<String, WorksControllerManager> loaderManagers)
-    {
+    public void restoreLoaderNonConfig(SimpleArrayMap<String, WorksControllerManager> loaderManagers) {
         mHost.restoreLoaderNonConfig(loaderManagers);
     }
 }

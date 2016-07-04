@@ -1,5 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
+import android.support.v4.app.Fragment;
+
 /**
  * Created by yunarta on 17/11/15.
  */
@@ -33,7 +35,7 @@ public class FragmentControllerHost {
         mWho = who;
         mHost = host.mHost;
 
-        mHost.addFragmentControllerHost(this);
+//        mHost.addFragmentControllerHost(this);
 //        mContinuation = new Continuation<Boolean, Object>() {
 //            @Override
 //            public Object then(Task<Boolean> task) throws Exception {
@@ -155,14 +157,12 @@ public class FragmentControllerHost {
     public void dispatchResume() {
         mHostState = HostState.RESUME;
 
-        if (!mCheckedForLoaderManager)
-        {
+        if (!mCheckedForLoaderManager) {
             mCheckedForLoaderManager = true;
             mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
         }
 
-        if (mLoaderManager != null)
-        {
+        if (mLoaderManager != null) {
             updateStates(mCheckingState, mHostState, mLoaderManager);
             mCheckingState = mHostState;
         }
@@ -171,14 +171,12 @@ public class FragmentControllerHost {
     public void dispatchPause() {
         mHostState = HostState.PAUSED;
 
-        if (!mCheckedForLoaderManager)
-        {
+        if (!mCheckedForLoaderManager) {
             mCheckedForLoaderManager = true;
             mLoaderManager = mHost.getControllerManager(mWho, mHostState, false);
         }
 
-        if (mLoaderManager != null)
-        {
+        if (mLoaderManager != null) {
             updateStates(mCheckingState, mHostState, mLoaderManager);
             mCheckingState = mHostState;
         }
@@ -255,7 +253,7 @@ public class FragmentControllerHost {
 //            updateState(state, manager);
 //        }
         if (lastState != newState)
-        updateState(newState, manager);
+            updateState(newState, manager);
     }
 
     private void updateState(int state, WorksControllerManager manager) {
@@ -300,6 +298,21 @@ public class FragmentControllerHost {
         final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
         if (loaderManager != null) {
             if (retain) {
+                loaderManager.doRetain();
+            } else {
+                loaderManager.doStop();
+            }
+        }
+    }
+
+    /**
+     * @see @{@link android.support.v4.app.FragmentManagerImpl#moveToState(Fragment, int, int, int, boolean)}
+     * @see @{@link android.support.v4.app.Fragment#performReallyStop()}
+     */
+    public void v2performReallyStop() {
+        final WorksControllerManager loaderManager = mHost.getControllerManager(mWho, mHostState, false);
+        if (loaderManager != null) {
+            if (mHost.getRetainLoaders()) {
                 loaderManager.doRetain();
             } else {
                 loaderManager.doStop();

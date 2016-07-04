@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
-
-import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
 
 /**
  * Created by yunarta on 19/11/15.
@@ -32,12 +31,6 @@ public class WorksActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        mHost.dispatchPostCreate();
-        super.onPostCreate(savedInstanceState);
     }
 
     @Override
