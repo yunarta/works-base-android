@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.app.WorksFragment;
-import com.mobilesolutionworks.android.bolts.BoltsWorksController;
-import com.mobilesolutionworks.android.exe.WorksExecutor;
-
-import java.util.concurrent.Callable;
+import com.mobilesolutionworks.android.bolts.BoltsWorksController2;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -20,7 +17,8 @@ import bolts.Task;
  * A placeholder fragment containing a simple view.
  */
 public class BoltsActivityFragment extends WorksFragment {
-    private BoltsWorksController mBwc;
+
+    private BoltsWorksController2 mBwc;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,18 +26,7 @@ public class BoltsActivityFragment extends WorksFragment {
 
         WorksControllerManager manager = getControllerManager();
 
-        mBwc = manager.initController(0, null, new BoltsWorksController.ControllerCallbacks());
-        mBwc.setContinuation("login", new BoltsWorksController.ContinuationFactory<Boolean, Boolean>() {
-            @Override
-            public Task<Boolean> continueWith(Task<Boolean> task) {
-                DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag("dialog");
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-
-                return null;
-            }
-        });
+        mBwc = manager.initController(0, null, new BoltsWorksController2.ControllerCallbacks());
     }
 
     @Override
@@ -48,22 +35,19 @@ public class BoltsActivityFragment extends WorksFragment {
     }
 
     public void onLogin(View view) {
-        Task<Boolean> task;
-
         DialogFragment dialogFragment = new DialogFragment();
         dialogFragment.show(getFragmentManager(), "dialog");
 
-        task = Task.call(new Callable<Boolean>() {
+        mBwc.addTask(Task.forResult(true), new Continuation<Boolean, Boolean>() {
             @Override
-            public Boolean call() throws Exception {
-                return true;
+            public Boolean then(Task<Boolean> task) {
+                DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag("dialog");
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+
+                return null;
             }
-        }).continueWith(new Continuation<Boolean, Boolean>() {
-            @Override
-            public Boolean then(Task<Boolean> task) throws Exception {
-                return task.getResult();
-            }
-        }, WorksExecutor.MAIN);
-        mBwc.addTask("login", task);
+        });
     }
 }
