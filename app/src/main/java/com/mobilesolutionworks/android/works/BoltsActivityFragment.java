@@ -25,8 +25,7 @@ public class BoltsActivityFragment extends WorksFragment {
         super.onCreate(savedInstanceState);
 
         WorksControllerManager manager = getControllerManager();
-
-        mBwc = manager.initController(0, null, new BoltsWorksController2.ControllerCallbacks());
+        mBwc = manager.initController(0, new BoltsWorksController2.ControllerCallbacks());
     }
 
     @Override

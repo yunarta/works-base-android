@@ -7,95 +7,29 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
-import com.mobilesolutionworks.android.app.v4.SimpleArrayMap;
-
 /**
  * Created by yunarta on 19/11/15.
  */
 public class WorksActivity extends AppCompatActivity {
 
-    private static final boolean DEBUG = WorksBaseConfig.DEBUG;
-
-    ActivityControllerHost mHost;
-
     private SparseArray<FragmentTrackInfo> mTrackInfoMap;
 
-    @SuppressWarnings("deprecation")
+    private WorksControllerManager mController;
+
+    public WorksActivity() {
+        mTrackInfoMap = new SparseArray<>();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mHost = new ActivityControllerHost(this);
-        mTrackInfoMap = new SparseArray<>();
-
-        NonConfiguration nc = (NonConfiguration) getLastCustomNonConfigurationInstance();
-        if (nc != null) {
-            mHost.restoreLoaderNonConfig(nc.allControllerManagers);
-        }
-
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        mHost.dispatchPostCreate();
-        super.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onStart() {
-        mHost.dispatchStart();
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        mHost.dispatchStop();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mHost.dispatchDestroy();
-        super.onDestroy();
-    }
-
-    public Object getLastPersistedObject() {
-        NonConfiguration nc = (NonConfiguration) super.getLastCustomNonConfigurationInstance();
-        return nc != null ? nc.persisted : null;
-    }
-
-    public Object onRetainPersistedObject() {
-        return null;
-    }
-
-    @Override
-    public final Object onRetainCustomNonConfigurationInstance() {
-        SimpleArrayMap<String, WorksControllerManager> allControllerManagers = mHost.retainLoaderNonConfig();
-
-        NonConfiguration nc = new NonConfiguration();
-        nc.persisted = onRetainPersistedObject();
-        nc.allControllerManagers = allControllerManagers;
-
-        return nc;
-    }
-
-    @Override
-    @Deprecated
-    public Object getLastCustomNonConfigurationInstance() {
-        return super.getLastCustomNonConfigurationInstance();
-    }
-
-    class NonConfiguration {
-        public Object persisted;
-
-        public SimpleArrayMap<String, WorksControllerManager> allControllerManagers;
-    }
-
-    ActivityControllerHost getControllerHost() {
-        return mHost;
+        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getSupportLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(this));
+        mController = loader.getController();
     }
 
     public WorksControllerManager getControllerManager() {
-        return mHost.getControllerManager();
+        return mController;
     }
 
     @Override
@@ -149,7 +83,7 @@ public class WorksActivity extends AppCompatActivity {
         }
     }
 
-    class FragmentTrackInfo {
+    private class FragmentTrackInfo {
 
         FragmentTrackInfo mChild;
 

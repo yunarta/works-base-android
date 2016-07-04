@@ -1,12 +1,11 @@
 package com.mobilesolutionworks.android.bolts;
 
-import android.os.Bundle;
-import android.os.Handler;
+import com.mobilesolutionworks.android.app.WorksController;
+import com.mobilesolutionworks.android.app.WorksControllerManager;
+
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
-import com.mobilesolutionworks.android.app.WorksController;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
 
 /**
  * Created by yunarta on 19/11/15.
@@ -101,18 +100,18 @@ public class BoltsWorksController2<Host> extends WorksController {
         BoltsWorksController2 mController;
 
         @Override
-        public BoltsWorksController2 onCreateController(int id, Bundle args) {
+        public BoltsWorksController2 onCreateController(int id) {
             mController = new BoltsWorksController2();
             return mController;
         }
 
         @Override
-        public void onCreated(int id, BoltsWorksController2 loader) {
+        public void onLoadFinished(int id, BoltsWorksController2 controller) {
 
         }
 
         @Override
-        public void onReset(BoltsWorksController2 loader) {
+        public void onLoaderReset(BoltsWorksController2 loader) {
 
         }
     }

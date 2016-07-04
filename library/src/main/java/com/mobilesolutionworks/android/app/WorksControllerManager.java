@@ -1,126 +1,126 @@
 package com.mobilesolutionworks.android.app;
 
+import android.content.Context;
 import android.os.Bundle;
-
-import java.util.logging.Logger;
+import android.support.v4.app.LoaderManager;
+import android.util.SparseArray;
 
 /**
  * Created by yunarta on 18/11/15.
  */
-public abstract class WorksControllerManager {
-//    private WeakReference<FragmentHostCallback> mFragmentHostCallback;
-//
-//    public void setFragmentHostCallback(FragmentHostCallback fragmentHostCallback)
-//    {
-//        mFragmentHostCallback = new WeakReference<>(fragmentHostCallback);
-//    }
-//
-//    public boolean isFragmentRetaining()
-//    {
-//        // if fragment is retaining, then controller manager is retaining
-//        boolean mFragmentRetaining = false;
-//        if (mFragmentHostCallback != null && mFragmentHostCallback.get() != null)
-//        {
-//            mFragmentRetaining = mFragmentHostCallback.get().isRetaining();
-//        }
-//
-//        return mFragmentRetaining;
-//    }
+public class WorksControllerManager {
 
-    /**
-     * Callback interface for a client to interact with the manager.
-     */
+    public void dispatchPause() {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onPaused();
+        }
+    }
+
+    public void dispatchResume() {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onResume();
+        }
+    }
+
+    private void dispatchDestroy() {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onDestroy();
+        }
+        mControllers.clear();
+    }
+
+    private class ControllerInfo<D extends WorksController> {
+
+        D controller;
+
+        ControllerCallbacks<D> callback;
+
+        public ControllerInfo(ControllerCallbacks<D> callback) {
+            this.callback = callback;
+        }
+    }
+
     public interface ControllerCallbacks<D extends WorksController> {
 
-        D onCreateController(int id, Bundle args);
+        D onCreateController(int id);
 
-        void onCreated(int id, D controller);
+        void onLoadFinished(int id, D controller);
 
-        void onReset(D loader);
+        void onLoaderReset(D loader);
     }
 
-    public interface CreateControllerCallback<D extends WorksController> {
+    SparseArray<ControllerInfo> mControllers;
 
-        D onCreateController(int id, Bundle args);
+    public WorksControllerManager() {
+        mControllers = new SparseArray<>();
     }
 
-//    public static <D extends WorksController> ControllerCallbacks<D> createControllerOnly(final CreateControllerCallback<D> callback) {
-//    }
+    public <D extends WorksController> D initController(int id, ControllerCallbacks<D> callback) {
+        ControllerInfo info = mControllers.get(id);
+        if (info == null) {
+            info = new ControllerInfo(callback);
 
-    protected static final Logger LOGGER = Logger.getLogger(WorksControllerManager.class.getName());
+            D newController = callback.onCreateController(id);
+            info.controller = newController;
 
-    protected static final boolean DEBUG = true;
+            callback.onLoadFinished(id, newController);
+            newController.onCreate();
 
-    final String mWho;
+            mControllers.put(id, info);
+        } else {
+            info.callback = callback;
+            info.callback.onLoadFinished(id, info.controller);
+        }
 
-    protected ControllerHostCallback mHost;
-
-    boolean mStarted;
-
-    boolean mRetaining;
-
-    public boolean isRetaining() {
-//        return true; // mRetaining || isFragmentRetaining();
-        return mRetaining; // || isFragmentRetaining();
+        return (D) info.controller;
     }
 
-    boolean mFragmentRetaining;
+    public static class Loader extends android.support.v4.content.Loader<WorksControllerManager> {
 
-    public WorksControllerManager(ControllerHostCallback host, String who) {
-//        mHost = host;
-        mWho = who;
+        private WorksControllerManager mData;
+
+        public Loader(Context context) {
+            super(context);
+            mData = new WorksControllerManager();
+        }
+
+        @Override
+        protected void onStartLoading() {
+            super.onStartLoading();
+
+            deliverResult(mData);
+        }
+
+        public WorksControllerManager getController() {
+            return mData;
+        }
     }
 
-    public String who() {
-        return mWho;
+    public static class LoaderCallbacks implements LoaderManager.LoaderCallbacks<WorksControllerManager> {
+
+        private Context mContext;
+
+        public LoaderCallbacks(Context context) {
+            mContext = context.getApplicationContext();
+        }
+
+        @Override
+        public android.support.v4.content.Loader<WorksControllerManager> onCreateLoader(int id, Bundle args) {
+            return new Loader(mContext);
+        }
+
+        @Override
+        public void onLoadFinished(android.support.v4.content.Loader<WorksControllerManager> loader, WorksControllerManager data) {
+
+        }
+
+        @Override
+        public void onLoaderReset(android.support.v4.content.Loader<WorksControllerManager> loader) {
+            Loader l = (Loader) loader;
+            l.getController().dispatchDestroy();
+        }
     }
-
-    public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
-
-    public <D extends WorksController> D createControllerOnly(int id, Bundle args, final CreateControllerCallback<D> callback) {
-        return initController(id, args, new ControllerCallbacks<D>() {
-            @Override
-            public D onCreateController(int id, Bundle args) {
-                return callback.onCreateController(id, args);
-            }
-
-            @Override
-            public void onCreated(int id, D controller) {
-                // not used
-            }
-
-            @Override
-            public void onReset(D loader) {
-                // not used
-            }
-        });
-    }
-
-    public abstract void destroyController(int id);
-
-    void updateHostController(ControllerHostCallback host) {
-//        mHost = host;
-    }
-
-    abstract void updateState(int state);
-
-    abstract void doStart();
-
-    abstract void doResume();
-
-    abstract void doPause();
-
-    abstract void doStop();
-
-    abstract void doRelease();
-
-    abstract void doRetain();
-
-    abstract void finishRetain();
-
-    abstract void doReportNextStart();
-
-    abstract void doReportStart();
-
-    abstract void doDestroy(boolean release);
 }

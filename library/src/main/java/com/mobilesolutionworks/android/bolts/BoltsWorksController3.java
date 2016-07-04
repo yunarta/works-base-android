@@ -1,7 +1,5 @@
 package com.mobilesolutionworks.android.bolts;
 
-import android.os.Handler;
-
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
@@ -14,13 +12,11 @@ import bolts.TaskCompletionSource;
  */
 public class BoltsWorksController3<Host> extends WorksController {
 
-    boolean mIsPaused;
+    private boolean mIsPaused;
 
-    TaskCompletionSource<Void> mDiplayTCS;
+    private TaskCompletionSource<Void> mDiplayTCS;
 
-    protected Host mHost;
-
-    protected Handler mHandler;
+    private Host mHost;
 
     public BoltsWorksController3() {
         mDiplayTCS = new TaskCompletionSource<>();
@@ -91,7 +87,6 @@ public class BoltsWorksController3<Host> extends WorksController {
         super.onPaused();
 
         mIsPaused = true;
-
         mDiplayTCS = new TaskCompletionSource<>();
     }
 
@@ -113,13 +108,13 @@ public class BoltsWorksController3<Host> extends WorksController {
         }
 
         @Override
-        public void onCreated(int id, Controller controller) {
+        public void onLoadFinished(int id, Controller controller) {
             controller.setHost(mHost);
             controller.onHostUpdated();
         }
 
         @Override
-        public void onReset(Controller loader) {
+        public void onLoaderReset(Controller loader) {
 
         }
     }

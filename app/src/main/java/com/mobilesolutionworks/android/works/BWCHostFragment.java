@@ -19,7 +19,7 @@ public class BWCHostFragment extends WorksFragment {
 //        setRetainInstance(true);
 
         WorksControllerManager manager = getControllerManager();
-        manager.initController(0, null, new BoltsWorksController2.ControllerCallbacks());
+        manager.initController(0, new BoltsWorksController2.ControllerCallbacks());
     }
 
     @Override
