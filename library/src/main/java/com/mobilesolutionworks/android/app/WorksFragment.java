@@ -2,6 +2,7 @@ package com.mobilesolutionworks.android.app;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ public class WorksFragment extends Fragment {
             mInstanceName = "fragment:" + (++sInstanceCount);
         }
 
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.myLooper());
 
         WorksActivity activity = (WorksActivity) getActivity();
 

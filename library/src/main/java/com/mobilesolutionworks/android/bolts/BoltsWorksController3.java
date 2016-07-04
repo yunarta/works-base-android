@@ -1,17 +1,18 @@
 package com.mobilesolutionworks.android.bolts;
 
-import android.os.Bundle;
 import android.os.Handler;
-import bolts.Continuation;
-import bolts.Task;
-import bolts.TaskCompletionSource;
+
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
+import bolts.Continuation;
+import bolts.Task;
+import bolts.TaskCompletionSource;
+
 /**
- * Created by yunarta on 19/11/15.
+ * Created by yunarta on 28/6/16.
  */
-public class BoltsWorksController2<Host> extends WorksController {
+public class BoltsWorksController3<Host> extends WorksController {
 
     boolean mIsPaused;
 
@@ -19,7 +20,9 @@ public class BoltsWorksController2<Host> extends WorksController {
 
     protected Host mHost;
 
-    public BoltsWorksController2() {
+    protected Handler mHandler;
+
+    public BoltsWorksController3() {
         mDiplayTCS = new TaskCompletionSource<>();
     }
 
@@ -79,6 +82,10 @@ public class BoltsWorksController2<Host> extends WorksController {
         mDiplayTCS.trySetResult(null);
     }
 
+    protected void onHostUpdated() {
+
+    }
+
     @Override
     public void onPaused() {
         super.onPaused();
@@ -97,25 +104,23 @@ public class BoltsWorksController2<Host> extends WorksController {
         }
     }
 
-    public static class ControllerCallbacks implements WorksControllerManager.ControllerCallbacks<BoltsWorksController2> {
-        BoltsWorksController2 mController;
+    public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
 
-        @Override
-        public BoltsWorksController2 onCreateController(int id, Bundle args) {
-            mController = new BoltsWorksController2();
-            return mController;
+        private Host mHost;
+
+        public ControllerCallbacks(Host host) {
+            mHost = host;
         }
 
         @Override
-        public void onCreated(int id, BoltsWorksController2 loader) {
-
+        public void onCreated(int id, Controller controller) {
+            controller.setHost(mHost);
+            controller.onHostUpdated();
         }
 
         @Override
-        public void onReset(BoltsWorksController2 loader) {
+        public void onReset(Controller loader) {
 
         }
     }
-
-
 }
