@@ -63,7 +63,12 @@ public class BoltsWorksController3<Host> extends WorksController {
     }
 
     public void setHost(Host host) {
+        boolean sendUpdate = mHost != host;
+
         this.mHost = host;
+        if (sendUpdate) {
+            onHostUpdated();
+        }
     }
 
     public Host getHost() {
@@ -110,7 +115,7 @@ public class BoltsWorksController3<Host> extends WorksController {
         @Override
         public void onLoadFinished(int id, Controller controller) {
             controller.setHost(mHost);
-            controller.onHostUpdated();
+
         }
 
         @Override

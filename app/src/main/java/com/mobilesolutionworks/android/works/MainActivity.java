@@ -6,11 +6,9 @@ import android.support.v7.widget.Toolbar;
 
 import com.mobilesolutionworks.android.app.WorksActivity;
 
-public class MainActivity extends WorksActivity
-{
+public class MainActivity extends WorksActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,8 +40,7 @@ public class MainActivity extends WorksActivity
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
     }
 }

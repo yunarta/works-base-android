@@ -28,12 +28,12 @@
         android:layout_height="match_parent">
 
         <!--<fragment-->
-            <!--android:id="@+id/fragment"-->
-            <!--android:name="com.mobilesolutionworks.android.works.BWCHostFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-            <!--tools:layout="@layout/fragment_main"/>-->
+        <!--android:id="@+id/fragment"-->
+        <!--android:name="com.mobilesolutionworks.android.works.BWCHostFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--tools:layout="@layout/fragment_main"/>-->
 
     </FrameLayout>
 

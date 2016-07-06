@@ -8,12 +8,9 @@ import java.util.concurrent.Executor;
 /**
  * Created by yunarta on 19/11/15.
  */
-public class WorksExecutor
-{
-    static class MainExecutor implements Executor
-    {
-        MainExecutor()
-        {
+public class WorksExecutor {
+    static class MainExecutor implements Executor {
+        MainExecutor() {
             mHandler = new Handler(Looper.getMainLooper());
         }
 
@@ -21,8 +18,7 @@ public class WorksExecutor
 
 
         @Override
-        public void execute(Runnable runnable)
-        {
+        public void execute(Runnable runnable) {
             mHandler.post(runnable);
         }
     }

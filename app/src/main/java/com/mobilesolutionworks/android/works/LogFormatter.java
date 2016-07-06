@@ -10,8 +10,7 @@ import java.util.logging.LogRecord;
 /**
  * Created by yunarta on 25/11/15.
  */
-class LogFormatter extends Formatter
-{
+class LogFormatter extends Formatter {
     private final String mPrefix;
 
     private final boolean mShortenName;
@@ -22,21 +21,18 @@ class LogFormatter extends Formatter
 
     private String format = "%1$tb %1$td, %1$tY %1$tl:%1$tM:%1$tS %1$Tp %2$s\t%4$s: %5$s%6$s%n";
 
-    public LogFormatter(String prefix, boolean shortenName, boolean printThread)
-    {
+    public LogFormatter(String prefix, boolean shortenName, boolean printThread) {
         mPrefix = prefix;
         mShortenName = shortenName;
         mThread = printThread;
     }
 
-    public void setFormat(String format)
-    {
+    public void setFormat(String format) {
         this.format = format;
     }
 
     @Override
-    public synchronized String format(LogRecord record)
-    {
+    public synchronized String format(LogRecord record) {
         dat.setTime(record.getMillis());
 //        if (record.getSourceClassName() != null)
 //        {
@@ -51,11 +47,10 @@ class LogFormatter extends Formatter
 //            source = record.getLoggerName();
 //        }
 
-        String message   = formatMessage(record);
+        String message = formatMessage(record);
 
         StringBuilder sb = new StringBuilder();
-        if (mThread)
-        {
+        if (mThread) {
             sb.append(Thread.currentThread().toString());
             sb.append(" - ");
         }
@@ -65,14 +60,12 @@ class LogFormatter extends Formatter
         message = sb.toString();
 
         String source = record.getLoggerName();
-        if (mShortenName)
-        {
+        if (mShortenName) {
             source = source.substring(source.lastIndexOf(".") + 1);
         }
 
         String throwable = "";
-        if (record.getThrown() != null)
-        {
+        if (record.getThrown() != null) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             pw.println();
