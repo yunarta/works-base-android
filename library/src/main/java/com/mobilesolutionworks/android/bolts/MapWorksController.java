@@ -1,5 +1,7 @@
 package com.mobilesolutionworks.android.bolts;
 
+import android.os.Bundle;
+
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
@@ -26,12 +28,12 @@ public class MapWorksController extends WorksController {
 
     public static class ManagerCallback implements WorksControllerManager.ControllerCallbacks<MapWorksController> {
         @Override
-        public MapWorksController onCreateController(int id) {
+        public MapWorksController onCreateController(int id, Bundle bundle) {
             return new MapWorksController();
         }
 
         @Override
-        public void onLoadFinished(int id, MapWorksController controller) {
+        public void onLoadFinished(int id, Bundle bundle, MapWorksController controller) {
 
         }
 

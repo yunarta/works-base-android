@@ -1,5 +1,7 @@
 package com.mobilesolutionworks.android.bolts;
 
+import android.os.Bundle;
+
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
@@ -100,13 +102,13 @@ public class BoltsWorksController2<Host> extends WorksController {
         BoltsWorksController2 mController;
 
         @Override
-        public BoltsWorksController2 onCreateController(int id) {
+        public BoltsWorksController2 onCreateController(int id, Bundle bundle) {
             mController = new BoltsWorksController2();
             return mController;
         }
 
         @Override
-        public void onLoadFinished(int id, BoltsWorksController2 controller) {
+        public void onLoadFinished(int id, Bundle bundle, BoltsWorksController2 controller) {
 
         }
 

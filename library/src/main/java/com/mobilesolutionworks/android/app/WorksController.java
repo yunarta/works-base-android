@@ -1,11 +1,13 @@
 package com.mobilesolutionworks.android.app;
 
+import android.os.Bundle;
+
 /**
  * Created by yunarta on 16/11/15.
  */
 public class WorksController {
 
-    public void onCreate() {
+    public void onCreate(Bundle savedInstanceState) {
 
     }
 
@@ -18,6 +20,10 @@ public class WorksController {
     }
 
     public void onDestroy() {
+
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
 
     }
 }

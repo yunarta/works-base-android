@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.android.persistence;
 
+import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.mobilesolutionworks.android.app.WorksController;
@@ -40,12 +41,12 @@ public class PersistenceSparseArray extends WorksController {
         }
 
         @Override
-        public PersistenceSparseArray onCreateController(int id) {
+        public PersistenceSparseArray onCreateController(int id, Bundle bundle) {
             return new PersistenceSparseArray();
         }
 
         @Override
-        public void onLoadFinished(int id, PersistenceSparseArray controller) {
+        public void onLoadFinished(int id, Bundle bundle, PersistenceSparseArray controller) {
             if (mCallback != null) {
                 OnSparseArrayCreated callback = mCallback != null ? mCallback.get() : null;
                 if (callback != null) {

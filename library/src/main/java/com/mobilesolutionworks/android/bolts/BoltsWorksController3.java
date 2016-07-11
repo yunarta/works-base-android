@@ -1,5 +1,7 @@
 package com.mobilesolutionworks.android.bolts;
 
+import android.os.Bundle;
+
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 
@@ -113,7 +115,7 @@ public class BoltsWorksController3<Host> extends WorksController {
         }
 
         @Override
-        public void onLoadFinished(int id, Controller controller) {
+        public void onLoadFinished(int id, Bundle bundle, Controller controller) {
             controller.setHost(mHost);
 
         }

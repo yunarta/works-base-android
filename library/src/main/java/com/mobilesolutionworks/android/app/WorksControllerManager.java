@@ -45,9 +45,9 @@ public class WorksControllerManager {
 
     public interface ControllerCallbacks<D extends WorksController> {
 
-        D onCreateController(int id);
+        D onCreateController(int id, Bundle bundle);
 
-        void onLoadFinished(int id, D controller);
+        void onLoadFinished(int id, Bundle bundle, D controller);
 
         void onLoaderReset(D loader);
     }
@@ -58,21 +58,21 @@ public class WorksControllerManager {
         mControllers = new SparseArray<>();
     }
 
-    public <D extends WorksController> D initController(int id, ControllerCallbacks<D> callback) {
+    public <D extends WorksController> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
         ControllerInfo info = mControllers.get(id);
         if (info == null) {
             info = new ControllerInfo(callback);
 
-            D newController = callback.onCreateController(id);
+            D newController = callback.onCreateController(id, bundle);
             info.controller = newController;
 
-            callback.onLoadFinished(id, newController);
-            newController.onCreate();
+            callback.onLoadFinished(id, bundle, newController);
+            newController.onCreate(bundle);
 
             mControllers.put(id, info);
         } else {
             info.callback = callback;
-            info.callback.onLoadFinished(id, info.controller);
+            info.callback.onLoadFinished(id, bundle, info.controller);
         }
 
         return (D) info.controller;
