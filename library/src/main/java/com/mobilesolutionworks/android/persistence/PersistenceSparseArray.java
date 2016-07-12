@@ -37,7 +37,7 @@ public class PersistenceSparseArray extends WorksController {
         WeakReference<OnSparseArrayCreated> mCallback;
 
         public ManagerCallback(OnSparseArrayCreated callback) {
-            mCallback = new WeakReference<OnSparseArrayCreated>(callback);
+            mCallback = new WeakReference<>(callback);
         }
 
         @Override
