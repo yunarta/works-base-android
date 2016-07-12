@@ -25,36 +25,36 @@ public class ActivityControllerHost // <Host>
 
     private boolean mRetaining;
 
-    final Handler mHandler = new HandlerImpl();
-
-    private class HandlerImpl extends Handler
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case MSG_REALLY_STOPPED:
-//                    if (mStopped)
-//                    {
-////                        doReallyStop(false);
-//                    }
-                    break;
-
-//                case MSG_RESUME_PENDING:
-//                    onResumeFragments();
-//                    mFragments.execPendingActions();
+//    final Handler mHandler = new HandlerImpl();
+//
+//    private class HandlerImpl extends Handler
+//    {
+//        @Override
+//        public void handleMessage(Message msg)
+//        {
+//            switch (msg.what)
+//            {
+//                case MSG_REALLY_STOPPED:
+////                    if (mStopped)
+////                    {
+//////                        doReallyStop(false);
+////                    }
 //                    break;
-
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
+//
+////                case MSG_RESUME_PENDING:
+////                    onResumeFragments();
+////                    mFragments.execPendingActions();
+////                    break;
+//
+//                default:
+//                    super.handleMessage(msg);
+//            }
+//        }
+//    }
 
     public ActivityControllerHost(Activity activity)
     {
-        mHost = new ControllerHostCallback(activity, mHandler);
+        mHost = new ControllerHostCallback(activity, null);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ActivityControllerHost // <Host>
     {
         mStopped = false;
         mReallyStopped = false;
-        mHandler.removeMessages(MSG_REALLY_STOPPED);
+//        mHandler.removeMessages(MSG_REALLY_STOPPED);
 
         mHost.doControllerStart();
         mHost.reportControllerStart();
@@ -83,7 +83,7 @@ public class ActivityControllerHost // <Host>
     public void dispatchStop()
     {
         mStopped = true;
-        mHandler.sendEmptyMessage(MSG_REALLY_STOPPED);
+//        mHandler.sendEmptyMessage(MSG_REALLY_STOPPED);
     }
 
     public void dispatchDestroy()
@@ -103,7 +103,7 @@ public class ActivityControllerHost // <Host>
         {
             mReallyStopped = true;
             mRetaining = retaining;
-            mHandler.removeMessages(MSG_REALLY_STOPPED);
+//            mHandler.removeMessages(MSG_REALLY_STOPPED);
             onReallyStop();
         }
     }

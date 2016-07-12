@@ -25,7 +25,7 @@ public class ControllerHostCallback {
 
     final Context mContext;
 
-    final Handler mHandler;
+//    final Handler mHandler;
 
     SimpleArrayMap<String, WorksControllerManager> mAllLoaderManagers;
 
@@ -52,7 +52,7 @@ public class ControllerHostCallback {
     ControllerHostCallback(Activity activity, Handler handler) {
         mActivity = activity;
         mContext = activity;
-        mHandler = handler;
+//        mHandler = handler;
 
         mRetainLoadersTCS = new TaskCompletionSource<>();
         mCheckLoaderTCS = new TaskCompletionSource<>();
