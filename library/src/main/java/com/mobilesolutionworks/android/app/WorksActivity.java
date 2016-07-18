@@ -83,6 +83,10 @@ public class WorksActivity extends AppCompatActivity {
         }
     }
 
+    public void onActivityResultCompat(int requestCode, int resultCode, Intent data) {
+        onActivityResult(requestCode, resultCode, data);
+    }
+
     private class FragmentTrackInfo {
 
         FragmentTrackInfo mChild;
