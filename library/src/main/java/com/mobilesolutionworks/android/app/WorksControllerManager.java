@@ -32,6 +32,13 @@ public class WorksControllerManager {
         mControllers.clear();
     }
 
+    public void onRestoreInstanceState(Bundle state) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onViewStateRestored(state);
+        }
+    }
+
     private class ControllerInfo<D extends WorksController> {
 
         D controller;

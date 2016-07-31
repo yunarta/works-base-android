@@ -26,4 +26,8 @@ public class WorksController {
     public void onSaveInstanceState(Bundle outState) {
 
     }
+
+    public void onViewStateRestored(Bundle state) {
+
+    }
 }

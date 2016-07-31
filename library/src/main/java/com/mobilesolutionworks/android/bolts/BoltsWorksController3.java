@@ -1,6 +1,8 @@
 package com.mobilesolutionworks.android.bolts;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
@@ -14,7 +16,7 @@ import bolts.TaskCompletionSource;
  */
 public class BoltsWorksController3<Host> extends WorksController {
 
-    private boolean mIsPaused;
+    private boolean mIsPaused = true;
 
     private TaskCompletionSource<Void> mDiplayTCS;
 
@@ -25,6 +27,11 @@ public class BoltsWorksController3<Host> extends WorksController {
     }
 
     public <T, R> Task<R> addTask(Task<T> task, Continuation<T, R> continuation) {
+        if (getHost() instanceof Fragment) {
+            Fragment fragment  = (Fragment) getHost();
+            Log.d("WF", fragment + " isPaused = " + mIsPaused);
+        }
+
         return task.continueWithTask(new Continuation<T, Task<T>>() {
             @Override
             public Task<T> then(final Task<T> finished) throws Exception {
