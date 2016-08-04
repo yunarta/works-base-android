@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseArray;
 
 /**
@@ -32,6 +33,17 @@ public class WorksActivity extends AppCompatActivity {
         return mController;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mController.dispatchPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mController.dispatchResume();
+    }
     @Override
     public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
         if (fragment instanceof WaitingForResult) {

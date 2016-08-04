@@ -1,6 +1,9 @@
 package com.mobilesolutionworks.android.bolts;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
@@ -22,14 +25,20 @@ public class BoltsWorksController3<Host> extends WorksController {
 
     private Host mHost;
 
+    private Handler mHandler;
+
     public BoltsWorksController3() {
         mDiplayTCS = new TaskCompletionSource<>();
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
-    public <T, R> Task<R> addTask(Task<T> task, Continuation<T, R> continuation) {
+    public Handler getHandler() {
+        return mHandler;
+    }
+
+    public <T, R> Task<R> addTask(final Task<T> task, Continuation<T, R> continuation) {
         if (getHost() instanceof Fragment) {
             Fragment fragment  = (Fragment) getHost();
-            Log.d("WF", fragment + " isPaused = " + mIsPaused);
         }
 
         return task.continueWithTask(new Continuation<T, Task<T>>() {
@@ -39,6 +48,9 @@ public class BoltsWorksController3<Host> extends WorksController {
                     return getDisplayTCS().continueWithTask(new Continuation<Void, Task<T>>() {
                         @Override
                         public Task<T> then(Task<Void> task) throws Exception {
+                            if (task.getError() != null) {
+                                Log.d("task", "task.getError()", task.getError());
+                            }
                             return finished;
                         }
                     });
@@ -111,6 +123,10 @@ public class BoltsWorksController3<Host> extends WorksController {
         if (mDiplayTCS != null) {
             mDiplayTCS.trySetCancelled();
         }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 
     public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
