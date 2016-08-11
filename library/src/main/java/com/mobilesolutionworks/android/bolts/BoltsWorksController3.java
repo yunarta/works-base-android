@@ -14,7 +14,7 @@ import bolts.TaskCompletionSource;
  */
 public class BoltsWorksController3<Host> extends WorksController {
 
-    boolean mIsPaused;
+    boolean mIsPaused = true;
 
     TaskCompletionSource<Void> mDiplayTCS;
 
