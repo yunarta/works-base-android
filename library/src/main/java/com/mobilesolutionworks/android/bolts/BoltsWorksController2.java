@@ -11,6 +11,7 @@ import com.mobilesolutionworks.android.app.WorksControllerManager;
 /**
  * Created by yunarta on 19/11/15.
  */
+@Deprecated
 public class BoltsWorksController2<Host> extends WorksController {
 
     boolean mIsPaused;
@@ -97,6 +98,7 @@ public class BoltsWorksController2<Host> extends WorksController {
         }
     }
 
+    @Deprecated
     public static class ControllerCallbacks implements WorksControllerManager.ControllerCallbacks<BoltsWorksController2> {
         BoltsWorksController2 mController;
 
