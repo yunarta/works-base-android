@@ -167,7 +167,8 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                 }
             }
 
-            if (mInfoStarted && /*mHaveData &&*/ !mInfoReportNextStart)
+//            if (mInfoStarted && /*mHaveData &&*/ !mInfoReportNextStart)
+            if (mLoader != null)
             {
                 // This loader has retained its data, either completely across
                 // a configuration change or just whatever the last data set
@@ -188,7 +189,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
                     mInfoReportNextStart = false;
 //                    if (mHaveData)
 //                    {
-//                        callOnLoadFinished(mLoader, mData);
+                        callOnLoadFinished(mLoader);
 //                    }
                 }
             }
