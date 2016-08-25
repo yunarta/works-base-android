@@ -80,6 +80,10 @@ public class ActivityControllerHost // <Host>
         mHost.reportControllerStart();
     }
 
+    public void dispatchResume() {
+        getControllerManager().doResume();
+    }
+
     public void dispatchStop()
     {
         mStopped = true;

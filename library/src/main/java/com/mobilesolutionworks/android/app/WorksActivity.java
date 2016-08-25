@@ -47,6 +47,12 @@ public class WorksActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        mHost.dispatchResume();
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         mHost.dispatchStop();
         super.onStop();
