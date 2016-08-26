@@ -75,6 +75,10 @@ public abstract class WorksControllerManager {
         return mWho;
     }
 
+    public abstract void onRestoreInstanceState(Bundle state);
+
+    public abstract void dispatchSaveInstanceState(Bundle state);
+
     public abstract <D extends WorksController> D initController(int id, Bundle args, ControllerCallbacks<D> callback);
 
     public <D extends WorksController> D createControllerOnly(int id, Bundle args, final CreateControllerCallback<D> callback) {

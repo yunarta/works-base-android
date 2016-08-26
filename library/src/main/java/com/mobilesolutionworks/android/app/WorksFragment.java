@@ -3,7 +3,10 @@ package com.mobilesolutionworks.android.app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import java.util.logging.Logger;
 
@@ -61,7 +64,9 @@ public class WorksFragment extends Fragment {
         super.setRetainInstance(retain);
     }
 
+    @Override
     public void onSaveInstanceState(Bundle bundle) {
+        getControllerManager().dispatchSaveInstanceState(bundle);
         bundle.putString(":fragment:instance", mInstanceName);
         super.onSaveInstanceState(bundle);
     }
@@ -76,6 +81,12 @@ public class WorksFragment extends Fragment {
     public void onResume() {
         mHost.dispatchResume();
         super.onResume();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getControllerManager().onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

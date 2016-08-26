@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.android.app;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -64,6 +65,14 @@ public class WorksController {
 
     public boolean handleMessage(Message message) {
         return true;
+    }
+
+    public void onViewStateRestored(Bundle bundle) {
+
+    }
+
+    public void onSaveInstanceState(Bundle bundle) {
+
     }
 
     public static class HandlerImpl implements Handler.Callback {

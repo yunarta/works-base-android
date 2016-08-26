@@ -38,6 +38,6 @@ configurations {
 
 dependencies {
     provided fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.android.support:appcompat-v7:24.0.0'
+    provided 'com.android.support:appcompat-v7:24.2.0'
     provided 'com.parse.bolts:bolts-tasks:1.4.0'
 }

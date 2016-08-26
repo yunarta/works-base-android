@@ -515,6 +515,40 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         mHostState = state;
     }
 
+    /**
+     * Hook host dispatch restore instance to controller.
+     * <p>
+     * This method must be called by host.
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle state) {
+        if (state != null) {
+            int size = mControllers.size();
+            for (int i = 0; i < size; i++) {
+                Bundle bundle = state.getParcelable(":worksController:" + mControllers.keyAt(i));
+                mControllers.valueAt(i).mLoader.onViewStateRestored(bundle);
+            }
+        }
+    }
+
+    /**
+     * Hook host dispatch save instance state instance to controller.
+     * <p>
+     * This method must be called by host.
+     */
+    @Override
+    public void dispatchSaveInstanceState(Bundle state) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            ControllerInfo info = mControllers.valueAt(i);
+
+            Bundle bundle = new Bundle();
+            info.mLoader.onSaveInstanceState(bundle);
+
+            state.putParcelable(":worksController:" + mControllers.keyAt(i), bundle);
+        }
+    }
+
     private ControllerInfo createLoader(int id, Bundle args, ControllerCallbacks<? extends WorksController> callback)
     {
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
