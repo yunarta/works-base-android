@@ -34,13 +34,13 @@ public class WorksActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         mController.dispatchPause();
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         mController.dispatchResume();
     }
