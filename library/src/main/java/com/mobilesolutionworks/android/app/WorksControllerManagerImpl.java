@@ -554,7 +554,7 @@ public class WorksControllerManagerImpl extends WorksControllerManager
         ControllerInfo  info   = new ControllerInfo(id, args, callback);
         WorksController loader = callback.onCreateController(id, args);
         info.mLoader = loader;
-        loader.onCreate();
+        loader.onCreate(args);
 
         return info;
     }

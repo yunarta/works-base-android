@@ -31,7 +31,7 @@ public class WorksController {
 //        return mActivity;
 //    }
 
-    public void onCreate() {
+    public void onCreate(Bundle savedInstanceState) {
         if (DEBUG) WC_LOGGER.fine("  wc[" + mHash + "] onCreate");
     }
 
