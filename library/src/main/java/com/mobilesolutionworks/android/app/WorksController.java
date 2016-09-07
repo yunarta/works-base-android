@@ -7,7 +7,7 @@ import android.os.Bundle;
  */
 public class WorksController {
 
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle args) {
 
     }
 
