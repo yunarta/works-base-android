@@ -44,6 +44,13 @@ public class WorksActivity extends AppCompatActivity {
         super.onResume();
         mController.dispatchResume();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mController.dispatchOnSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public void startActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
         if (fragment instanceof WaitingForResult) {

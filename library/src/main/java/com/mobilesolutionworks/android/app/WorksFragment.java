@@ -52,4 +52,10 @@ public class WorksFragment extends Fragment {
 
         Log.d("fragmentstate", this.getClass() + " Resume");
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mController.dispatchOnSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
 }

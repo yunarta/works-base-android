@@ -39,6 +39,13 @@ public class WorksControllerManager {
         }
     }
 
+    public void dispatchOnSaveInstanceState(Bundle state) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onSaveInstanceState(state);
+        }
+    }
+
     private class ControllerInfo<D extends WorksController> {
 
         D controller;

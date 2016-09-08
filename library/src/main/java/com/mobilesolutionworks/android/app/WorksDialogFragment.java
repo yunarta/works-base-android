@@ -50,4 +50,10 @@ public class WorksDialogFragment extends DialogFragment {
 
         Log.d("fragmentstate", this.getClass() + " Resume");
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mController.dispatchOnSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
 }
