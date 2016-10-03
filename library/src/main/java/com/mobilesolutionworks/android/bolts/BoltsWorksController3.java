@@ -14,6 +14,8 @@ import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+
 /**
  * Created by yunarta on 28/6/16.
  */
@@ -36,9 +38,23 @@ public class BoltsWorksController3<Host> extends WorksController {
         return mHandler;
     }
 
+    public void runOnUIWhenIsReady(final Runnable runnable) {
+        if (mIsPaused) {
+            getDisplayTCS().continueWith(new Continuation<Void, Object>() {
+                @Override
+                public Object then(Task<Void> task) throws Exception {
+                    runnable.run();
+                    return null;
+                }
+            }, Task.UI_THREAD_EXECUTOR);
+        } else {
+            Task.UI_THREAD_EXECUTOR.execute(runnable);
+        }
+    }
+
     public <T, R> Task<R> addTask(final Task<T> task, Continuation<T, R> continuation) {
         if (getHost() instanceof Fragment) {
-            Fragment fragment  = (Fragment) getHost();
+            Fragment fragment = (Fragment) getHost();
         }
 
         return task.continueWithTask(new Continuation<T, Task<T>>() {
