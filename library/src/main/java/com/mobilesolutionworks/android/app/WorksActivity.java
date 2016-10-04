@@ -47,8 +47,8 @@ public class WorksActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        mController.dispatchOnSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+        mController.dispatchOnSaveInstanceState(outState);
     }
 
     @Override
