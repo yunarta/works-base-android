@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.util.SparseArray;
@@ -43,6 +44,20 @@ public class WorksControllerManager {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
             mControllers.valueAt(i).controller.onSaveInstanceState(state);
+        }
+    }
+
+    public void dispatchOnActivityResult(int requestCode, int resultCode, Intent data) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void dispatchOnRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
