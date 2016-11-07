@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.android.bolts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -136,6 +137,14 @@ public class BoltsWorksController3<Host> extends WorksController {
         if (mDiplayTCS != null) {
             mDiplayTCS.trySetCancelled();
         }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
     }
 
     public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
