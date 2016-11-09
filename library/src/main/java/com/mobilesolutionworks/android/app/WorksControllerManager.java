@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.android.app;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.util.SparseArray;
@@ -43,6 +44,13 @@ public class WorksControllerManager {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
             mControllers.valueAt(i).controller.onSaveInstanceState(state);
+        }
+    }
+
+    public void onConfigurationChanged(Configuration config) {
+        int size = mControllers.size();
+        for (int i = 0; i < size; i++) {
+            mControllers.valueAt(i).controller.onConfigurationChanged(config);
         }
     }
 

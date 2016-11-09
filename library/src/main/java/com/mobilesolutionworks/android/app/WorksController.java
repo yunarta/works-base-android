@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.android.app;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 /**
@@ -28,6 +29,10 @@ public class WorksController {
     }
 
     public void onViewStateRestored(Bundle state) {
+
+    }
+
+    public void onConfigurationChanged(Configuration config) {
 
     }
 }

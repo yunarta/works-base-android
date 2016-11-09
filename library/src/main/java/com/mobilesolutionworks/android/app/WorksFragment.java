@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.android.app;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -55,5 +56,11 @@ public class WorksFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         mController.dispatchOnSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mController.onConfigurationChanged(newConfig);
     }
 }
