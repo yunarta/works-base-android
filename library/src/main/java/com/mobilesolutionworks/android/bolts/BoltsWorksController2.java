@@ -16,12 +16,12 @@ public class BoltsWorksController2<Host> extends WorksController {
 
     boolean mIsPaused;
 
-    TaskCompletionSource<Void> mDiplayTCS;
+    TaskCompletionSource<Void> mDisplayTCS;
 
     protected Host mHost;
 
     public BoltsWorksController2() {
-        mDiplayTCS = new TaskCompletionSource<>();
+        mDisplayTCS = new TaskCompletionSource<>();
     }
 
     public <T, R> Task<R> addTask(Task<T> task, Continuation<T, R> continuation) {
@@ -61,7 +61,7 @@ public class BoltsWorksController2<Host> extends WorksController {
     }
 
     private Task<Void> getDisplayTCS() {
-        return mDiplayTCS.getTask();
+        return mDisplayTCS.getTask();
     }
 
     public void setHost(Host host) {
@@ -77,7 +77,7 @@ public class BoltsWorksController2<Host> extends WorksController {
         super.onResume();
         mIsPaused = false;
 
-        mDiplayTCS.trySetResult(null);
+        mDisplayTCS.trySetResult(null);
     }
 
     @Override
@@ -86,15 +86,15 @@ public class BoltsWorksController2<Host> extends WorksController {
 
         mIsPaused = true;
 
-        mDiplayTCS = new TaskCompletionSource<>();
+        mDisplayTCS = new TaskCompletionSource<>();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if (mDiplayTCS != null) {
-            mDiplayTCS.trySetCancelled();
+        if (mDisplayTCS != null) {
+            mDisplayTCS.trySetCancelled();
         }
     }
 
