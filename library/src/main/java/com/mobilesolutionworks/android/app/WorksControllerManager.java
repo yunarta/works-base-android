@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.util.SparseArray;
 
+import static android.R.attr.id;
+
 /**
  * Created by yunarta on 18/11/15.
  */
@@ -78,6 +80,15 @@ public class WorksControllerManager {
 
     public WorksControllerManager() {
         mControllers = new SparseArray<>();
+    }
+
+    public <D extends WorksController> D getController(int id) {
+        ControllerInfo info = mControllers.get(id);
+        if (info != null) {
+            return (D) info.controller;
+        }
+
+        return null;
     }
 
     public <D extends WorksController> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
