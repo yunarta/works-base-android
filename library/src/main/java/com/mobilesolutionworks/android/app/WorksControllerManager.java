@@ -56,6 +56,16 @@ public class WorksControllerManager {
         }
     }
 
+    public <T extends WorksController> T getController(int id, Class<T> klass) {
+        WorksController worksController = mControllers.get(id).controller;
+        if (worksController != null && klass.isInstance(worksController)) {
+            return (T) worksController;
+
+        }
+
+        return null;
+    }
+
     private class ControllerInfo<D extends WorksController> {
 
         D controller;
