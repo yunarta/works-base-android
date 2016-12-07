@@ -68,11 +68,13 @@ public class WorksControllerManager {
 
     private class ControllerInfo<D extends WorksController> {
 
+        int id;
+
         D controller;
 
         ControllerCallbacks<D> callback;
 
-        public ControllerInfo(ControllerCallbacks<D> callback) {
+        public ControllerInfo(int id, ControllerCallbacks<D> callback) {
             this.callback = callback;
         }
     }
@@ -104,10 +106,12 @@ public class WorksControllerManager {
     public <D extends WorksController> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
         ControllerInfo info = mControllers.get(id);
         if (info == null) {
-            info = new ControllerInfo(callback);
+            info = new ControllerInfo(id, callback);
 
             D newController = callback.onCreateController(id, bundle);
             info.controller = newController;
+            info.controller.setId(id);
+
 
             callback.onLoadFinished(id, bundle, newController);
             newController.onCreate(bundle);

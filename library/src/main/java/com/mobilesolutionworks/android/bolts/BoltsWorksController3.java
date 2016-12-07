@@ -139,13 +139,6 @@ public class BoltsWorksController3<Host> extends WorksController {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-    }
 
     public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
 
@@ -158,7 +151,6 @@ public class BoltsWorksController3<Host> extends WorksController {
         @Override
         public void onLoadFinished(int id, Bundle bundle, Controller controller) {
             controller.setHost(mHost);
-
         }
 
         @Override
