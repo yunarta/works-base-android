@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.util.SparseArray;
 
-import static android.R.attr.id;
-
 /**
  * Created by yunarta on 18/11/15.
  */
 public class WorksControllerManager {
+
+    private Object mData;
+
+    private void setData(Object data) {
+        mData = data;
+    }
 
     public void dispatchPause() {
         int size = mControllers.size();
@@ -114,7 +118,7 @@ public class WorksControllerManager {
 
 
             callback.onLoadFinished(id, bundle, newController);
-            newController.onCreate(bundle);
+            newController.onCreate(bundle, mData);
 
             mControllers.put(id, info);
         } else {
@@ -127,22 +131,24 @@ public class WorksControllerManager {
 
     public static class Loader extends android.support.v4.content.Loader<WorksControllerManager> {
 
-        private WorksControllerManager mData;
+        private WorksControllerManager mControllerManager;
 
-        public Loader(Context context) {
+        public Loader(Context context, Object data) {
             super(context);
-            mData = new WorksControllerManager();
+
+            mControllerManager = new WorksControllerManager();
+            mControllerManager.setData(data);
         }
 
         @Override
         protected void onStartLoading() {
             super.onStartLoading();
 
-            deliverResult(mData);
+            deliverResult(mControllerManager);
         }
 
         public WorksControllerManager getController() {
-            return mData;
+            return mControllerManager;
         }
     }
 
@@ -150,13 +156,18 @@ public class WorksControllerManager {
 
         private Context mContext;
 
-        public LoaderCallbacks(Context context) {
+        private final Object mData;
+
+        public LoaderCallbacks(Context context, Object transientData) {
             mContext = context.getApplicationContext();
+            mContext = context;
+
+            mData = transientData;
         }
 
         @Override
         public android.support.v4.content.Loader<WorksControllerManager> onCreateLoader(int id, Bundle args) {
-            return new Loader(mContext);
+            return new Loader(mContext, mData);
         }
 
         @Override

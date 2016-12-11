@@ -3,6 +3,7 @@ package com.mobilesolutionworks.android.app;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 /**
  * Created by yunarta on 16/11/15.
@@ -10,6 +11,8 @@ import android.os.Bundle;
 public class WorksController {
 
     private int mId;
+
+    private Object mData;
 
     public final void setId(int id) {
         mId = id;
@@ -19,7 +22,7 @@ public class WorksController {
         return mId;
     }
 
-    public void onCreate(Bundle args) {
+    public void onCreate(Bundle args, @Nullable Object data) {
 
     }
 
@@ -48,6 +51,10 @@ public class WorksController {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    public void onControllerResult(int requestCode, int resultCode, Object data) {
 
     }
 

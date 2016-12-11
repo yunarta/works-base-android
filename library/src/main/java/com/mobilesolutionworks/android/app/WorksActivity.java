@@ -24,7 +24,7 @@ public class WorksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getSupportLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(this));
+        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getSupportLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(this, null));
         mController = loader.getController();
     }
 
@@ -128,6 +128,13 @@ public class WorksActivity extends AppCompatActivity {
 
             requestId |= mId;
             return requestId;
+        }
+    }
+
+    public void postControllerResult(int id, int requestCode, int resultCode, Object data) {
+        WorksController controller = mController.getController(id);
+        if (controller != null) {
+            controller.onControllerResult(requestCode, resultCode, data);
         }
     }
 }
