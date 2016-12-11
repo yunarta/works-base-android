@@ -18,6 +18,10 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
 
     private int mTargetControllerRequestCode;
 
+    public void setTransientData(Object transientData) {
+        mTransientData = transientData;
+    }
+
     public void setTargetController(int id) {
         setTargetController(id, 0);
     }

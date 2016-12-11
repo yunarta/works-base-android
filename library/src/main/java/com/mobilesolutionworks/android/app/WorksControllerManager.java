@@ -17,6 +17,10 @@ public class WorksControllerManager {
         mData = data;
     }
 
+    public <T> T getData() {
+        return (T) mData;
+    }
+
     public void dispatchPause() {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
