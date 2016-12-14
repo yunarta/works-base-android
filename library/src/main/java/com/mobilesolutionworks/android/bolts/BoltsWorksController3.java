@@ -63,7 +63,7 @@ public class BoltsWorksController3<Host> extends WorksController {
                         @Override
                         public Task<T> then(Task<Void> task) throws Exception {
                             if (task.getError() != null) {
-                                Log.d("task", "task.getError()", task.getError());
+                                Log.d("WORKS", "Task failed due to error", task.getError());
                             }
                             return finished;
                         }
