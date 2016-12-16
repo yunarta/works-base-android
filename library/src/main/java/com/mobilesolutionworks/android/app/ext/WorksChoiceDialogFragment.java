@@ -20,6 +20,8 @@ import org.javatuples.Pair;
 
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Action2;
+import rx.functions.Func2;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -41,9 +43,9 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
     protected transient Data mTransientData;
 
-    protected transient Action1<Observable<Pair<Integer, Data>>> mTransientAction;
+    protected transient Action2<Integer, Data> mTransientAction;
 
-    public void setTransientData(Data data, Action1<Observable<Pair<Integer, Data>>> action) {
+    public void setTransientData(Data data, Action2<Integer, Data> action) {
         mTransientData = data;
         mTransientAction = action;
     }
@@ -55,11 +57,9 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
             @Override
             public AlertDialogFragmentController<Data> onCreateController(int id, Bundle bundle) {
-                AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<>();
-                mTransientAction.call(controller.setData(mTransientData));
-
-                mTransientAction = null;
+                AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<>(mTransientData, mTransientAction);
                 mTransientData = null;
+                mTransientAction = null;
                 return controller;
             }
         });
