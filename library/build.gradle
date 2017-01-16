@@ -46,6 +46,6 @@ dependencies {
     provided fileTree(dir: 'libs', include: ['*.jar'])
     provided 'com.android.support:appcompat-v7:24.2.1'
     provided 'com.parse.bolts:bolts-tasks:1.4.0'
-    provided 'io.reactivex:rxjava:1.2.4'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.4'
     provided 'com.github.pakoito:RxTuples:1.0.0'
 }
