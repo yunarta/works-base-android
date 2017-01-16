@@ -47,5 +47,4 @@ dependencies {
     provided 'com.android.support:appcompat-v7:24.2.1'
     provided 'com.parse.bolts:bolts-tasks:1.4.0'
     compile 'io.reactivex.rxjava2:rxjava:2.0.4'
-    provided 'com.github.pakoito:RxTuples:1.0.0'
 }

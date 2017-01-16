@@ -16,8 +16,6 @@ import com.mobilesolutionworks.android.app.WorksConstants;
 import com.mobilesolutionworks.android.app.WorksDialogFragment;
 import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
 
-import org.javatuples.Pair;
-
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.BiConsumer;

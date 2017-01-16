@@ -2,7 +2,6 @@ package com.mobilesolutionworks.android.app.ext;
 
 import com.mobilesolutionworks.android.app.WorksDialogFragment;
 import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
-import com.pacoworks.rxtuples.RxTuples;
 
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.BiConsumer;
