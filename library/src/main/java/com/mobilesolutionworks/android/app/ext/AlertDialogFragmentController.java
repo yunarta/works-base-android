@@ -15,7 +15,7 @@ public class AlertDialogFragmentController<Data> extends BoltsWorksController3<W
 
     private final Data mData;
 
-    private final BiConsumer<Integer, Data> action;
+    private final BiConsumer<Integer, Data> mAction;
 
     public AlertDialogFragmentController(Data mData, BiConsumer<Integer, Data> action) {
         this.mData = mData;
@@ -24,7 +24,7 @@ public class AlertDialogFragmentController<Data> extends BoltsWorksController3<W
 
     public void postResult(int choiceRes) {
         try {
-            action.accept(choiceRes, mData);
+            mAction.accept(choiceRes, mData);
         } catch (Exception e) {
             throw Exceptions.propagate(e);
         }
