@@ -16,12 +16,10 @@ import com.mobilesolutionworks.android.app.WorksConstants;
 import com.mobilesolutionworks.android.app.WorksDialogFragment;
 import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
 
-import org.javatuples.Pair;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Action2;
-import rx.functions.Func2;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.BiConsumer;
+import io.reactivex.functions.BiFunction;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -43,9 +41,9 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
     protected transient Data mTransientData;
 
-    protected transient Action2<Integer, Data> mTransientAction;
+    protected transient BiConsumer<Integer, Data> mTransientAction;
 
-    public void setTransientData(Data data, Action2<Integer, Data> action) {
+    public void setTransientData(Data data, BiConsumer<Integer, Data> action) {
         mTransientData = data;
         mTransientAction = action;
     }
@@ -57,7 +55,7 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
             @Override
             public AlertDialogFragmentController<Data> onCreateController(int id, Bundle bundle) {
-                AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<>(mTransientData, mTransientAction);
+                AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<Data>(mTransientData, mTransientAction);
                 mTransientData = null;
                 mTransientAction = null;
                 return controller;
