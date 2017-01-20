@@ -9,19 +9,7 @@ import java.util.concurrent.Executor;
  * Created by yunarta on 19/11/15.
  */
 public class WorksExecutor {
-    static class MainExecutor implements Executor {
-        MainExecutor() {
-            mHandler = new Handler(Looper.getMainLooper());
-        }
 
-        private Handler mHandler;
+    public static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);
 
-
-        @Override
-        public void execute(Runnable runnable) {
-            mHandler.post(runnable);
-        }
-    }
-
-    public static final Executor MAIN = new MainExecutor();
 }

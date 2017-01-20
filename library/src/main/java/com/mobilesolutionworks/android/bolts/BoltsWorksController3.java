@@ -1,100 +1,60 @@
 package com.mobilesolutionworks.android.bolts;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
+import com.mobilesolutionworks.android.exe.WorksExecutor;
 
-import bolts.Continuation;
-import bolts.Task;
-import bolts.TaskCompletionSource;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by yunarta on 28/6/16.
  */
 public class BoltsWorksController3<Host> extends WorksController {
 
-    private boolean mIsPaused = true;
+    private final Observable observable = new Observable();
 
-    private TaskCompletionSource<Void> mDisplayTCS;
+    private boolean mIsPaused = true;
 
     private Host mHost;
 
-    private Handler mHandler;
-
-    public BoltsWorksController3() {
-        mDisplayTCS = new TaskCompletionSource<>();
-        mHandler = new Handler(Looper.getMainLooper());
-    }
-
-    public Handler getHandler() {
-        return mHandler;
-    }
-
     public void runOnUIWhenIsReady(final Runnable runnable) {
         if (mIsPaused) {
-            getDisplayTCS().continueWith(new Continuation<Void, Object>() {
+            observable.addObserver(new Observer() {
                 @Override
-                public Object then(Task<Void> task) throws Exception {
-                    runnable.run();
-                    return null;
+                public void update(Observable o, Object arg) {
+                    observable.deleteObserver(this);
+                    executeInUIThread(runnable);
                 }
-            }, Task.UI_THREAD_EXECUTOR);
+            });
         } else {
-            Task.UI_THREAD_EXECUTOR.execute(runnable);
+            executeInUIThread(runnable);
         }
     }
 
-    public <T, R> Task<R> addTask(final Task<T> task, Continuation<T, R> continuation) {
+    private void executeInUIThread(final Runnable runnable) {
+        if(isInUIThread()) {
+            runnable.run();
+        } else {
+            WorksExecutor.UIExecutor.execute(runnable);
+        }
+    }
+
+    private boolean isInUIThread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? Looper.getMainLooper().isCurrentThread()
+                : Thread.currentThread() == Looper.getMainLooper().getThread();
+    }
+
+    public <T, R> Runnable addTask(Runnable runnable) {
         if (getHost() instanceof Fragment) {
             Fragment fragment = (Fragment) getHost();
         }
-
-        return task.continueWithTask(new Continuation<T, Task<T>>() {
-            @Override
-            public Task<T> then(final Task<T> finished) throws Exception {
-                if (mIsPaused) {
-                    return getDisplayTCS().continueWithTask(new Continuation<Void, Task<T>>() {
-                        @Override
-                        public Task<T> then(Task<Void> task) throws Exception {
-                            if (task.getError() != null) {
-                                Log.d("WORKS", "Task failed due to error", task.getError());
-                            }
-                            return finished;
-                        }
-                    });
-                } else {
-                    return finished;
-                }
-            }
-        }, Task.UI_THREAD_EXECUTOR).continueWith(continuation);
-    }
-
-    public <T> Task<T> createTask(Task<T> task) {
-        return task.continueWithTask(new Continuation<T, Task<T>>() {
-            @Override
-            public Task<T> then(final Task<T> finished) throws Exception {
-                if (mIsPaused) {
-                    return getDisplayTCS().continueWithTask(new Continuation<Void, Task<T>>() {
-                        @Override
-                        public Task<T> then(Task<Void> task) throws Exception {
-                            return finished;
-                        }
-                    });
-                } else {
-                    return finished;
-                }
-            }
-        }, Task.UI_THREAD_EXECUTOR);
-    }
-
-    private Task<Void> getDisplayTCS() {
-        return mDisplayTCS.getTask();
+        return () -> runOnUIWhenIsReady(runnable);
     }
 
     public void setHost(Host host) {
@@ -114,8 +74,7 @@ public class BoltsWorksController3<Host> extends WorksController {
     public void onResume() {
         super.onResume();
         mIsPaused = false;
-
-        mDisplayTCS.trySetResult(null);
+        observable.notifyObservers();
     }
 
     protected void onHostUpdated() {
@@ -125,20 +84,14 @@ public class BoltsWorksController3<Host> extends WorksController {
     @Override
     public void onPaused() {
         super.onPaused();
-
         mIsPaused = true;
-        mDisplayTCS = new TaskCompletionSource<>();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (mDisplayTCS != null) {
-            mDisplayTCS.trySetCancelled();
-        }
+        observable.deleteObservers();
     }
-
 
     public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
 

@@ -1,10 +1,8 @@
 package com.mobilesolutionworks.android.app.ext;
 
+import com.mobilesolutionworks.android.app.BiFunction;
 import com.mobilesolutionworks.android.app.WorksDialogFragment;
 import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
-
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiConsumer;
 
 
 /**
@@ -15,19 +13,15 @@ public class AlertDialogFragmentController<Data> extends BoltsWorksController3<W
 
     private final Data mData;
 
-    private final BiConsumer<Integer, Data> mAction;
+    private final BiFunction<Integer, Data> mAction;
 
-    public AlertDialogFragmentController(Data mData, BiConsumer<Integer, Data> action) {
+    public AlertDialogFragmentController(Data mData, BiFunction<Integer, Data> action) {
         this.mData = mData;
         this.mAction = action;
     }
 
     public void postResult(int choiceRes) {
-        try {
-            mAction.accept(choiceRes, mData);
-        } catch (Exception e) {
-            throw Exceptions.propagate(e);
-        }
+        mAction.accept(choiceRes, mData);
     }
 
 }

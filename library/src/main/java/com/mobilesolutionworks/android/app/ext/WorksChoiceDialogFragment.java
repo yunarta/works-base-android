@@ -12,14 +12,10 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
+import com.mobilesolutionworks.android.app.BiFunction;
 import com.mobilesolutionworks.android.app.WorksConstants;
 import com.mobilesolutionworks.android.app.WorksDialogFragment;
 import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
-
-
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.functions.BiFunction;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -41,9 +37,9 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
     protected transient Data mTransientData;
 
-    protected transient BiConsumer<Integer, Data> mTransientAction;
+    protected transient BiFunction<Integer, Data> mTransientAction;
 
-    public void setTransientData(Data data, BiConsumer<Integer, Data> action) {
+    public void setTransientData(Data data, BiFunction<Integer, Data> action) {
         mTransientData = data;
         mTransientAction = action;
     }
