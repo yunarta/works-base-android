@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 
+import com.mobilesolutionworks.android.app.WaitingForResult;
 import com.mobilesolutionworks.android.app.WorksController;
 import com.mobilesolutionworks.android.app.WorksControllerManager;
 import com.mobilesolutionworks.android.exe.WorksExecutor;
@@ -17,7 +18,7 @@ import java.util.Observer;
  */
 public class BoltsWorksController3<Host> extends WorksController {
 
-    private final Observable observable = new Observable();
+    private final PublicObservable observable = new PublicObservable();
 
     private boolean mIsPaused = true;
 
@@ -72,8 +73,8 @@ public class BoltsWorksController3<Host> extends WorksController {
 
     @Override
     public void onResume() {
-        super.onResume();
         mIsPaused = false;
+        observable.setChanged();
         observable.notifyObservers();
     }
 
@@ -83,7 +84,6 @@ public class BoltsWorksController3<Host> extends WorksController {
 
     @Override
     public void onPaused() {
-        super.onPaused();
         mIsPaused = true;
     }
 
