@@ -21,7 +21,7 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
 
     private int mTargetControllerRequestCode;
 
-    public void setArgument(Object data) {
+    public void setTransientArgument(Object data) {
         mTransientData = data;
     }
 
