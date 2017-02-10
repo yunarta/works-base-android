@@ -77,7 +77,7 @@ public class WorksActivity2 extends Activity implements Host {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         int key = requestCode & 0xffff;
 
         FragmentTrackInfo trackInfo = mTrackInfoMap.get(key);
@@ -111,8 +111,13 @@ public class WorksActivity2 extends Activity implements Host {
     }
 
     @Override
-    public Context getContext() {
+    public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public android.support.v4.app.FragmentManager getHostFragmentManager() {
+        throw new UnsupportedOperationException();
     }
 
     private class FragmentTrackInfo {

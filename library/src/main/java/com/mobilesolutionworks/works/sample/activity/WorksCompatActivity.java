@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.works.sample.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,7 +77,7 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         int key = requestCode & 0xffff;
 
         FragmentTrackInfo trackInfo = mTrackInfoMap.get(key);
@@ -109,8 +110,13 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
     }
 
     @Override
-    public Context getContext() {
+    public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public FragmentManager getHostFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     private class FragmentTrackInfo {

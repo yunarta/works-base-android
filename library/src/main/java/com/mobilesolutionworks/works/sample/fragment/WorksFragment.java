@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.mobilesolutionworks.works.core.WorksController;
@@ -113,4 +114,15 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
             controller.onControllerResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public FragmentManager getHostFragmentManager() {
+        return getChildFragmentManager();
+    }
+
+    @Override
+    public void finish() {
+        // Nothing to do
+    }
+
 }

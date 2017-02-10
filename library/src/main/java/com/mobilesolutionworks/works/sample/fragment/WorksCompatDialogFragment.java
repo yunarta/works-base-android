@@ -3,6 +3,7 @@ package com.mobilesolutionworks.works.sample.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.View;
 
@@ -106,6 +107,16 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
         if (controller != null) {
             controller.onControllerResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public FragmentManager getHostFragmentManager() {
+        return getChildFragmentManager();
+    }
+
+    @Override
+    public void finish() {
+        // Nothing to do
     }
 
 }
