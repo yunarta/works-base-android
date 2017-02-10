@@ -14,7 +14,7 @@ import java.util.concurrent.Executor;
 /**
  * Created by yunarta on 28/6/16.
  */
-public class SimpleWorksController<Host> extends WorksController {
+public class SimpleWorksController<H extends Host> extends WorksController {
 
     private static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);
 
@@ -22,7 +22,7 @@ public class SimpleWorksController<Host> extends WorksController {
 
     private boolean mIsPaused = true;
 
-    private Host mHost;
+    private H mHost;
 
     public void runOnUIWhenIsReady(final Runnable runnable) {
         if (mIsPaused) {
@@ -58,7 +58,7 @@ public class SimpleWorksController<Host> extends WorksController {
         return () -> runOnUIWhenIsReady(runnable);
     }
 
-    public void setHost(Host host) {
+    public void setHost(H host) {
         boolean sendUpdate = mHost != host;
 
         this.mHost = host;
@@ -67,7 +67,7 @@ public class SimpleWorksController<Host> extends WorksController {
         }
     }
 
-    protected Host getHost() {
+    protected H getHost() {
         return mHost;
     }
 
@@ -102,11 +102,11 @@ public class SimpleWorksController<Host> extends WorksController {
 
     }
 
-    public static abstract class ControllerCallbacks<Controller extends SimpleWorksController<Host>, Host> implements WorksSupportControllerManager.ControllerCallbacks<Controller> {
+    public static abstract class ControllerCallbacks<Controller extends SimpleWorksController<E>, E extends Host> implements WorksSupportControllerManager.ControllerCallbacks<Controller> {
 
-        private Host mHost;
+        private E mHost;
 
-        public ControllerCallbacks(Host host) {
+        public ControllerCallbacks(E host) {
             mHost = host;
         }
 

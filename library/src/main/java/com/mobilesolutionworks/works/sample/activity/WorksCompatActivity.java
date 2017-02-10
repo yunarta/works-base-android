@@ -1,5 +1,6 @@
 package com.mobilesolutionworks.works.sample.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
+import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.sample.WaitingForResult;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
@@ -15,7 +17,7 @@ import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
  * Created by lucas34990 on 10/2/17.
  */
 
-public class WorksCompatActivity extends AppCompatActivity {
+public class WorksCompatActivity extends AppCompatActivity implements Host {
 
     private final SparseArray<FragmentTrackInfo> mTrackInfoMap = new SparseArray<>();
 
@@ -104,6 +106,11 @@ public class WorksCompatActivity extends AppCompatActivity {
 
     public void onActivityResultCompat(int requestCode, int resultCode, Intent data) {
         onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     private class FragmentTrackInfo {
