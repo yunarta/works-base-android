@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.sample;
 
 /**
  * A functional interface (callback) that accepts two values (of possibly different types).

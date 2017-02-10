@@ -1,15 +1,15 @@
-package com.mobilesolutionworks.android.app.ext;
+package com.mobilesolutionworks.works.sample.controler;
 
-import com.mobilesolutionworks.android.app.BiFunction;
-import com.mobilesolutionworks.android.app.WorksDialogFragment;
-import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
+import com.mobilesolutionworks.works.sample.BiFunction;
+import com.mobilesolutionworks.works.sample.fragment.WorksDialogFragment;
+import com.mobilesolutionworks.works.core.SimpleWorksController;
 
 
 /**
  * Created by yunarta on 7/12/16.
  */
 
-public class AlertDialogFragmentController<Data> extends BoltsWorksController3<WorksDialogFragment> {
+public class AlertDialogFragmentController<Data> extends SimpleWorksController<WorksDialogFragment> {
 
     private final Data mData;
 

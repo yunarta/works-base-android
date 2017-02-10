@@ -1,10 +1,10 @@
-package com.mobilesolutionworks.android.persistence;
+package com.mobilesolutionworks.works.sample.controler;
 
 import android.os.Bundle;
 import android.util.SparseArray;
 
-import com.mobilesolutionworks.android.app.WorksController;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
+import com.mobilesolutionworks.works.core.WorksController;
+import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 
 import java.lang.ref.WeakReference;
 
@@ -32,7 +32,7 @@ public class PersistenceSparseArray extends WorksController {
         void onCreate(int id, PersistenceSparseArray controller);
     }
 
-    public static class ManagerCallback implements WorksControllerManager.ControllerCallbacks<PersistenceSparseArray> {
+    public static class ManagerCallback implements WorksSupportControllerManager.ControllerCallbacks<PersistenceSparseArray> {
 
         WeakReference<OnSparseArrayCreated> mCallback;
 

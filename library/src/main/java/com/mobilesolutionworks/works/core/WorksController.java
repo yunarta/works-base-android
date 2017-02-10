@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.core;
 
 import android.content.Intent;
 import android.content.res.Configuration;

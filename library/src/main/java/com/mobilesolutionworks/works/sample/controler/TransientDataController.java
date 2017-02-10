@@ -1,6 +1,6 @@
-package com.mobilesolutionworks.android.app.ext;
+package com.mobilesolutionworks.works.sample.controler;
 
-import com.mobilesolutionworks.android.app.WorksController;
+import com.mobilesolutionworks.works.core.WorksController;
 
 /**
  * Created by yunarta on 10/12/16.

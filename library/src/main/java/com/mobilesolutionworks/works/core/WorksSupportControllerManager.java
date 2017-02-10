@@ -1,15 +1,16 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.core;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.SparseArray;
 
 /**
  * Created by yunarta on 18/11/15.
  */
-public class WorksControllerManager {
+public class WorksSupportControllerManager {
 
     private Object mData;
 
@@ -98,7 +99,7 @@ public class WorksControllerManager {
 
     SparseArray<ControllerInfo> mControllers;
 
-    public WorksControllerManager() {
+    public WorksSupportControllerManager() {
         mControllers = new SparseArray<>();
     }
 
@@ -133,14 +134,14 @@ public class WorksControllerManager {
         return (D) info.controller;
     }
 
-    public static class Loader extends android.support.v4.content.Loader<WorksControllerManager> {
+    public static class InternalLoader extends Loader<WorksSupportControllerManager> {
 
-        private WorksControllerManager mControllerManager;
+        private WorksSupportControllerManager mControllerManager;
 
-        public Loader(Context context, Object data) {
+        public InternalLoader(Context context, Object data) {
             super(context);
 
-            mControllerManager = new WorksControllerManager();
+            mControllerManager = new WorksSupportControllerManager();
             mControllerManager.setData(data);
         }
 
@@ -151,12 +152,12 @@ public class WorksControllerManager {
             deliverResult(mControllerManager);
         }
 
-        public WorksControllerManager getController() {
+        public WorksSupportControllerManager getController() {
             return mControllerManager;
         }
     }
 
-    public static class LoaderCallbacks implements LoaderManager.LoaderCallbacks<WorksControllerManager> {
+    public static class LoaderCallbacks implements LoaderManager.LoaderCallbacks<WorksSupportControllerManager> {
 
         private Context mContext;
 
@@ -170,18 +171,18 @@ public class WorksControllerManager {
         }
 
         @Override
-        public android.support.v4.content.Loader<WorksControllerManager> onCreateLoader(int id, Bundle args) {
-            return new Loader(mContext, mData);
+        public Loader<WorksSupportControllerManager> onCreateLoader(int id, Bundle args) {
+            return new InternalLoader(mContext, mData);
         }
 
         @Override
-        public void onLoadFinished(android.support.v4.content.Loader<WorksControllerManager> loader, WorksControllerManager data) {
+        public void onLoadFinished(Loader<WorksSupportControllerManager> loader, WorksSupportControllerManager data) {
 
         }
 
         @Override
-        public void onLoaderReset(android.support.v4.content.Loader<WorksControllerManager> loader) {
-            Loader l = (Loader) loader;
+        public void onLoaderReset(Loader<WorksSupportControllerManager> loader) {
+            InternalLoader l = (InternalLoader) loader;
             l.getController().dispatchDestroy();
         }
     }

@@ -1,17 +1,22 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.sample.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.mobilesolutionworks.works.sample.activity.WorksActivity;
+import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.core.WorksController;
+import com.mobilesolutionworks.works.core.WorksFragmentBase;
+
 /**
- * Created by lucas34990 on 9/2/17.
+ * Created by yunarta on 19/11/15.
  */
+public class WorksDialogFragment extends DialogFragment implements WorksFragmentBase {
 
-public class WorksCompatDialogFragment extends AppCompatDialogFragment implements WorksFragmentBase {
-
-    private WorksControllerManager mController;
+    private WorksSupportControllerManager mController;
 
     private transient Object mTransientData;
 
@@ -44,7 +49,7 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(getActivity(), mTransientData));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity(), mTransientData));
         mController = loader.getController();
 
         if (savedInstanceState != null) {
@@ -53,7 +58,7 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
         }
     }
 
-    public WorksControllerManager getControllerManager() {
+    protected WorksSupportControllerManager getControllerManager() {
         return mController;
     }
 
@@ -84,11 +89,22 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends WorksActivity> T getBaseActivity() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof WorksActivity) {
+            return (T) activity;
+        }
+
+        return null;
+    }
+
+    @Override
     public void postControllerResult(int id, int requestCode, int resultCode, Object data) {
         WorksController controller = mController.getController(id);
         if (controller != null) {
             controller.onControllerResult(requestCode, resultCode, data);
         }
     }
-
 }

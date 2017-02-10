@@ -1,22 +1,22 @@
-package com.mobilesolutionworks.android.bolts;
+package com.mobilesolutionworks.works.core;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 
-import com.mobilesolutionworks.android.app.WaitingForResult;
-import com.mobilesolutionworks.android.app.WorksController;
-import com.mobilesolutionworks.android.app.WorksControllerManager;
-import com.mobilesolutionworks.android.exe.WorksExecutor;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Executor;
 
 /**
  * Created by yunarta on 28/6/16.
  */
-public class BoltsWorksController3<Host> extends WorksController {
+public class SimpleWorksController<Host> extends WorksController {
+
+    private static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);
 
     private final PublicObservable observable = new PublicObservable();
 
@@ -42,7 +42,7 @@ public class BoltsWorksController3<Host> extends WorksController {
         if(isInUIThread()) {
             runnable.run();
         } else {
-            WorksExecutor.UIExecutor.execute(runnable);
+            UIExecutor.execute(runnable);
         }
     }
 
@@ -67,7 +67,7 @@ public class BoltsWorksController3<Host> extends WorksController {
         }
     }
 
-    public Host getHost() {
+    protected Host getHost() {
         return mHost;
     }
 
@@ -93,7 +93,16 @@ public class BoltsWorksController3<Host> extends WorksController {
         observable.deleteObservers();
     }
 
-    public static abstract class ControllerCallbacks<Controller extends BoltsWorksController3<Host>, Host> implements WorksControllerManager.ControllerCallbacks<Controller> {
+    private static final class PublicObservable extends Observable {
+
+        @Override
+        public void setChanged() {
+            super.setChanged();
+        }
+
+    }
+
+    public static abstract class ControllerCallbacks<Controller extends SimpleWorksController<Host>, Host> implements WorksSupportControllerManager.ControllerCallbacks<Controller> {
 
         private Host mHost;
 

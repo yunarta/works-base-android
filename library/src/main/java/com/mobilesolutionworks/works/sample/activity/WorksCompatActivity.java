@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.sample.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,28 +7,29 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
+import com.mobilesolutionworks.works.sample.WaitingForResult;
+import com.mobilesolutionworks.works.core.WorksController;
+import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+
 /**
- * Created by yunarta on 19/11/15.
+ * Created by lucas34990 on 10/2/17.
  */
-public class WorksActivity extends AppCompatActivity {
 
-    private SparseArray<FragmentTrackInfo> mTrackInfoMap;
+public class WorksCompatActivity extends AppCompatActivity {
 
-    private WorksControllerManager mController;
+    private final SparseArray<FragmentTrackInfo> mTrackInfoMap = new SparseArray<>();
 
-    public WorksActivity() {
-        mTrackInfoMap = new SparseArray<>();
-    }
+    private WorksSupportControllerManager mController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getSupportLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(this, null));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getSupportLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(this, null));
         mController = loader.getController();
     }
 
-    public WorksControllerManager getControllerManager() {
+    public WorksSupportControllerManager getControllerManager() {
         return mController;
     }
 

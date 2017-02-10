@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.sample.fragment;
 
 /**
  * Created by yunarta on 7/12/16.

@@ -1,16 +1,23 @@
-package com.mobilesolutionworks.android.app;
+package com.mobilesolutionworks.works.sample.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
+
+import com.mobilesolutionworks.works.core.WorksController;
+import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.core.WorksFragmentBase;
+import com.mobilesolutionworks.works.sample.activity.WorksActivity;
 
 /**
  * Created by yunarta on 19/11/15.
  */
-public class WorksDialogFragment extends DialogFragment implements WorksFragmentBase {
+public class WorksFragment extends Fragment implements WorksFragmentBase {
 
-    private WorksControllerManager mController;
+    private WorksSupportControllerManager mController;
 
     private transient Object mTransientData;
 
@@ -18,8 +25,8 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
 
     private int mTargetControllerRequestCode;
 
-    public void setTransientData(Object transientData) {
-        mTransientData = transientData;
+    public void setTransientArgument(Object data) {
+        mTransientData = data;
     }
 
     public void setTargetController(int id) {
@@ -43,17 +50,13 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksControllerManager.Loader loader = (WorksControllerManager.Loader) getLoaderManager().initLoader(0, null, new WorksControllerManager.LoaderCallbacks(getActivity(), mTransientData));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity(), mTransientData));
         mController = loader.getController();
 
         if (savedInstanceState != null) {
             mTargetControllerId = savedInstanceState.getInt("targetControllerId");
             mTargetControllerRequestCode = savedInstanceState.getInt("targetControllerRequestCode");
         }
-    }
-
-    public WorksControllerManager getControllerManager() {
-        return mController;
     }
 
     @Override
@@ -81,6 +84,27 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
 
         mController.dispatchOnSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mController.onConfigurationChanged(newConfig);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends WorksActivity> T getBaseActivity() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof WorksActivity) {
+            return (T) activity;
+        }
+
+        return null;
+    }
+
+    protected WorksSupportControllerManager getControllerManager() {
+        return mController;
     }
 
     public void postControllerResult(int id, int requestCode, int resultCode, Object data) {

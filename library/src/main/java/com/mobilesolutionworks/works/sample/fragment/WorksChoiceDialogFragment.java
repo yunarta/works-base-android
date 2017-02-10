@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.android.app.ext;
+package com.mobilesolutionworks.works.sample.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,10 +12,9 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
-import com.mobilesolutionworks.android.app.BiFunction;
-import com.mobilesolutionworks.android.app.WorksConstants;
-import com.mobilesolutionworks.android.app.WorksDialogFragment;
-import com.mobilesolutionworks.android.bolts.BoltsWorksController3;
+import com.mobilesolutionworks.works.sample.BiFunction;
+import com.mobilesolutionworks.works.sample.controler.AlertDialogFragmentController;
+import com.mobilesolutionworks.works.core.SimpleWorksController;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -47,7 +46,7 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mController = getControllerManager().initController(WorksConstants.WORKS_ID_DIALOG_CONTROLLER, null, new BoltsWorksController3.ControllerCallbacks<AlertDialogFragmentController<Data>, WorksDialogFragment>(this) {
+        mController = getControllerManager().initController(WorksConstants.WORKS_ID_DIALOG_CONTROLLER, null, new SimpleWorksController.ControllerCallbacks<AlertDialogFragmentController<Data>, WorksDialogFragment>(this) {
 
             @Override
             public AlertDialogFragmentController<Data> onCreateController(int id, Bundle bundle) {
