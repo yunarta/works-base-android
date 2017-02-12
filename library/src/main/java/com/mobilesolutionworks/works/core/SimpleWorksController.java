@@ -51,10 +51,6 @@ public class SimpleWorksController<H extends Host> extends WorksController {
                 : Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
-    public Runnable wrap(Runnable runnable) {
-        return () -> runOnUIWhenIsReady(runnable);
-    }
-
     public void setHost(H host) {
         boolean sendUpdate = mHost != host;
 
