@@ -80,6 +80,10 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         mIsPaused = true;
     }
 
+    public boolean isResumed() {
+        return !mIsPaused;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
