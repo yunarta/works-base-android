@@ -6,27 +6,28 @@ import com.mobilesolutionworks.works.core.SimpleWorksController;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Created by lucas34990 on 17/5/16.
- * Syncronise RX result with the UI flow by using simple controller
- * This will make sure the sucess callback will be executed when the UI is displayed
+ * Synchronise RX result with the UI flow by using simple controller
+ * This will make sure the success callback will be executed when the UI is displayed
  */
 public class WorksCompleteObserver<D extends SimpleWorksController<?>, T> extends DisposableObserver<T> {
 
     private final D host;
     private final Consumer<Exception> fail;
-    private final Runnable runnableSucess;
+    private final Runnable runnableSuccess;
 
     public WorksCompleteObserver(D host, Runnable success, Consumer<Exception> fail) {
         this.host = host;
         this.fail = fail;
-        this.runnableSucess = host.addTask(success::run);
+        this.runnableSuccess = host.wrap(success);
     }
 
     @Override
     public void onComplete() {
-        runnableSucess.run();
+        runnableSuccess.run();
     }
 
     @Override
@@ -36,7 +37,7 @@ public class WorksCompleteObserver<D extends SimpleWorksController<?>, T> extend
                 try {
                     fail.accept((Exception) throwable);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    RxJavaPlugins.onError(e);
                 }
             });
         } else {

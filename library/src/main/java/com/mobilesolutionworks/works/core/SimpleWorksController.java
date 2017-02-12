@@ -51,10 +51,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
                 : Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
-    public <T, R> Runnable addTask(Runnable runnable) {
-        if (getHost() instanceof Fragment) {
-            Fragment fragment = (Fragment) getHost();
-        }
+    public Runnable wrap(Runnable runnable) {
         return () -> runOnUIWhenIsReady(runnable);
     }
 
