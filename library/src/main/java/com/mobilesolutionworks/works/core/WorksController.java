@@ -22,31 +22,31 @@ public class WorksController {
         return mId;
     }
 
-    public void onCreate(Bundle args, @Nullable Object data) {
+    protected void onCreate(Bundle args, @Nullable Object data) {
 
     }
 
-    public void onPaused() {
+    protected void onPaused() {
 
     }
 
-    public void onResume() {
+    protected void onResume() {
 
     }
 
-    public void onDestroy() {
+    protected void onDestroy() {
 
     }
 
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
 
     }
 
-    public void onViewStateRestored(Bundle state) {
+    protected void onViewStateRestored(Bundle state) {
 
     }
 
-    public void onConfigurationChanged(Configuration config) {
+    protected void onConfigurationChanged(Configuration config) {
 
     }
 
@@ -58,7 +58,7 @@ public class WorksController {
 
     }
 
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    protected void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
     }
 }

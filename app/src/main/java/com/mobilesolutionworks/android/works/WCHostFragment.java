@@ -31,7 +31,7 @@ public class WCHostFragment extends WorksFragment {
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
     }
 
@@ -44,7 +44,7 @@ public class WCHostFragment extends WorksFragment {
         }
 
         @Override
-        public void onResume() {
+        protected void onResume() {
             super.onResume();
             Log.d("[fragment]", "onResume controller = " + getHost());
         }

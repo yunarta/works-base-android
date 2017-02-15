@@ -65,7 +65,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         mIsPaused = false;
         observable.setChanged();
         observable.notifyObservers();
@@ -85,7 +85,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         observable.deleteObservers();
     }
