@@ -58,7 +58,7 @@ public class WorksController {
 
     }
 
-    protected void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
     }
 }
