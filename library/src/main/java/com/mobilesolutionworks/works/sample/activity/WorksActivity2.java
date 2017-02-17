@@ -3,15 +3,14 @@ package com.mobilesolutionworks.works.sample.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.sample.WaitingForResult;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksControllerManager;
+import com.mobilesolutionworks.works.sample.WaitingForResult;
 
 /**
  * Created by lucas34990 on 10/2/17.

@@ -1,7 +1,6 @@
 package com.mobilesolutionworks.works.sample.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.sample.WaitingForResult;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.sample.WaitingForResult;
 
 /**
  * Created by yunarta on 19/11/15.
