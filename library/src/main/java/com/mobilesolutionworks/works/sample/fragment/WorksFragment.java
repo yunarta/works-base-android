@@ -11,7 +11,7 @@ import android.view.View;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 import com.mobilesolutionworks.works.core.WorksFragmentBase;
-import com.mobilesolutionworks.works.sample.activity.WorksActivity;
+import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
 
 /**
  * Created by yunarta on 19/11/15.
@@ -95,9 +95,9 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends WorksActivity> T getBaseActivity() {
+    public <T extends WorksCompatActivity> T getBaseActivity() {
         FragmentActivity activity = getActivity();
-        if (activity instanceof WorksActivity) {
+        if (activity instanceof WorksCompatActivity) {
             return (T) activity;
         }
 
