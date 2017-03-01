@@ -98,7 +98,8 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
         return null;
     }
 
-    protected WorksSupportControllerManager getControllerManager() {
+    @Override
+    public WorksSupportControllerManager getControllerManager() {
         return mController;
     }
 

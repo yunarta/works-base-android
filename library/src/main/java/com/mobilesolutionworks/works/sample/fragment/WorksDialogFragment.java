@@ -59,7 +59,8 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
         }
     }
 
-    protected WorksSupportControllerManager getControllerManager() {
+    @Override
+    public WorksSupportControllerManager getControllerManager() {
         return mController;
     }
 

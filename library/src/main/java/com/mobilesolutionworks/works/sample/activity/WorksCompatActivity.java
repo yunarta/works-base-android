@@ -31,8 +31,18 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
         mController = loader.getController();
     }
 
+    @Override
     public WorksSupportControllerManager getControllerManager() {
         return mController;
+    }
+
+    @Override
+    public Bundle getArguments() {
+        Bundle bundle = null;
+        if(getIntent() != null) {
+            bundle = getIntent().getExtras();
+        }
+        return bundle != null ? bundle : new Bundle();
     }
 
     @Override

@@ -104,7 +104,8 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
         return null;
     }
 
-    protected WorksSupportControllerManager getControllerManager() {
+    @Override
+    public WorksSupportControllerManager getControllerManager() {
         return mController;
     }
 

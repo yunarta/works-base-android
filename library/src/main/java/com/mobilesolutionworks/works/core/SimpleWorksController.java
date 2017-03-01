@@ -1,12 +1,18 @@
 package com.mobilesolutionworks.works.core;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
+
+import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
+import com.mobilesolutionworks.works.sample.fragment.WorksFragment;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 /**
@@ -88,6 +94,29 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         observable.deleteObservers();
     }
 
+    public static <C extends SimpleWorksController> C  init(Host fragment, int id, Callable<C> controller) {
+        return fragment.getControllerManager().initController(id, fragment.getArguments(), new WorksSupportControllerManager.ControllerCallbacks<C>() {
+            @Override
+            public C onCreateController(int id, Bundle bundle) {
+                try {
+                    return controller.call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onLoadFinished(int id, Bundle bundle, C controller) {
+                controller.setHost(fragment);
+            }
+
+            @Override
+            public void onLoaderReset(C loader) {
+
+            }
+        });
+    }
+
     private static final class PublicObservable extends Observable {
 
         @Override
@@ -97,6 +126,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
     }
 
+    @Deprecated
     public static abstract class ControllerCallbacks<Controller extends SimpleWorksController<E>, E extends Host> implements WorksSupportControllerManager.ControllerCallbacks<Controller> {
 
         private E mHost;

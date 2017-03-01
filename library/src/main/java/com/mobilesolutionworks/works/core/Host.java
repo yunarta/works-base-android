@@ -2,6 +2,7 @@ package com.mobilesolutionworks.works.core;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 /**
@@ -37,9 +38,19 @@ public interface Host {
      * To have the same visibility we declare the function.
      * So both will have the public method
      * If your host is neither fragment or activity
-     * you shoud throw an exception
+     * you should throw an exception
      */
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    /**
+     *
+     * For host activity:
+     *  @return getIntent().getExtra()
+     *
+     * For host fragment
+     *  @return getArguments()
+     */
+    Bundle getArguments();
 
     /**
      *
@@ -53,5 +64,11 @@ public interface Host {
      *   It will call dismiss()
      */
     void finish();
+
+    /**
+     * Experimental
+     */
+    WorksSupportControllerManager getControllerManager();
+
 
 }
