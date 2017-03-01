@@ -1,5 +1,8 @@
 package com.mobilesolutionworks.works.sample.rx;
 
+import android.os.Build;
+import android.os.Looper;
+
 import com.mobilesolutionworks.works.core.SimpleWorksController;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class ObservableSyncToUI<T> implements ObservableTransformer<T, T> {
 
     @Override
     public ObservableSource<T> apply(Observable<T> upstream) {
-        return upstream.observeOn(AndroidSchedulers.mainThread()).lift(new SyncToUiOperator<T>());
+        return upstream.lift(new SyncToUiOperator<T>());
     }
 
     /**
@@ -87,16 +90,17 @@ public class ObservableSyncToUI<T> implements ObservableTransformer<T, T> {
         }
 
         private void checkAndRun(final Runnable runnable) {
-            if(host.isResumed()) {
-                if(buffer.isEmpty()) {
-                    runnable.run();
-                } else {
-                    subscribe();
-                }
-            } else {
-                buffer.add(runnable);
-                subscribe();
-            }
+            host.runOnUIWhenIsReady(runnable);
+//            if(host.isResumed() && isInUIThread()) {
+//                if(buffer.isEmpty()) {
+//                    runnable.run();
+//                } else {
+//                    subscribe();
+//                }
+//            } else {
+//                buffer.add(runnable);
+//                subscribe();
+//            }
         }
 
         private void subscribe() {
