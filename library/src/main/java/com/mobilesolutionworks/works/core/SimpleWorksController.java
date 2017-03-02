@@ -55,7 +55,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
                 : Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
-    public void setHost(H host) {
+    /* package */ void setHost(H host) {
         boolean sendUpdate = mHost != host;
 
         this.mHost = host;
