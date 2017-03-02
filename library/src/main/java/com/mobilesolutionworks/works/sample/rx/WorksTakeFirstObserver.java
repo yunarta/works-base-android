@@ -26,10 +26,7 @@ public class WorksTakeFirstObserver<D extends SimpleWorksController<?>, T> exten
 
     @Override
     public void onComplete() {
-        if (!isDone) {
-            isDone = true;
-            RxWorksControllerUtil.safeConsume(host, success, null);
-        }
+        // Nothing to do
     }
 
     @Override
