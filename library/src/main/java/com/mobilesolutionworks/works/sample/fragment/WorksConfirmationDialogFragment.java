@@ -15,8 +15,6 @@ import android.text.TextUtils;
 
 import com.mobilesolutionworks.works.core.SimpleWorksController;
 
-import java.util.function.Consumer;
-
 /**
  * Created by yunarta on 7/12/16.
  */
@@ -101,11 +99,11 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         private String mPositiveText;
 
-        private Runnable mOnPositive;
-
-        private Runnable mOnNegative;
-
         private transient Consumer<Integer> mCallback;
+
+        private transient Runnable success;
+        private transient Runnable negative;
+        private transient Runnable neutral;
 
         public Builder(Context context) {
             this.context = context;
@@ -146,8 +144,18 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             return this;
         }
 
-        public Builder callback(Consumer<Integer> callback) {
-            mCallback = callback;
+        public Builder onSuccess(Runnable callback) {
+            success = callback;
+            return this;
+        }
+
+        public Builder onFail(Runnable callback) {
+            negative = callback;
+            return this;
+        }
+
+        public Builder onNeutral(Runnable callback) {
+            neutral = callback;
             return this;
         }
 
@@ -184,7 +192,29 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         };
 
         public WorksConfirmationDialogFragment build() {
+            mCallback = new Consumer<Integer>() {
+                @Override
+                public void accept(Integer integer) {
+                    if(integer == AlertDialog.BUTTON_POSITIVE) {
+                        success.run();
+                    } else if(integer == AlertDialog.BUTTON_NEGATIVE) {
+                        negative.run();
+                    } else if(integer == AlertDialog.BUTTON_NEUTRAL) {
+                        neutral.run();
+                    }
+                }
+            };
+
             return create(this);
         }
     }
+
+    public interface Consumer<T> {
+        /**
+         * Consume the given value.
+         * @param t the value
+         */
+        void accept(T t);
+    }
+
 }
