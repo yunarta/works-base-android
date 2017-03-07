@@ -3,6 +3,7 @@ package com.mobilesolutionworks.works.sample.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -13,7 +14,12 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
+import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.SimpleWorksController;
+import com.mobilesolutionworks.works.core.WorksControllerManager;
+import com.mobilesolutionworks.works.sample.BiFunction;
+
+import java.util.concurrent.Callable;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -55,6 +61,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mController = SimpleWorksController.init(this, WorksConstants.WORKS_ID_DIALOG_CONTROLLER, () -> new Controller(callback));
+        callback = null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         Bundle args = getArguments();
@@ -62,12 +69,20 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         builder.setMessage(build.mUseHtml ? fromHtml(build.mMessageText) : build.mMessageText);
 
+        if (!TextUtils.isEmpty(build.mTitle)) {
+            builder.setTitle(build.mTitle);
+        }
+
         if (!TextUtils.isEmpty(build.mPositiveText)) {
             builder.setPositiveButton(build.mPositiveText, this);
         }
 
         if (!TextUtils.isEmpty(build.mNegativeText)) {
             builder.setNegativeButton(build.mNegativeText, this);
+        }
+
+        if(build.mItems != null && build.mItems.length > 0) {
+            builder.setItems(build.mItems, (dialog, which) -> callback.accept(which));
         }
 
         return builder.create();
@@ -87,17 +102,23 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         }
     }
 
-    public static class Builder implements Parcelable{
+    public static class Builder implements Parcelable {
 
-        private transient Context context;
+        private transient Resources resources;
 
         private boolean mUseHtml;
+
+        private String mTitle;
 
         private String mMessageText;
 
         private String mNegativeText;
 
         private String mPositiveText;
+
+        private String[] mItems;
+
+        private String mKey;
 
         private transient Consumer<Integer> mCallback;
 
@@ -106,7 +127,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         private transient Runnable neutral;
 
         public Builder(Context context) {
-            this.context = context;
+            this.resources = context.getResources();
         }
 
         public Builder useHtml() {
@@ -114,8 +135,24 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             return this;
         }
 
+        public Builder title(int title) {
+            mTitle = resources.getString(title);
+            return this;
+        }
+
+        @Deprecated
+        public Builder key(String key) {
+            mKey = key;
+            return this;
+        }
+
+        public Builder title(String title) {
+            mTitle = title;
+            return this;
+        }
+
         public Builder message(int message) {
-            mMessageText = context.getString(message);
+            mMessageText = resources.getString(message);
             return this;
         }
 
@@ -125,7 +162,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         }
 
         public Builder positive(int positive) {
-            mPositiveText = context.getString(positive);
+            mPositiveText = resources.getString(positive);
             return this;
         }
 
@@ -135,7 +172,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         }
 
         public Builder negative(int negative) {
-            mNegativeText = context.getString(negative);
+            mNegativeText = resources.getString(negative);
             return this;
         }
 
@@ -144,6 +181,18 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             return this;
         }
 
+        public Builder callback(Consumer<Integer> callback) {
+            mCallback = callback;
+            return this;
+        }
+
+        /**
+         * WARNING : The callback is safe to use if the dialog as been created inside a controller
+         * during the rotation, the controller won't be destroyed, so the link is still valid.
+         * If you implement the callback inside an activity (or a fragment), the callback will
+         * leak the activity (or the fragment).
+         *
+         */
         public Builder onSuccess(Runnable callback) {
             success = callback;
             return this;
@@ -159,6 +208,11 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             return this;
         }
 
+        public Builder choices(String[] items) {
+            mItems = items;
+            return this;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -166,17 +220,25 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.mTitle);
+            dest.writeString(this.mKey);
             dest.writeByte(this.mUseHtml ? (byte) 1 : (byte) 0);
             dest.writeString(this.mMessageText);
             dest.writeString(this.mNegativeText);
             dest.writeString(this.mPositiveText);
+            dest.writeInt(this.mItems != null ? this.mItems.length : 0);
+            dest.writeStringArray(this.mItems);
         }
 
         protected Builder(Parcel in) {
+            this.mTitle = in.readString();
+            this.mKey = in.readString();
             this.mUseHtml = in.readByte() != 0;
             this.mMessageText = in.readString();
             this.mNegativeText = in.readString();
             this.mPositiveText = in.readString();
+            this.mItems = new String[in.readInt()];
+            in.readStringArray(this.mItems);
         }
 
         public static final Parcelable.Creator<WorksConfirmationDialogFragment.Builder> CREATOR = new Parcelable.Creator<WorksConfirmationDialogFragment.Builder>() {
@@ -192,18 +254,30 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         };
 
         public WorksConfirmationDialogFragment build() {
-            mCallback = new Consumer<Integer>() {
-                @Override
-                public void accept(Integer integer) {
-                    if(integer == AlertDialog.BUTTON_POSITIVE) {
-                        success.run();
-                    } else if(integer == AlertDialog.BUTTON_NEGATIVE) {
-                        negative.run();
-                    } else if(integer == AlertDialog.BUTTON_NEUTRAL) {
-                        neutral.run();
+            if(mCallback == null) {
+                mCallback = new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) {
+                        if (integer == AlertDialog.BUTTON_POSITIVE) {
+                            if(success != null) {
+                                success.run();
+                            }
+                        } else if (integer == AlertDialog.BUTTON_NEGATIVE) {
+                            if(negative != null) {
+                                negative.run();
+                            }
+                        } else if (integer == AlertDialog.BUTTON_NEUTRAL) {
+                            if(neutral != null) {
+                                neutral.run();
+                            }
+                        }
                     }
-                }
-            };
+                };
+            }
+            // TODO | instead of creating a parcelable
+            // TODO | We can store inside the data inside bundle ?
+
+            resources = null;
 
             return create(this);
         }
