@@ -1,9 +1,9 @@
 package com.mobilesolutionworks.works.sample.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
@@ -119,7 +119,7 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
     }
 
     @Override
-    public Activity getActivity() {
+    public FragmentActivity getActivity() {
         return this;
     }
 
