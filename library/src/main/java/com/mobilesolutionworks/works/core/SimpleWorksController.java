@@ -101,6 +101,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
                 try {
                     return controller.call();
                 } catch (Exception e) {
+                    // TODO
                     throw new RuntimeException(e);
                 }
             }
@@ -131,16 +132,19 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
         private E mHost;
 
+        @Deprecated
         public ControllerCallbacks(E host) {
             mHost = host;
         }
 
         @Override
+        @Deprecated
         public void onLoadFinished(int id, Bundle bundle, Controller controller) {
             controller.setHost(mHost);
         }
 
         @Override
+        @Deprecated
         public void onLoaderReset(Controller loader) {
 
         }
