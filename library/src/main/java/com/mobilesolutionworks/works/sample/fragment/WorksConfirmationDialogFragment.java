@@ -20,6 +20,7 @@ import com.mobilesolutionworks.works.core.WorksControllerManager;
 import com.mobilesolutionworks.works.sample.BiFunction;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -27,13 +28,15 @@ import java.util.concurrent.Callable;
 
 public class WorksConfirmationDialogFragment extends WorksDialogFragment implements DialogInterface.OnClickListener {
 
+    public static final String KEY = ":buildInfo";
+
     private Controller mController;
 
     /* package */ Consumer<Integer> callback;
 
     private static WorksConfirmationDialogFragment create(Builder info) {
         Bundle args = new Bundle();
-        args.putParcelable(":buildInfo", info);
+        args.putParcelable(KEY, info);
 
         WorksConfirmationDialogFragment fragment = new WorksConfirmationDialogFragment();
         fragment.callback = info.mCallback;
@@ -65,7 +68,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         Bundle args = getArguments();
-        WorksConfirmationDialogFragment.Builder build = args.getParcelable(":buildInfo");
+        WorksConfirmationDialogFragment.Builder build = args.getParcelable(KEY);
 
         builder.setMessage(build.mUseHtml ? fromHtml(build.mMessageText) : build.mMessageText);
 
@@ -128,6 +131,10 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         public Builder(Context context) {
             this.resources = context.getResources();
+        }
+
+        public Builder(Resources resources) {
+            this.resources = resources;
         }
 
         public Builder useHtml() {
