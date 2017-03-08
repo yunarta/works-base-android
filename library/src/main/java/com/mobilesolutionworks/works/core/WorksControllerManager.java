@@ -12,16 +12,6 @@ import android.util.SparseArray;
  */
 public class WorksControllerManager {
 
-    private Object mData;
-
-    private void setData(Object data) {
-        mData = data;
-    }
-
-    public <T> T getData() {
-        return (T) mData;
-    }
-
     public void dispatchPause() {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
@@ -123,7 +113,7 @@ public class WorksControllerManager {
 
 
             callback.onLoadFinished(id, bundle, newController);
-            newController.onCreate(bundle, mData);
+            newController.onCreate(bundle, null);
 
             mControllers.put(id, info);
         } else {
@@ -142,7 +132,6 @@ public class WorksControllerManager {
             super(context);
 
             mControllerManager = new WorksControllerManager();
-            mControllerManager.setData(data);
         }
 
         @Override

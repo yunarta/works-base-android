@@ -12,16 +12,6 @@ import android.util.SparseArray;
  */
 public class WorksSupportControllerManager {
 
-    private Object mData;
-
-    private void setData(Object data) {
-        mData = data;
-    }
-
-    public <T> T getData() {
-        return (T) mData;
-    }
-
     public void dispatchPause() {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
@@ -123,7 +113,7 @@ public class WorksSupportControllerManager {
 
 
             callback.onLoadFinished(id, bundle, newController);
-            newController.onCreate(bundle, mData);
+            newController.onCreate(bundle, null);
 
             mControllers.put(id, info);
         } else {
@@ -138,11 +128,10 @@ public class WorksSupportControllerManager {
 
         private WorksSupportControllerManager mControllerManager;
 
-        public InternalLoader(Context context, Object data) {
+        public InternalLoader(Context context) {
             super(context);
 
             mControllerManager = new WorksSupportControllerManager();
-            mControllerManager.setData(data);
         }
 
         @Override
@@ -161,18 +150,14 @@ public class WorksSupportControllerManager {
 
         private Context mContext;
 
-        private final Object mData;
-
-        public LoaderCallbacks(Context context, Object transientData) {
+        public LoaderCallbacks(Context context) {
             mContext = context.getApplicationContext();
             mContext = context;
-
-            mData = transientData;
         }
 
         @Override
         public Loader<WorksSupportControllerManager> onCreateLoader(int id, Bundle args) {
-            return new InternalLoader(mContext, mData);
+            return new InternalLoader(mContext);
         }
 
         @Override

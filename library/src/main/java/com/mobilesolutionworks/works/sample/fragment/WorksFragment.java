@@ -20,15 +20,9 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
 
     private WorksSupportControllerManager mController;
 
-    private transient Object mTransientData;
-
     private int mTargetControllerId;
 
     private int mTargetControllerRequestCode;
-
-    public void setTransientArgument(Object data) {
-        mTransientData = data;
-    }
 
     public void setTargetController(int id) {
         setTargetController(id, 0);
@@ -51,7 +45,7 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity(), mTransientData));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
         mController = loader.getController();
 
         if (savedInstanceState != null) {

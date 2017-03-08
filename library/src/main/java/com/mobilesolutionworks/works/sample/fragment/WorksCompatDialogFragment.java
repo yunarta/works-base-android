@@ -20,15 +20,9 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
 
     private WorksSupportControllerManager mController;
 
-    private transient Object mTransientData;
-
     private int mTargetControllerId;
 
     private int mTargetControllerRequestCode;
-
-    public void setTransientData(Object transientData) {
-        mTransientData = transientData;
-    }
 
     public void setTargetController(int id) {
         setTargetController(id, 0);
@@ -51,7 +45,7 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity(), mTransientData));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
         mController = loader.getController();
 
         if (savedInstanceState != null) {

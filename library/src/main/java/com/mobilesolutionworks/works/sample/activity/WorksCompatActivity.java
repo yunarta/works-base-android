@@ -27,7 +27,7 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getSupportLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(this, null));
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getSupportLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(this));
         mController = loader.getController();
     }
 

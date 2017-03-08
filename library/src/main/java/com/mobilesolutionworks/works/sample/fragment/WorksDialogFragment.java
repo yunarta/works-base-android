@@ -17,17 +17,11 @@ import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
  */
 public class WorksDialogFragment extends DialogFragment implements WorksFragmentBase {
 
-    private WorksSupportControllerManager mController;
-
-    private transient Object mTransientData;
+    private WorksSupportControllerManager mControllerManager;
 
     private int mTargetControllerId;
 
     private int mTargetControllerRequestCode;
-
-    public void setTransientData(Object transientData) {
-        mTransientData = transientData;
-    }
 
     public void setTargetController(int id) {
         setTargetController(id, 0);
@@ -38,10 +32,12 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
         mTargetControllerRequestCode = requestCode;
     }
 
+    @Override
     public int getTargetControllerId() {
         return mTargetControllerId;
     }
 
+    @Override
     public int getTargetControllerRequestCode() {
         return mTargetControllerRequestCode;
     }
@@ -50,8 +46,8 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity(), mTransientData));
-        mController = loader.getController();
+        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
+        mControllerManager = loader.getController();
 
         if (savedInstanceState != null) {
             mTargetControllerId = savedInstanceState.getInt("targetControllerId");
@@ -61,25 +57,26 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
 
     @Override
     public WorksSupportControllerManager getControllerManager() {
-        return mController;
+        return mControllerManager;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mController.onRestoreInstanceState(savedInstanceState);
+        mControllerManager.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mController.dispatchPause();
+        mControllerManager.dispatchPause();
+//        dismissAllowingStateLoss();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mController.dispatchResume();
+        mControllerManager.dispatchResume();
     }
 
     @Override
@@ -87,7 +84,7 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
         outState.putInt("targetController", mTargetControllerId);
         outState.putInt("targetControllerRequestCode", mTargetControllerRequestCode);
 
-        mController.dispatchOnSaveInstanceState(outState);
+        mControllerManager.dispatchOnSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -104,7 +101,7 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
 
     @Override
     public void postControllerResult(int id, int requestCode, int resultCode, Object data) {
-        WorksController controller = mController.getController(id);
+        WorksController controller = mControllerManager.getController(id);
         if (controller != null) {
             controller.onControllerResult(requestCode, resultCode, data);
         }
