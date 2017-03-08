@@ -24,12 +24,8 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
 
     private int mTargetControllerRequestCode;
 
-    public void setTargetController(int id) {
-        setTargetController(id, 0);
-    }
-
-    public void setTargetController(int id, int requestCode) {
-        mTargetControllerId = id;
+    public void setTargetController(WorksController controller, int requestCode) {
+        mTargetControllerId = controller.getId();
         mTargetControllerRequestCode = requestCode;
     }
 
