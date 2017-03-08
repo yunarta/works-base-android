@@ -19,11 +19,12 @@ import com.mobilesolutionworks.works.core.SimpleWorksController;
 /**
  * Created by yunarta on 7/12/16.
  */
-
+@Deprecated
 public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment implements DialogInterface.OnClickListener {
 
     private AlertDialogFragmentController<Data> mController;
 
+    @Deprecated
     public static <Data> WorksChoiceDialogFragment<Data> create(BuildInfo info) {
         Bundle args = new Bundle();
         args.putParcelable(":buildInfo", info);
@@ -38,6 +39,7 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
 
     protected transient BiFunction<Integer, Data> mTransientAction;
 
+    @Deprecated
     public void setTransientData(Data data, BiFunction<Integer, Data> action) {
         mTransientData = data;
         mTransientAction = action;
