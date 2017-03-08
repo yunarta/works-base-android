@@ -114,6 +114,7 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
         }
     }
 
+    @Deprecated
     public void onActivityResultCompat(int requestCode, int resultCode, Intent data) {
         onActivityResult(requestCode, resultCode, data);
     }

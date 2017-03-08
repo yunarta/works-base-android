@@ -48,15 +48,11 @@ public class WorksChoiceDialogFragment<Data> extends WorksDialogFragment impleme
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mController = getControllerManager().initController(WorksConstants.WORKS_ID_DIALOG_CONTROLLER, null, new SimpleWorksController.ControllerCallbacks<AlertDialogFragmentController<Data>, WorksDialogFragment>(this) {
-
-            @Override
-            public AlertDialogFragmentController<Data> onCreateController(int id, Bundle bundle) {
-                AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<Data>(mTransientData, mTransientAction);
-                mTransientData = null;
-                mTransientAction = null;
-                return controller;
-            }
+        mController = SimpleWorksController.init(this, WorksConstants.WORKS_ID_DIALOG_CONTROLLER, () -> {
+            AlertDialogFragmentController<Data> controller = new AlertDialogFragmentController<Data>(mTransientData, mTransientAction);
+            mTransientData = null;
+            mTransientAction = null;
+            return controller;
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
