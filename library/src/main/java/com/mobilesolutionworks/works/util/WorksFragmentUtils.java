@@ -15,6 +15,11 @@ public class WorksFragmentUtils {
         // No instance
     }
 
+    public static void sendResultToParent(WorksFragmentBase fragment, int resultCode) {
+        Fragment target = fragment.getParentFragment();
+        sendResultToTarget(fragment, target, resultCode, new Intent());
+    }
+
     public static void sendResultToParent(WorksFragmentBase fragment, int resultCode, Intent intent) {
         Fragment target = fragment.getParentFragment();
         sendResultToTarget(fragment, target, resultCode, intent);
