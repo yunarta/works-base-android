@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.mobilesolutionworks.works.core.WorksController;
-import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 import com.mobilesolutionworks.works.core.WorksFragmentBase;
+import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
 
 /**
@@ -70,7 +70,7 @@ public class WorksFragment extends Fragment implements WorksFragmentBase {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("targetController", mTargetControllerId);
+        outState.putInt("targetControllerId", mTargetControllerId);
         outState.putInt("targetControllerRequestCode", mTargetControllerRequestCode);
 
         mController.dispatchOnSaveInstanceState(outState);

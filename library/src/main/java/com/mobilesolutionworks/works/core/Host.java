@@ -1,8 +1,8 @@
 package com.mobilesolutionworks.works.core;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 /**
@@ -21,7 +21,7 @@ public interface Host {
      *  This implementation is transparent for the fragment since
      *  it already has this method.
      */
-    Activity getActivity();
+    FragmentActivity getActivity();
 
     /**
      *
