@@ -14,13 +14,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
-import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.SimpleWorksController;
-import com.mobilesolutionworks.works.core.WorksControllerManager;
-import com.mobilesolutionworks.works.sample.BiFunction;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by yunarta on 7/12/16.
@@ -32,9 +26,9 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
     private Controller mController;
 
-    /* package */ Consumer<Integer> callback;
+    /* package */ IntConsumer callback;
 
-    private static WorksConfirmationDialogFragment create(Builder info) {
+    /* package */ static WorksConfirmationDialogFragment create(Builder info) {
         Bundle args = new Bundle();
         args.putParcelable(KEY, info);
 
@@ -47,9 +41,9 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
     private static class Controller extends SimpleWorksController<WorksDialogFragment> {
 
-        private final Consumer<Integer> mAction;
+        private final IntConsumer mAction;
 
-        public Controller(Consumer<Integer> action) {
+        public Controller(IntConsumer action) {
             this.mAction = action;
         }
 
@@ -109,21 +103,21 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         private transient Resources resources;
 
-        private boolean mUseHtml;
+        /* package */ boolean mUseHtml;
 
-        private String mTitle;
+        /* package */ String mTitle;
 
-        private String mMessageText;
+        /* package */ String mMessageText;
 
-        private String mNegativeText;
+        /* package */ String mNegativeText;
 
-        private String mPositiveText;
+        /* package */ String mPositiveText;
 
-        private String[] mItems;
+        /* package */ String[] mItems;
 
-        private String mKey;
+        /* package */ String mKey;
 
-        private transient Consumer<Integer> mCallback;
+        /* package */ transient IntConsumer mCallback;
 
         private transient Runnable success;
         private transient Runnable negative;
@@ -188,7 +182,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             return this;
         }
 
-        public Builder callback(Consumer<Integer> callback) {
+        public Builder callback(IntConsumer callback) {
             mCallback = callback;
             return this;
         }
@@ -262,21 +256,18 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         public WorksConfirmationDialogFragment build() {
             if(mCallback == null) {
-                mCallback = new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) {
-                        if (integer == AlertDialog.BUTTON_POSITIVE) {
-                            if(success != null) {
-                                success.run();
-                            }
-                        } else if (integer == AlertDialog.BUTTON_NEGATIVE) {
-                            if(negative != null) {
-                                negative.run();
-                            }
-                        } else if (integer == AlertDialog.BUTTON_NEUTRAL) {
-                            if(neutral != null) {
-                                neutral.run();
-                            }
+                mCallback = integer -> {
+                    if (integer == AlertDialog.BUTTON_POSITIVE) {
+                        if(success != null) {
+                            success.run();
+                        }
+                    } else if (integer == AlertDialog.BUTTON_NEGATIVE) {
+                        if(negative != null) {
+                            negative.run();
+                        }
+                    } else if (integer == AlertDialog.BUTTON_NEUTRAL) {
+                        if(neutral != null) {
+                            neutral.run();
                         }
                     }
                 };
@@ -290,12 +281,12 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         }
     }
 
-    public interface Consumer<T> {
+    public interface IntConsumer {
         /**
          * Consume the given value.
-         * @param t the value
+         * @param i the value
          */
-        void accept(T t);
+        void accept(int i);
     }
 
 }
