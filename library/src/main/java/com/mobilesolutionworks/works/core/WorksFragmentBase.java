@@ -12,8 +12,6 @@ public interface WorksFragmentBase extends Host {
 
     void postControllerResult(int id, int requestCode, int resultCode, Object data);
 
-    <T extends WorksCompatActivity> T getBaseActivity();
-
     int getTargetRequestCode();
 
     Fragment getParentFragment();

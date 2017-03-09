@@ -81,17 +81,6 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
         super.onSaveInstanceState(outState);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends WorksCompatActivity> T getBaseActivity() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof WorksCompatActivity) {
-            return (T) activity;
-        }
-
-        return null;
-    }
-
     @Override
     public WorksSupportControllerManager getControllerManager() {
         return mController;

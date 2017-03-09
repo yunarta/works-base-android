@@ -88,17 +88,6 @@ public class WorksDialogFragment extends DialogFragment implements WorksFragment
         super.onSaveInstanceState(outState);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends WorksCompatActivity> T getBaseActivity() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof WorksCompatActivity) {
-            return (T) activity;
-        }
-
-        return null;
-    }
-
     @Override
     public void postControllerResult(int id, int requestCode, int resultCode, Object data) {
         WorksController controller = mControllerManager.getController(id);
