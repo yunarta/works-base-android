@@ -273,8 +273,6 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
                     }
                 };
             }
-            // TODO | instead of creating a parcelable
-            // TODO | We can store inside the data inside bundle ?
 
             resources = null;
 

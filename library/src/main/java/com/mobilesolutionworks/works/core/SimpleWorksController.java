@@ -101,8 +101,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
                 try {
                     return controller.call();
                 } catch (Exception e) {
-                    // TODO
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e); // Re-trow
                 }
             }
 
