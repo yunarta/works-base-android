@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
@@ -278,6 +279,14 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             resources = null;
 
             return create(this);
+        }
+
+        public void show(FragmentManager manager) {
+            show(manager, "alert");
+        }
+
+        public void show(FragmentManager manager, String tag) {
+            build().show(manager, tag);
         }
     }
 
