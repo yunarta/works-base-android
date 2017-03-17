@@ -80,7 +80,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         }
 
         if(build.mItems != null && build.mItems.length > 0) {
-            builder.setItems(build.mItems, (dialog, which) -> callback.accept(which));
+            builder.setItems(build.mItems, (dialog, which) -> mController.postResult(which));
         }
 
         return builder.create();
