@@ -23,7 +23,7 @@ import com.mobilesolutionworks.works.core.SimpleWorksController;
 
 public class WorksConfirmationDialogFragment extends WorksDialogFragment implements DialogInterface.OnClickListener {
 
-    public static final String KEY = ":buildInfo";
+    private static final String KEY = ":buildInfo";
 
     private Controller mController;
 
