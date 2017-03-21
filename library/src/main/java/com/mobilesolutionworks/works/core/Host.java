@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.works.core;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,17 @@ public interface Host {
      *  it already has this method.
      */
     FragmentActivity getActivity();
+
+    /**
+     *
+     * For host activity:
+     *  @return getResources()
+     *
+     * For host fragment
+     *  @return getResources()
+     *
+     */
+    Resources getResources();
 
     /**
      *

@@ -1,6 +1,7 @@
 package com.mobilesolutionworks.works.core;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,6 +67,10 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
     protected H getHost() {
         return mHost;
+    }
+
+    protected Resources getResources() {
+        return mHost.getResources();
     }
 
     @Override
