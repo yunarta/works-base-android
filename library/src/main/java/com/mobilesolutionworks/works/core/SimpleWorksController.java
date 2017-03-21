@@ -99,8 +99,8 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         observable.deleteObservers();
     }
 
-    public static <C extends SimpleWorksController> C  init(Host fragment, int id, Callable<C> controller) {
-        return fragment.getControllerManager().initController(id, fragment.getArguments(), new WorksSupportControllerManager.ControllerCallbacks<C>() {
+    public static <C extends SimpleWorksController> C  init(Host host, int id, Callable<C> controller) {
+        return host.getControllerManager().initController(id, host.getArguments(), new WorksSupportControllerManager.ControllerCallbacks<C>() {
             @Override
             public C onCreateController(int id, Bundle bundle) {
                 try {
@@ -112,7 +112,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
             @Override
             public void onLoadFinished(int id, Bundle bundle, C controller) {
-                controller.setHost(fragment);
+                controller.setHost(host);
             }
 
             @Override
