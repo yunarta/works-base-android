@@ -100,7 +100,7 @@ public class WorksCompatDialogFragment extends AppCompatDialogFragment implement
 
     @Override
     public void finish() {
-        // Nothing to do
+        dismissAllowingStateLoss();
     }
 
 }
