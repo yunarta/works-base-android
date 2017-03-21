@@ -124,10 +124,6 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
         private transient Runnable negative;
         private transient Runnable neutral;
 
-        public Builder(Context context) {
-            this.resources = context.getResources();
-        }
-
         public Builder(Resources resources) {
             this.resources = resources;
         }
