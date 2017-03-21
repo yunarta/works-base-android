@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
+import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.SimpleWorksController;
 
 /**
@@ -273,6 +274,10 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             resources = null;
 
             return create(this);
+        }
+
+        public void show(Host host) {
+            show(host.getHostFragmentManager(), "alert");
         }
 
         public void show(FragmentManager manager) {
