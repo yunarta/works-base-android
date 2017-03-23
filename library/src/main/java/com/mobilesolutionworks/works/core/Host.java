@@ -1,11 +1,13 @@
 package com.mobilesolutionworks.works.core;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 /**
  * Created by lucas34990 on 10/2/17.
@@ -34,6 +36,12 @@ public interface Host {
      * Fragment and activty implements this method.
      */
     void startActivity(Intent intent, @Nullable Bundle options);
+
+    void startActivityForResult(Intent intent, int requestCode);
+
+    void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options);
+
+    @Nullable View getView();
 
     /**
      *
