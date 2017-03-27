@@ -69,16 +69,7 @@ public interface Host {
      *  @return getChildFragmentManager()
      */
     FragmentManager getHostFragmentManager();
-
-    /**
-     * This method is public in fragment but protected in activity
-     * To have the same visibility we declare the function.
-     * So both will have the public method
-     * If your host is neither fragment or activity
-     * you should throw an exception
-     */
-    void onActivityResult(int requestCode, int resultCode, Intent data);
-
+    
     /**
      *
      * For host activity:
