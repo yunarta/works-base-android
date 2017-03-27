@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.text.method.SingleLineTransformationMethod;
 
 import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
 import com.mobilesolutionworks.works.sample.fragment.WorksFragment;
@@ -97,6 +98,16 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     protected void onDestroy() {
         super.onDestroy();
         observable.deleteObservers();
+    }
+
+    public static SimpleWorksController empty(Host host, int id) {
+        return init(host, id, () -> new EmptyController());
+    }
+
+    private static final class EmptyController<H extends Host> extends SimpleWorksController<H> {
+        public EmptyController() {
+            // Empty
+        }
     }
 
     public static <C extends SimpleWorksController> C  init(Host host, int id, Callable<C> controller) {
