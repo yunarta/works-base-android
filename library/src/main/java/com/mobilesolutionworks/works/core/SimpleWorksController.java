@@ -6,12 +6,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.SingleLineTransformationMethod;
 
 import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
 import com.mobilesolutionworks.works.sample.fragment.WorksFragment;
 
+import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Callable;
@@ -24,11 +26,11 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
     private static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);
 
-    private final PublicObservable observable = new PublicObservable();
+    /* package */ final PublicObservable observable = new PublicObservable();
 
     private boolean mIsPaused = true;
 
-    private H mHost;
+    private WeakReference<H> mHost;
 
     public void runOnUIWhenIsReady(final Runnable runnable) {
         if (mIsPaused) {
@@ -44,7 +46,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         }
     }
 
-    private void executeInUIThread(final Runnable runnable) {
+    /* package */ void executeInUIThread(final Runnable runnable) {
         if(isInUIThread()) {
             runnable.run();
         } else {
@@ -60,18 +62,21 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     /* package */ void setHost(H host) {
         boolean sendUpdate = mHost != host;
 
-        this.mHost = host;
+        this.mHost = new WeakReference<H>(host);
         if (sendUpdate) {
             onHostUpdated();
         }
     }
 
-    protected H getHost() {
-        return mHost;
+    /**
+     *
+     */
+    protected @Nullable H getHost() {
+        return mHost.get();
     }
 
     protected Resources getResources() {
-        return mHost.getResources();
+        return getHost().getResources();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     }
 
     public boolean isResumed() {
-        return !mIsPaused;
+        return getHost() != null;
     }
 
     @Override
@@ -101,7 +106,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
     }
 
     public static SimpleWorksController empty(Host host, int id) {
-        return init(host, id, () -> new EmptyController());
+        return init(host, id, (Callable<EmptyController>) EmptyController::new);
     }
 
     private static final class EmptyController<H extends Host> extends SimpleWorksController<H> {
@@ -133,7 +138,7 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         });
     }
 
-    private static final class PublicObservable extends Observable {
+    /* package */ static final class PublicObservable extends Observable {
 
         @Override
         public void setChanged() {
@@ -142,26 +147,4 @@ public class SimpleWorksController<H extends Host> extends WorksController {
 
     }
 
-    @Deprecated
-    public static abstract class ControllerCallbacks<Controller extends SimpleWorksController<E>, E extends Host> implements WorksSupportControllerManager.ControllerCallbacks<Controller> {
-
-        private E mHost;
-
-        @Deprecated
-        public ControllerCallbacks(E host) {
-            mHost = host;
-        }
-
-        @Override
-        @Deprecated
-        public void onLoadFinished(int id, Bundle bundle, Controller controller) {
-            controller.setHost(mHost);
-        }
-
-        @Override
-        @Deprecated
-        public void onLoaderReset(Controller loader) {
-
-        }
-    }
 }
