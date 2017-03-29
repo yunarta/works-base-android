@@ -12,8 +12,6 @@ public class WorksController {
 
     private int mId;
 
-    private Object mData;
-
     public final void setId(int id) {
         mId = id;
     }
@@ -51,10 +49,6 @@ public class WorksController {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-    public void onControllerResult(int requestCode, int resultCode, Object data) {
 
     }
 

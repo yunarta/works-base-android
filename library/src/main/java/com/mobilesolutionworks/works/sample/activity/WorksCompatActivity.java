@@ -3,18 +3,15 @@ package com.mobilesolutionworks.works.sample.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
 
 import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
-import com.mobilesolutionworks.works.sample.WaitingForResult;
 
 /**
  * Created by lucas34990 on 10/2/17.
@@ -23,6 +20,11 @@ import com.mobilesolutionworks.works.sample.WaitingForResult;
 public class WorksCompatActivity extends AppCompatActivity implements Host {
 
     private WorksSupportControllerManager mController;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data); // To make the visibility public
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +66,6 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
         mController.dispatchOnSaveInstanceState(outState);
     }
 
-    @Deprecated
-    public void onActivityResultCompat(int requestCode, int resultCode, Intent data) {
-        onActivityResult(requestCode, resultCode, data);
-    }
-
     @Override
     public FragmentActivity getActivity() {
         return this;
@@ -86,10 +83,4 @@ public class WorksCompatActivity extends AppCompatActivity implements Host {
         return getSupportFragmentManager();
     }
 
-    public void postControllerResult(int id, int requestCode, int resultCode, Object data) {
-        WorksController controller = mController.getController(id);
-        if (controller != null) {
-            controller.onControllerResult(requestCode, resultCode, data);
-        }
-    }
 }

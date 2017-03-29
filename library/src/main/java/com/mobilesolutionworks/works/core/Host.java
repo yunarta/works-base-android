@@ -1,6 +1,5 @@
 package com.mobilesolutionworks.works.core;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -43,6 +42,8 @@ public interface Host {
     void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options);
 
     void requestPermissions(@NonNull String[] permissions, int requestCode);
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 
     @Nullable View getView();
 
