@@ -1,8 +1,9 @@
-package com.mobilesolutionworks.works.sample.fragment;
+package com.mobilesolutionworks.works.host;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
@@ -12,45 +13,51 @@ import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 /**
  * Created by yunarta on 19/11/15.
  */
-public class WorksDialogFragment extends DialogFragment implements Host {
+public class HostFragment extends Fragment implements Host {
 
-    private WorksSupportControllerManager mControllerManager;
+    private WorksSupportControllerManager mController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
-        mControllerManager = loader.getController();
-    }
-
-    @Override
-    public WorksSupportControllerManager getControllerManager() {
-        return mControllerManager;
+        mController = loader.getController();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mControllerManager.onRestoreInstanceState(savedInstanceState);
+        mController.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mControllerManager.dispatchPause();
+        mController.dispatchPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mControllerManager.dispatchResume();
+        mController.dispatchResume();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mControllerManager.dispatchOnSaveInstanceState(outState);
+        mController.dispatchOnSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mController.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public WorksSupportControllerManager getControllerManager() {
+        return mController;
     }
 
     @Override
@@ -60,6 +67,7 @@ public class WorksDialogFragment extends DialogFragment implements Host {
 
     @Override
     public void finish() {
-        dismissAllowingStateLoss();
+        // Nothing to do
     }
+
 }

@@ -1,4 +1,4 @@
-package com.mobilesolutionworks.works.sample.activity;
+package com.mobilesolutionworks.works.host;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
  * Created by lucas34990 on 10/2/17.
  */
 
-public class WorksCompatActivity extends AppCompatActivity implements Host {
+public class HostActivity extends AppCompatActivity implements Host {
 
     private WorksSupportControllerManager mController;
 

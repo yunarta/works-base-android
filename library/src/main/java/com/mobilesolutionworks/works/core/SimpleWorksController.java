@@ -1,17 +1,11 @@
 package com.mobilesolutionworks.works.core;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.method.SingleLineTransformationMethod;
-
-import com.mobilesolutionworks.works.sample.activity.WorksCompatActivity;
-import com.mobilesolutionworks.works.sample.fragment.WorksFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.Observable;

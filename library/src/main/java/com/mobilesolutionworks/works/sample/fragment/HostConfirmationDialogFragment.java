@@ -1,7 +1,6 @@
 package com.mobilesolutionworks.works.sample.fragment;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Build;
@@ -17,12 +16,13 @@ import android.text.TextUtils;
 
 import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.SimpleWorksController;
+import com.mobilesolutionworks.works.host.HostDialogFragment;
 
 /**
  * Created by yunarta on 7/12/16.
  */
 
-public class WorksConfirmationDialogFragment extends WorksDialogFragment implements DialogInterface.OnClickListener {
+public class HostConfirmationDialogFragment extends HostDialogFragment implements DialogInterface.OnClickListener {
 
     private static final String KEY = ":buildInfo";
 
@@ -30,18 +30,18 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
     /* package */ IntConsumer callback;
 
-    /* package */ static WorksConfirmationDialogFragment create(Builder info) {
+    /* package */ static HostConfirmationDialogFragment create(Builder info) {
         Bundle args = new Bundle();
         args.putParcelable(KEY, info);
 
-        WorksConfirmationDialogFragment fragment = new WorksConfirmationDialogFragment();
+        HostConfirmationDialogFragment fragment = new HostConfirmationDialogFragment();
         fragment.callback = info.mCallback;
         fragment.setArguments(args);
 
         return fragment;
     }
 
-    private static class Controller extends SimpleWorksController<WorksDialogFragment> {
+    private static class Controller extends SimpleWorksController<HostDialogFragment> {
 
         private final IntConsumer mAction;
 
@@ -64,7 +64,7 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         Bundle args = getArguments();
-        WorksConfirmationDialogFragment.Builder build = args.getParcelable(KEY);
+        HostConfirmationDialogFragment.Builder build = args.getParcelable(KEY);
 
         builder.setMessage(build.mUseHtml ? fromHtml(build.mMessageText) : build.mMessageText);
 
@@ -240,19 +240,19 @@ public class WorksConfirmationDialogFragment extends WorksDialogFragment impleme
             in.readStringArray(this.mItems);
         }
 
-        public static final Parcelable.Creator<WorksConfirmationDialogFragment.Builder> CREATOR = new Parcelable.Creator<WorksConfirmationDialogFragment.Builder>() {
+        public static final Parcelable.Creator<HostConfirmationDialogFragment.Builder> CREATOR = new Parcelable.Creator<HostConfirmationDialogFragment.Builder>() {
             @Override
-            public WorksConfirmationDialogFragment.Builder createFromParcel(Parcel source) {
-                return new WorksConfirmationDialogFragment.Builder(source);
+            public HostConfirmationDialogFragment.Builder createFromParcel(Parcel source) {
+                return new HostConfirmationDialogFragment.Builder(source);
             }
 
             @Override
-            public WorksConfirmationDialogFragment.Builder[] newArray(int size) {
-                return new WorksConfirmationDialogFragment.Builder[size];
+            public HostConfirmationDialogFragment.Builder[] newArray(int size) {
+                return new HostConfirmationDialogFragment.Builder[size];
             }
         };
 
-        public WorksConfirmationDialogFragment build() {
+        public HostConfirmationDialogFragment build() {
             if(mCallback == null) {
                 mCallback = integer -> {
                     if (integer == AlertDialog.BUTTON_POSITIVE) {
