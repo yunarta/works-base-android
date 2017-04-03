@@ -26,7 +26,7 @@ public class WorksSupportControllerManager {
         }
     }
 
-    private void dispatchDestroy() {
+    public void dispatchDestroy() {
         int size = mControllers.size();
         for (int i = 0; i < size; i++) {
             mControllers.valueAt(i).controller.onDestroy();
@@ -73,7 +73,7 @@ public class WorksSupportControllerManager {
 
         ControllerCallbacks<D> callback;
 
-        public ControllerInfo(int id, ControllerCallbacks<D> callback) {
+        public ControllerInfo(ControllerCallbacks<D> callback) {
             this.callback = callback;
         }
     }
@@ -93,23 +93,14 @@ public class WorksSupportControllerManager {
         mControllers = new SparseArray<>();
     }
 
-    public <D extends WorksController> D getController(int id) {
-        ControllerInfo info = mControllers.get(id);
-        if (info != null) {
-            return (D) info.controller;
-        }
-
-        return null;
-    }
 
     public <D extends WorksController> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
         ControllerInfo info = mControllers.get(id);
         if (info == null) {
-            info = new ControllerInfo(id, callback);
+            info = new ControllerInfo(callback);
 
             D newController = callback.onCreateController(id, bundle);
             info.controller = newController;
-            info.controller.setId(id);
 
 
             callback.onLoadFinished(id, bundle, newController);

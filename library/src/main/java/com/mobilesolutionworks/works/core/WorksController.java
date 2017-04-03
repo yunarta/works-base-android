@@ -10,16 +10,6 @@ import android.support.annotation.Nullable;
  */
 public class WorksController {
 
-    private int mId;
-
-    public final void setId(int id) {
-        mId = id;
-    }
-
-    public final int getId() {
-        return mId;
-    }
-
     protected void onCreate(Bundle args, @Nullable Object data) {
 
     }
