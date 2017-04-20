@@ -84,6 +84,8 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
             builder.setItems(build.mItems, (dialog, which) -> mController.postResult(which));
         }
 
+        builder.setCancelable(build.mIsCancelable);
+
         return builder.create();
     }
 
@@ -118,6 +120,8 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
         /* package */ String[] mItems;
 
         /* package */ String mKey;
+
+        /* package */ boolean mIsCancelable = true;
 
         /* package */ transient IntConsumer mCallback;
 
@@ -185,6 +189,11 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
             return this;
         }
 
+        public Builder cancelable(boolean isCancelable) {
+            mIsCancelable = isCancelable;
+            return this;
+        }
+
         /**
          * WARNING : The callback is safe to use if the dialog as been created inside a controller
          * during the rotation, the controller won't be destroyed, so the link is still valid.
@@ -219,28 +228,28 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.mTitle);
-            dest.writeString(this.mKey);
-            dest.writeByte(this.mUseHtml ? (byte) 1 : (byte) 0);
-            dest.writeString(this.mMessageText);
-            dest.writeString(this.mNegativeText);
-            dest.writeString(this.mPositiveText);
-            dest.writeInt(this.mItems != null ? this.mItems.length : 0);
-            dest.writeStringArray(this.mItems);
+            dest.writeByte((byte) (mUseHtml ? 1 : 0));
+            dest.writeString(mTitle);
+            dest.writeString(mMessageText);
+            dest.writeString(mNegativeText);
+            dest.writeString(mPositiveText);
+            dest.writeStringArray(mItems);
+            dest.writeString(mKey);
+            dest.writeByte((byte) (mIsCancelable ? 1 : 0));
         }
 
         protected Builder(Parcel in) {
-            this.mTitle = in.readString();
-            this.mKey = in.readString();
-            this.mUseHtml = in.readByte() != 0;
-            this.mMessageText = in.readString();
-            this.mNegativeText = in.readString();
-            this.mPositiveText = in.readString();
-            this.mItems = new String[in.readInt()];
-            in.readStringArray(this.mItems);
+            mUseHtml = in.readByte() != 0;
+            mTitle = in.readString();
+            mMessageText = in.readString();
+            mNegativeText = in.readString();
+            mPositiveText = in.readString();
+            mItems = in.createStringArray();
+            mKey = in.readString();
+            mIsCancelable = in.readByte() != 0;
         }
 
-        public static final Parcelable.Creator<HostConfirmationDialogFragment.Builder> CREATOR = new Parcelable.Creator<HostConfirmationDialogFragment.Builder>() {
+        public static final Creator<Builder> CREATOR = new Creator<Builder>() {
             @Override
             public HostConfirmationDialogFragment.Builder createFromParcel(Parcel source) {
                 return new HostConfirmationDialogFragment.Builder(source);
