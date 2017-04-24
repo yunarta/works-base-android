@@ -9,9 +9,6 @@ import android.view.View;
 import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 
-/**
- * Created by yunarta on 19/11/15.
- */
 public class HostDialogFragment extends DialogFragment implements Host {
 
     private WorksSupportControllerManager mControllerManager;

@@ -9,9 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-/**
- * Created by lucas34990 on 10/2/17.
- */
 
 public interface Host {
 

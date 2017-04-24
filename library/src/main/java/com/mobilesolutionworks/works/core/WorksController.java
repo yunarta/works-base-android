@@ -5,9 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-/**
- * Created by yunarta on 16/11/15.
- */
 public class WorksController {
 
     protected void onCreate(Bundle args, @Nullable Object data) {

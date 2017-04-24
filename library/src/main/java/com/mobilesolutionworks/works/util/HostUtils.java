@@ -4,9 +4,6 @@ import android.support.v4.app.Fragment;
 
 import com.mobilesolutionworks.works.core.Host;
 
-/**
- * Created by lucas34990 on 29/3/17.
- */
 
 public final class HostUtils {
 

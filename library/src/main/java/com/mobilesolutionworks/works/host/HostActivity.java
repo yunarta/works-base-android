@@ -13,9 +13,6 @@ import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.WorksController;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 
-/**
- * Created by lucas34990 on 10/2/17.
- */
 
 public class HostActivity extends AppCompatActivity implements Host {
 

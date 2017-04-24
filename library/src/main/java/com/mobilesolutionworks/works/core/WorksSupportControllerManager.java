@@ -7,9 +7,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.SparseArray;
 
-/**
- * Created by yunarta on 18/11/15.
- */
 public class WorksSupportControllerManager {
 
     public void dispatchPause() {

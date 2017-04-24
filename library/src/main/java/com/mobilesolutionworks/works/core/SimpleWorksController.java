@@ -13,9 +13,6 @@ import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
-/**
- * Created by yunarta on 28/6/16.
- */
 public class SimpleWorksController<H extends Host> extends WorksController {
 
     private static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);

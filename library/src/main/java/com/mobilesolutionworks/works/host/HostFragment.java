@@ -10,9 +10,6 @@ import android.view.View;
 import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
 
-/**
- * Created by yunarta on 19/11/15.
- */
 public class HostFragment extends Fragment implements Host {
 
     private WorksSupportControllerManager mController;

@@ -1,8 +1,5 @@
 package com.mobilesolutionworks.works.sample.fragment;
 
-/**
- * Created by yunarta on 7/12/16.
- */
 
 public class WorksConstants {
 

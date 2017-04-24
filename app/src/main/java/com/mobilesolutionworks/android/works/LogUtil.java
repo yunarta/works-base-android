@@ -13,9 +13,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by yunarta on 6/3/16.
- */
 public class LogUtil {
     public static Class<? extends LogHandler> sDefaultHandler;
 

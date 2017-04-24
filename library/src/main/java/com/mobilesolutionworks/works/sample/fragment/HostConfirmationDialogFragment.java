@@ -18,9 +18,6 @@ import com.mobilesolutionworks.works.core.Host;
 import com.mobilesolutionworks.works.core.SimpleWorksController;
 import com.mobilesolutionworks.works.host.HostDialogFragment;
 
-/**
- * Created by yunarta on 7/12/16.
- */
 
 public class HostConfirmationDialogFragment extends HostDialogFragment implements DialogInterface.OnClickListener {
 

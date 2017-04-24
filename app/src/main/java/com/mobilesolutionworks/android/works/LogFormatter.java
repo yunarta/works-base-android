@@ -7,9 +7,6 @@ import java.util.Locale;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-/**
- * Created by yunarta on 25/11/15.
- */
 class LogFormatter extends Formatter {
     private final String mPrefix;
 
