@@ -13,7 +13,7 @@ import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
-public class SimpleWorksController<H extends Host> extends WorksController {
+public class Controller<H extends Host> extends Lifecycle {
 
     private static final Executor UIExecutor = command -> new Handler(Looper.getMainLooper()).post(command);
 
@@ -96,18 +96,18 @@ public class SimpleWorksController<H extends Host> extends WorksController {
         observable.deleteObservers();
     }
 
-    public static SimpleWorksController empty(Host host, int id) {
+    public static Controller empty(Host host, int id) {
         return init(host, id, (Callable<EmptyController>) EmptyController::new);
     }
 
-    private static final class EmptyController<H extends Host> extends SimpleWorksController<H> {
+    private static final class EmptyController<H extends Host> extends Controller<H> {
         public EmptyController() {
             // Empty
         }
     }
 
-    public static <C extends SimpleWorksController> C  init(Host host, int id, Callable<C> controller) {
-        return host.getControllerManager().initController(id, host.getArguments(), new WorksSupportControllerManager.ControllerCallbacks<C>() {
+    public static <C extends Controller> C  init(Host host, int id, Callable<C> controller) {
+        return host.getControllerManager().initController(id, host.getArguments(), new Manager.ControllerCallbacks<C>() {
             @Override
             public C onCreateController(int id, Bundle bundle) {
                 try {

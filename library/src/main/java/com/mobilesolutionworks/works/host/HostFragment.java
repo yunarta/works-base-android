@@ -8,17 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.core.Manager;
 
 public class HostFragment extends Fragment implements Host {
 
-    private WorksSupportControllerManager mController;
+    private Manager mController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
+        Manager.InternalLoader loader = (Manager.InternalLoader) getLoaderManager().initLoader(0, null, new Manager.LoaderCallbacks(getActivity()));
         mController = loader.getController();
     }
 
@@ -53,7 +53,7 @@ public class HostFragment extends Fragment implements Host {
     }
 
     @Override
-    public WorksSupportControllerManager getControllerManager() {
+    public Manager getControllerManager() {
         return mController;
     }
 

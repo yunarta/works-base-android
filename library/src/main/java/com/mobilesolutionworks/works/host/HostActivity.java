@@ -10,13 +10,12 @@ import android.view.View;
 import android.view.Window;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.core.WorksController;
-import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.core.Manager;
 
 
 public class HostActivity extends AppCompatActivity implements Host {
 
-    private WorksSupportControllerManager mController;
+    private Manager mController;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -27,12 +26,12 @@ public class HostActivity extends AppCompatActivity implements Host {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getSupportLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(this));
+        Manager.InternalLoader loader = (Manager.InternalLoader) getSupportLoaderManager().initLoader(0, null, new Manager.LoaderCallbacks(this));
         mController = loader.getController();
     }
 
     @Override
-    public WorksSupportControllerManager getControllerManager() {
+    public Manager getControllerManager() {
         return mController;
     }
 

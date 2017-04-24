@@ -15,7 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.core.SimpleWorksController;
+import com.mobilesolutionworks.works.core.Controller;
 import com.mobilesolutionworks.works.host.HostDialogFragment;
 
 
@@ -23,7 +23,7 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
 
     private static final String KEY = ":buildInfo";
 
-    private Controller mController;
+    private InternalController mController;
 
     /* package */ IntConsumer callback;
 
@@ -38,11 +38,11 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
         return fragment;
     }
 
-    private static class Controller extends SimpleWorksController<HostDialogFragment> {
+    private static class InternalController extends Controller<HostDialogFragment> {
 
         private final IntConsumer mAction;
 
-        public Controller(IntConsumer action) {
+        public InternalController(IntConsumer action) {
             this.mAction = action;
         }
 
@@ -56,7 +56,7 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mController = SimpleWorksController.init(this, WorksConstants.WORKS_ID_DIALOG_CONTROLLER, () -> new Controller(callback));
+        mController = Controller.init(this, WorksConstants.WORKS_ID_DIALOG_CONTROLLER, () -> new InternalController(callback));
         callback = null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -91,7 +91,6 @@ public class HostConfirmationDialogFragment extends HostDialogFragment implement
         mController.postResult(which);
     }
 
-    @SuppressWarnings("deprecation")
     private static Spanned fromHtml(String source) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);

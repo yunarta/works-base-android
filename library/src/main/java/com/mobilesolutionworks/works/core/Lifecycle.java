@@ -5,7 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-public class WorksController {
+public class Lifecycle {
 
     protected void onCreate(Bundle args, @Nullable Object data) {
 

@@ -7,22 +7,22 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.mobilesolutionworks.works.core.Host;
-import com.mobilesolutionworks.works.core.WorksSupportControllerManager;
+import com.mobilesolutionworks.works.core.Manager;
 
 public class HostDialogFragment extends DialogFragment implements Host {
 
-    private WorksSupportControllerManager mControllerManager;
+    private Manager mControllerManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WorksSupportControllerManager.InternalLoader loader = (WorksSupportControllerManager.InternalLoader) getLoaderManager().initLoader(0, null, new WorksSupportControllerManager.LoaderCallbacks(getActivity()));
+        Manager.InternalLoader loader = (Manager.InternalLoader) getLoaderManager().initLoader(0, null, new Manager.LoaderCallbacks(getActivity()));
         mControllerManager = loader.getController();
     }
 
     @Override
-    public WorksSupportControllerManager getControllerManager() {
+    public Manager getControllerManager() {
         return mControllerManager;
     }
 

@@ -7,7 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.SparseArray;
 
-public class WorksSupportControllerManager {
+public class Manager {
 
     public void dispatchPause() {
         int size = mControllers.size();
@@ -52,17 +52,17 @@ public class WorksSupportControllerManager {
         }
     }
 
-    public <T extends WorksController> T getController(int id, Class<T> klass) {
-        WorksController worksController = mControllers.get(id).controller;
-        if (worksController != null && klass.isInstance(worksController)) {
-            return (T) worksController;
+    public <T extends Lifecycle> T getController(int id, Class<T> klass) {
+        Lifecycle lifecycle = mControllers.get(id).controller;
+        if (lifecycle != null && klass.isInstance(lifecycle)) {
+            return (T) lifecycle;
 
         }
 
         return null;
     }
 
-    private class ControllerInfo<D extends WorksController> {
+    private class ControllerInfo<D extends Lifecycle> {
 
         int id;
 
@@ -75,7 +75,7 @@ public class WorksSupportControllerManager {
         }
     }
 
-    public interface ControllerCallbacks<D extends WorksController> {
+    public interface ControllerCallbacks<D extends Lifecycle> {
 
         D onCreateController(int id, Bundle bundle);
 
@@ -86,12 +86,12 @@ public class WorksSupportControllerManager {
 
     SparseArray<ControllerInfo> mControllers;
 
-    public WorksSupportControllerManager() {
+    public Manager() {
         mControllers = new SparseArray<>();
     }
 
 
-    public <D extends WorksController> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
+    public <D extends Lifecycle> D initController(int id, Bundle bundle, ControllerCallbacks<D> callback) {
         ControllerInfo info = mControllers.get(id);
         if (info == null) {
             info = new ControllerInfo(callback);
@@ -112,14 +112,14 @@ public class WorksSupportControllerManager {
         return (D) info.controller;
     }
 
-    public static class InternalLoader extends Loader<WorksSupportControllerManager> {
+    public static class InternalLoader extends Loader<Manager> {
 
-        private WorksSupportControllerManager mControllerManager;
+        private Manager mControllerManager;
 
         public InternalLoader(Context context) {
             super(context);
 
-            mControllerManager = new WorksSupportControllerManager();
+            mControllerManager = new Manager();
         }
 
         @Override
@@ -129,12 +129,12 @@ public class WorksSupportControllerManager {
             deliverResult(mControllerManager);
         }
 
-        public WorksSupportControllerManager getController() {
+        public Manager getController() {
             return mControllerManager;
         }
     }
 
-    public static class LoaderCallbacks implements LoaderManager.LoaderCallbacks<WorksSupportControllerManager> {
+    public static class LoaderCallbacks implements LoaderManager.LoaderCallbacks<Manager> {
 
         private Context mContext;
 
@@ -144,17 +144,17 @@ public class WorksSupportControllerManager {
         }
 
         @Override
-        public Loader<WorksSupportControllerManager> onCreateLoader(int id, Bundle args) {
+        public Loader<Manager> onCreateLoader(int id, Bundle args) {
             return new InternalLoader(mContext);
         }
 
         @Override
-        public void onLoadFinished(Loader<WorksSupportControllerManager> loader, WorksSupportControllerManager data) {
+        public void onLoadFinished(Loader<Manager> loader, Manager data) {
 
         }
 
         @Override
-        public void onLoaderReset(Loader<WorksSupportControllerManager> loader) {
+        public void onLoaderReset(Loader<Manager> loader) {
             InternalLoader l = (InternalLoader) loader;
             l.getController().dispatchDestroy();
         }

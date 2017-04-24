@@ -97,7 +97,7 @@ public interface Host {
     /**
      * Experimental
      */
-    WorksSupportControllerManager getControllerManager();
+    Manager getControllerManager();
 
 
 }

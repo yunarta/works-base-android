@@ -1,6 +1,6 @@
 package com.mobilesolutionworks.works.sample.rx;
 
-import com.mobilesolutionworks.works.core.SimpleWorksController;
+import com.mobilesolutionworks.works.core.Controller;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
@@ -9,7 +9,7 @@ import io.reactivex.observers.DisposableObserver;
  * Synchronise RX result with the UI flow by using simple controller
  * This will make sure the success callback will be executed when the UI is displayed
  */
-public class WorksTakeFirstObserver<D extends SimpleWorksController<?>, T> extends DisposableObserver<T> {
+public class WorksTakeFirstObserver<D extends Controller<?>, T> extends DisposableObserver<T> {
 
     private final Consumer<Throwable> fail;
     private final D host;

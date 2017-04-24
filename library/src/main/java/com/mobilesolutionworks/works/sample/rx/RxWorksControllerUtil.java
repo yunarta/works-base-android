@@ -1,6 +1,6 @@
 package com.mobilesolutionworks.works.sample.rx;
 
-import com.mobilesolutionworks.works.core.SimpleWorksController;
+import com.mobilesolutionworks.works.core.Controller;
 
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.functions.Action;
@@ -19,7 +19,7 @@ public class RxWorksControllerUtil {
         // No instance
     }
 
-    public static Runnable wrap(SimpleWorksController<?> controller, Action action) {
+    public static Runnable wrap(Controller<?> controller, Action action) {
         return () -> controller.runOnUIWhenIsReady(() -> {
             try {
                 action.run();
@@ -30,7 +30,7 @@ public class RxWorksControllerUtil {
         });
     }
 
-    public static <T> void safeConsume(SimpleWorksController<?> controller, Consumer<T> consumer, T t) {
+    public static <T> void safeConsume(Controller<?> controller, Consumer<T> consumer, T t) {
         controller.runOnUIWhenIsReady(() -> {
             try {
                 consumer.accept(t);
