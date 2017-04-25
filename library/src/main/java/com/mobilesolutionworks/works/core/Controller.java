@@ -70,6 +70,10 @@ public class Controller<H extends Host> extends Lifecycle {
         return getHost().getResources();
     }
 
+    protected String getString(int id) {
+        return getResources().getString(id);
+    }
+
     @Override
     protected void onResume() {
         mIsPaused = false;
