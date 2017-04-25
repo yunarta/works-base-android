@@ -7,12 +7,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.plugins.RxJavaPlugins;
 
-/**
- * Created with IntelliJ
- * Created by lucas
- * Date 26/03/15
- */
-
 public class RxWorksControllerUtil {
 
     private RxWorksControllerUtil() {
