@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -62,7 +63,12 @@ public class Controller<H extends Host> extends Lifecycle {
     /**
      *
      */
-    protected @Nullable H getHost() {
+    protected @NonNull H getHost() {
+        H host = mHost.get();
+        if(host == null) {
+            throw new IllegalStateException("host not attached");
+        }
+
         return mHost.get();
     }
 
@@ -91,7 +97,7 @@ public class Controller<H extends Host> extends Lifecycle {
     }
 
     public boolean isResumed() {
-        return getHost() != null;
+        return mHost.get() != null;
     }
 
     @Override
