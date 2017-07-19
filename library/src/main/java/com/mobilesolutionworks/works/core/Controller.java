@@ -111,7 +111,7 @@ public class Controller<H extends Host> extends Lifecycle {
     }
 
     private static final class EmptyController<H extends Host> extends Controller<H> {
-        public EmptyController() {
+        /* package */ EmptyController() {
             // Empty
         }
     }
