@@ -1,6 +1,6 @@
 def moduleName = "works-base"
 def moduleRoot = rootProject.projectDir
-def loadSmallApp = true
+def loadSmallApp = false
 
 def modulesFile = new File(rootProject.projectDir, "modules.json")
 if (modulesFile.exists()) {
