@@ -52,7 +52,7 @@ public class HostDialogFragment extends DialogFragment implements Host {
 
     @Override
     public FragmentManager getHostFragmentManager() {
-        return getChildFragmentManager();
+        return getFragmentManager();
     }
 
     @Override
