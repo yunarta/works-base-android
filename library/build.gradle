@@ -38,11 +38,24 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFile != null && outputFileName.endsWith('.aar')) {
+                outputFileName = "${archivesBaseName}-${version}.aar"
+            }
+        }
+    }
 }
 
-configurations {
-    provided
-    implementation.extendsFrom provided
+apply from: "publishing.gradle"
+publishing {
+    publications {
+        projectRelease(MavenPublication) {
+            artifactId 'works-base'
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+        }
+    }
 }
 
 dependencies {
