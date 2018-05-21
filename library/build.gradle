@@ -1,7 +1,7 @@
 apply plugin: "com.android.library"
 
 group "com.mobilesolutionworks"
-version "1.1.0"
+version "1.1.1"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
