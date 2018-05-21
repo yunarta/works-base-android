@@ -1,6 +1,15 @@
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
+android {
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFile != null && outputFileName.endsWith('.aar')) {
+                outputFileName = "${archivesBaseName}-${version}.aar"
+            }
+        }
+    }
+}
 task compilePublications(dependsOn: ["assembleRelease", "sourcesJar", "javadocJar", "generatePomFileForProjectReleasePublication"]) {
     group = "publish"
 }

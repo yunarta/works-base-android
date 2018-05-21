@@ -1,7 +1,9 @@
 apply plugin: "com.android.library"
 
-group "com.mobilesolutionworks"
-version "1.1.1"
+def module = new Properties()
+module.load(file("module.properties").newInputStream())
+group module.group
+version module.version
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -39,13 +41,7 @@ android {
         abortOnError false
     }
 
-    libraryVariants.all { variant ->
-        variant.outputs.all { output ->
-            if (outputFile != null && outputFileName.endsWith('.aar')) {
-                outputFileName = "${archivesBaseName}-${version}.aar"
-            }
-        }
-    }
+
 }
 
 apply from: "publishing.gradle"
