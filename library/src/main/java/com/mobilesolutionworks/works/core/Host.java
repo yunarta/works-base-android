@@ -25,7 +25,7 @@ public interface Host {
     FragmentActivity getActivity();
 
     /**
-     * @See startActivity(Intent, Bundle);
+     * {}@link #startActivity(Intent, Bundle)}
      */
     void startActivity(Intent intent);
 
