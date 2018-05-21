@@ -17,9 +17,9 @@ if (modulesFile.exists()) {
 }
 
 if (loadSmallApp) {
-    include ':works-base-smallapp'
-    project(':works-base-smallapp').projectDir = new File(moduleRoot, 'app')
+    include ":works-base-smallapp"
+    project(":works-base-smallapp").projectDir = new File(moduleRoot, "app")
 }
 
-include ':works-base'
-project(':works-base').projectDir = new File(moduleRoot, 'library')
+include ":works-base"
+project(":works-base").projectDir = new File(moduleRoot, "library")
