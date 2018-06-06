@@ -1,9 +1,13 @@
 apply plugin: "com.android.library"
 
-def module = new Properties()
-module.load(file("module.properties").newInputStream())
-group module.group
-version module.version
+group "com.mobilesolutionworks"
+version "1.1.1"
+
+if (plugins.hasPlugin("works-publish")) {
+    publication {
+        module = file('module.properties')
+    }
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -42,16 +46,6 @@ android {
     }
 
 
-}
-
-apply from: "publishing.gradle"
-publishing {
-    publications {
-        projectRelease(MavenPublication) {
-            artifactId 'works-base'
-            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
-        }
-    }
 }
 
 dependencies {
